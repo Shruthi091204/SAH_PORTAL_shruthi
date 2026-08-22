@@ -129,7 +129,7 @@ export default function CreateTeamPage() {
                 </option>
               ))}
             </select>
-            <div className="form-hint">You can assign a problem statement later</div>
+            <div className="form-hint">You can assign a theme later</div>
           </div>
 
           <div className="form-group">

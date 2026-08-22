@@ -306,7 +306,7 @@ export default function JudgePanelDetailModal({
               {totalAssignedTeams}
             </div>
             <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>
-              Across {assignedProblemStatements.length} problem statements
+              Across {assignedProblemStatements.length} themes
             </div>
           </div>
 
@@ -448,7 +448,7 @@ export default function JudgePanelDetailModal({
                 type="text"
                 className="form-input"
                 style={{ padding: '6px 12px', fontSize: '0.82rem', height: '36px' }}
-                placeholder="🔍 Search teams by name or problem statement..."
+                placeholder="🔍 Search teams by name or theme..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -505,7 +505,7 @@ export default function JudgePanelDetailModal({
                   <p style={{ margin: '4px 0 0', fontSize: '0.84rem' }}>
                     {search || judgeFilter || psFilter || statusFilter !== 'all'
                       ? 'Try clearing your filters or search keywords.'
-                      : 'No teams have selected problem statements assigned to this panel yet.'}
+                      : 'No teams have selected themes assigned to this panel yet.'}
                   </p>
                 </div>
               ) : (

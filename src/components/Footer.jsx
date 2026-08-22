@@ -26,7 +26,7 @@ export default function Footer() {
           <h4>Quick Links</h4>
           <p><a href="https://sih.gov.in"target="_blank"rel="noreferrer">Official SIH Portal →</a></p>
           <p><a href="https://www.amrita.edu/campus/chennai/"target="_blank"rel="noreferrer">Amrita Chennai Campus →</a></p>
-          <p><a href="/problem-statements">Browse Problem Statements →</a></p>
+          <p><a href="/themes">Browse Themes →</a></p>
           <p><a href="/marketplace">Team Recruitment Marketplace →</a></p>
         </div>
 

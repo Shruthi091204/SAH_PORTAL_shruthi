@@ -258,7 +258,7 @@ export default function AnalyticsDashboard() {
     <div className="page-container">
       <div className="page-header">
         <h1 className="page-title"> Analytics & Intelligence Dashboard</h1>
-        <p className="page-subtitle">Live real-time statistics, branch splitting, diversity metrics, and problem statement allocation for SAH 2026</p>
+        <p className="page-subtitle">Live real-time statistics, branch splitting, diversity metrics, and theme allocation for SAH 2026</p>
       </div>
 
       {/* Row 1 Stats */}
@@ -441,7 +441,7 @@ export default function AnalyticsDashboard() {
               <span></span> Problem Statement Allocation Explorer
             </h2>
             <p style={{ margin: '4px 0 0', fontSize: '0.88rem', color: 'var(--text-secondary)' }}>
-              Inspect which teams are solving which problem statements, track team competition, and spot unassigned statements.
+              Inspect which teams are solving which themes, track team competition, and spot unassigned statements.
             </p>
           </div>
 
@@ -561,7 +561,7 @@ export default function AnalyticsDashboard() {
             <div style={{ textAlign: 'center', padding: '40px', background: '#F8FAFC', borderRadius: '12px' }}>
               <div style={{ fontSize: '2rem', marginBottom: '8px' }}></div>
               <p style={{ color: 'var(--text-secondary)', margin: 0 }}>
-                No problem statements match your filter criteria.
+                No themes match your filter criteria.
               </p>
             </div>
           ) : (
@@ -676,7 +676,7 @@ export default function AnalyticsDashboard() {
                     </div>
                   ) : (
                     <div style={{ marginTop: '10px', fontSize: '0.8rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                      No teams have picked this problem statement yet. Available for new teams!
+                      No teams have picked this theme yet. Available for new teams!
                     </div>
                   )}
                 </div>

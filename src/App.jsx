@@ -24,11 +24,11 @@ import TeamMarketplace from './pages/TeamMarketplace';
 import MyTeamPage from './pages/MyTeamPage';
 import CreateTeamPage from './pages/CreateTeamPage';
 import ProfilePage from './pages/ProfilePage';
-import ProblemStatementsPage from './pages/ProblemStatementsPage';
+import ThemesPage from './pages/ThemesPage';
 import EventLandingPage from './pages/EventLandingPage';
 
 // Admin Pages
-import ProblemStatementsAdmin from './pages/admin/ProblemStatementsAdmin';
+import ThemesAdmin from './pages/admin/ThemesAdmin';
 import JudgePanelsAdmin from './pages/admin/JudgePanelsAdmin';
 import AnalyticsDashboard from './pages/admin/AnalyticsDashboard';
 import MasterRoster from './pages/admin/MasterRoster';
@@ -63,7 +63,7 @@ function SahHomePage() {
           Smart Amrita Hackathon (SAH) 2026 is an internal hackathon organized by
           Amrita Vishwa Vidyapeetham, Chennai Campus to prepare and shortlist the
           best student teams for the National Smart India Hackathon (SIH) 2026.
-          Students form teams of 6, choose problem statements from government
+          Students form teams of 6, choose themes from government
           ministries and organizations, and develop innovative solutions. The top 50
           teams will be selected through a rigorous evaluation process including
           Z-Score normalized judging, and will participate in an intensive bootcamp
@@ -91,7 +91,7 @@ function SahHomePage() {
               step: '02',
               colorTheme: 'step-navy',
               title: 'Choose Problem',
-              desc: 'Select an official problem statement and start developing your prototype.'
+              desc: 'Select an official theme and start developing your prototype.'
             },
             {
               step: '03',
@@ -119,8 +119,8 @@ function SahHomePage() {
         <a href="/register" className="btn btn-orange btn-lg" style={{ marginRight: '12px' }}>
           Register Now
         </a>
-        <a href="/problem-statements" className="btn btn-outline btn-lg">
-          View Problem Statements
+        <a href="/themes" className="btn btn-outline btn-lg">
+          Browse Themes
         </a>
       </div>
 
@@ -187,7 +187,7 @@ function SahHomePage() {
 
             <div className="oc-card">
               <div className="oc-avatar oc-avatar-md">
-                <img src={nivethithaImg} alt="Dr. Nivethitha" />
+                <img src={nivethithaImg} alt="Dr. Nivethitha" style={{ objectPosition: 'center top' }} />
               </div>
               <div className="oc-name">Dr. Nivethitha</div>
               <div className="oc-institution">Amrita Vishwa Vidyapeetham, Chennai Campus</div>
@@ -247,7 +247,7 @@ export default function App() {
             <Routes>
               {/* Public */}
               <Route path="/sah" element={<SahHomePage />} />
-              <Route path="/problem-statements" element={<ProblemStatementsPage />} />
+              <Route path="/themes" element={<ThemesPage />} />
 
               {/* Student / Team Leader */}
               <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
@@ -257,7 +257,7 @@ export default function App() {
               <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
 
               {/* Admin & SPOC Shared Management */}
-              <Route path="/admin/problem-statements" element={<ProtectedRoute roles={['admin', 'spoc']}><ProblemStatementsAdmin /></ProtectedRoute>} />
+              <Route path="/admin/themes" element={<ProtectedRoute roles={['admin', 'spoc']}><ThemesAdmin /></ProtectedRoute>} />
               <Route path="/admin/judge-panels" element={<ProtectedRoute roles={['admin']}><JudgePanelsAdmin /></ProtectedRoute>} />
               <Route path="/admin/analytics" element={<ProtectedRoute roles={['admin', 'spoc']}><AnalyticsDashboard /></ProtectedRoute>} />
               <Route path="/admin/roster" element={<ProtectedRoute roles={['admin', 'spoc']}><MasterRoster /></ProtectedRoute>} />

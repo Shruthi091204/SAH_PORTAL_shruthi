@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { parseExcelFile, downloadTemplate } from '../../utils/excelParser';
 
-export default function ProblemStatementsAdmin() {
+export default function ThemesAdmin() {
   const [statements, setStatements] = useState([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
@@ -30,7 +30,7 @@ export default function ProblemStatementsAdmin() {
     try {
       const parsed = await parseExcelFile(file);
       setPreview(parsed);
-      showToast('success', `Parsed ${parsed.length} problem statements from "${file.name}"`);
+      showToast('success', `Parsed ${parsed.length} themes from "${file.name}"`);
     } catch (err) {
       showToast('error', `Parse error: ${err.message}`);
     }
@@ -50,7 +50,7 @@ export default function ProblemStatementsAdmin() {
     try {
       const { error } = await supabase.from('problem_statements').upsert(preview, { onConflict: 'ps_code' });
       if (error) throw error;
-      showToast('success', `Successfully uploaded ${preview.length} problem statements!`);
+      showToast('success', `Successfully uploaded ${preview.length} themes!`);
       setPreview(null);
       fetchStatements();
     } catch (err) {
@@ -61,7 +61,7 @@ export default function ProblemStatementsAdmin() {
   };
 
   const handleDelete = async (id) => {
-    if (!confirm('Are you sure you want to delete this problem statement?')) return;
+    if (!confirm('Are you sure you want to delete this theme?')) return;
     await supabase.from('problem_statements').delete().eq('id', id);
     fetchStatements();
     showToast('info', 'Problem statement deleted.');
@@ -79,7 +79,7 @@ export default function ProblemStatementsAdmin() {
       <div className="page-header flex-between">
         <div>
           <h1 className="page-title"> Problem Statements Manager</h1>
-          <p className="page-subtitle">Upload, manage, and review all SAH 2026 problem statements</p>
+          <p className="page-subtitle">Upload, manage, and review all SAH 2026 themes</p>
         </div>
         <button className="btn btn-outline"onClick={downloadTemplate}>
            Download Excel Template
@@ -169,7 +169,7 @@ export default function ProblemStatementsAdmin() {
             </thead>
             <tbody>
               {statements.length === 0 ? (
-                <tr><td colSpan="6"style={{ textAlign: 'center', padding: '30px', color: 'var(--text-muted)' }}>No problem statements yet. Upload an Excel file to get started.</td></tr>
+                <tr><td colSpan="6"style={{ textAlign: 'center', padding: '30px', color: 'var(--text-muted)' }}>No themes yet. Upload an Excel file to get started.</td></tr>
               ) : (
                 statements.map(ps => (
                   <tr key={ps.id}>
