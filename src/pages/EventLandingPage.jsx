@@ -402,58 +402,66 @@ function SIHBulbScene() {
 /* ═══════════════════════════════════════════════════════════════════════
    Main Page Component
    ═══════════════════════════════════════════════════════════════════════ */
-export default function EventLandingPage() {
+export default function EventLandingPage({ onEnter }) {
   const navigate = useNavigate();
   const words = ['SMART', 'AMRITA', 'HACKATHON'];
 
   return (
-    <main className="futuristic-hero">
-      <div className="futuristic-copy">
-        <h1>
-          {words.map((word, index) => (
-            <span
-              className="futuristic-word is-visible"
-              style={{ animationDelay: `${index * 0.6}s` }}
-              key={word}
-            >
-              {word}
-            </span>
-          ))}
-        </h1>
-        <p className="futuristic-subtitle is-visible">INNOVATE. BUILD. INSPIRE.</p>
-      </div>
+    <>
+      <main className="futuristic-hero">
+        <div className="futuristic-copy">
+          <h1>
+            {words.map((word, index) => (
+              <span
+                className="futuristic-word is-visible"
+                style={{ animationDelay: `${index * 0.6}s` }}
+                key={word}
+              >
+                {word}
+              </span>
+            ))}
+          </h1>
+          <p className="futuristic-subtitle is-visible">INNOVATE. BUILD. INSPIRE.</p>
+        </div>
 
-      <button
-        className="futuristic-explore"
-        type="button"
-        onClick={() => navigate('/sah')}
-      >
-        Enter SAH 2026 <span className="futuristic-arrow">↓</span>
-      </button>
-
-      <motion.div 
-        className="futuristic-visual" 
-        aria-hidden="true"
-        initial={{ opacity: 0, scale: 0.85, y: 40 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ 
-          duration: 1.8, 
-          delay: 2.0, 
-          ease: [0.16, 1, 0.3, 1]
-        }}
-      >
-        <Canvas
-          flat
-          camera={{ position: [0, 0, 3.5], fov: 45 }}
-          gl={async (props) => {
-            const renderer = new THREE.WebGPURenderer(props);
-            await renderer.init();
-            return renderer;
+        <button
+          className="futuristic-explore"
+          type="button"
+          onClick={() => {
+            if (onEnter) {
+              onEnter();
+            } else {
+              navigate('/hub');
+            }
           }}
         >
-          <SIHBulbScene />
-        </Canvas>
-      </motion.div>
-    </main>
+          Enter SAH 2026 <span className="futuristic-arrow">↓</span>
+        </button>
+
+        <motion.div 
+          className="futuristic-visual" 
+          aria-hidden="true"
+          initial={{ opacity: 0, scale: 0.85, y: 40 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ 
+            duration: 1.8, 
+            delay: 2.0, 
+            ease: [0.16, 1, 0.3, 1]
+          }}
+        >
+          <Canvas
+            flat
+            camera={{ position: [0, 0, 3.5], fov: 45 }}
+            gl={async (props) => {
+              const renderer = new THREE.WebGPURenderer(props);
+              await renderer.init();
+              return renderer;
+            }}
+          >
+            <SIHBulbScene />
+          </Canvas>
+        </motion.div>
+      </main>
+    </>
   );
 }

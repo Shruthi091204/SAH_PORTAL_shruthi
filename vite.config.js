@@ -1,7 +1,9 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import nodemailer from 'nodemailer'
+import path from 'path'
 
+// ... existing code ...
 function otpEmailPlugin() {
   return {
     name: 'otp-email-plugin',
@@ -92,4 +94,9 @@ function otpEmailPlugin() {
 
 export default defineConfig({
   plugins: [react(), otpEmailPlugin()],
+  resolve: {
+    alias: {
+      "@": path.resolve(import.meta.dirname, "./src"),
+    },
+  },
 })

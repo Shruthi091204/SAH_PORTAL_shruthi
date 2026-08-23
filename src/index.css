@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* ============================================================
    Smart Amrita Hackathon 2026 — Design System
    Mirrors SIH Portal (sih.gov.in) visual language
