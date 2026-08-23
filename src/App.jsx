@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import AnnouncementBanner from './components/AnnouncementBanner';
@@ -26,6 +27,8 @@ import CreateTeamPage from './pages/CreateTeamPage';
 import ProfilePage from './pages/ProfilePage';
 import ThemesPage from './pages/ThemesPage';
 import EventLandingPage from './pages/EventLandingPage';
+import PortalHubPage from './pages/PortalHubPage';
+import { ConnoisseurStackInteractor } from './components/ui/connoisseur-stack-interactor';
 
 // Admin Pages
 import ThemesAdmin from './pages/admin/ThemesAdmin';
@@ -217,6 +220,28 @@ function SahHomePage() {
   );
 }
 
+function CombinedLandingHub() {
+  const { isAuthenticated } = useAuth();
+  const scrollRef = useRef(null);
+  
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  const handleScrollDown = () => {
+    scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  return (
+    <div style={{ backgroundColor: '#030303', minHeight: '100vh', color: '#ffffff' }}>
+      <EventLandingPage onEnter={handleScrollDown} />
+      <div ref={scrollRef}>
+        <ConnoisseurStackInteractor />
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const { loading } = useAuth();
 
@@ -231,7 +256,8 @@ export default function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<EventLandingPage />} />
+        <Route path="/" element={<CombinedLandingHub />} />
+        <Route path="/hub" element={<Navigate to="/" replace />} />
         {/* Auth pages — no banner/header/navbar */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
