@@ -1,11 +1,11 @@
 import * as XLSX from 'xlsx';
 
 /**
- * Parse an Excel file (.xlsx/.xls) containing problem statements.
+ * Parse an Excel file (.xlsx/.xls) containing themes.
  * Expected columns: PS Code | Title | Category | Organization | Domain | Description (optional)
  * 
  * @param {File} file - The uploaded Excel file
- * @returns {Promise<Array>} Parsed problem statements
+ * @returns {Promise<Array>} Parsed themes
  */
 export async function parseExcelFile(file) {
   return new Promise((resolve, reject) => {
@@ -75,7 +75,7 @@ export async function parseExcelFile(file) {
 }
 
 /**
- * Generate Excel template for problem statement upload
+ * Generate Excel template for theme upload
  */
 export function downloadTemplate() {
   const templateData = [

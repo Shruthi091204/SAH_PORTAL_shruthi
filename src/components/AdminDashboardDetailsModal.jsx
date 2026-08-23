@@ -257,7 +257,7 @@ export default function AdminDashboardDetailsModal({
             placeholder={
               activeTab.includes('student') || activeTab === 'unassigned'
                 ? "Search student name, roll number, department, skills..."
-                : "Search team name, problem statement, leader, skills..."
+                : "Search team name, theme, leader, skills..."
             }
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -638,7 +638,7 @@ export default function AdminDashboardDetailsModal({
                 <div>
                   <strong> Problem Statement Allocation & Team Competition</strong>
                   <span style={{ display: 'block', fontSize: '0.8rem', opacity: 0.85 }}>
-                    See which teams have selected each problem statement and which statements have 0 teams.
+                    See which teams have selected each theme and which statements have 0 teams.
                   </span>
                 </div>
               </div>

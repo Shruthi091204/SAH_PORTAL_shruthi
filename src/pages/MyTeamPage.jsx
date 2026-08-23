@@ -53,7 +53,7 @@ export default function MyTeamPage() {
   async function fetchTeamData() {
     setLoading(true);
 
-    // Fetch all problem statements for selection
+    // Fetch all themes for selection
     const { data: psList } = await supabase
       .from('problem_statements')
       .select('*')
@@ -75,7 +75,7 @@ export default function MyTeamPage() {
 
     setIsLeader(memberData.member_role === 'Leader');
 
-    // Fetch team with full problem statement details
+    // Fetch team with full theme details
     const { data: teamData } = await supabase
       .from('teams')
       .select('*, problem_statements(id, ps_code, title, category, domain, organization, description)')
@@ -350,7 +350,7 @@ export default function MyTeamPage() {
   // Save or update Problem Statement
   const handleSaveProblemStatement = async () => {
     if (!selectedPsId) {
-      showToast('error', 'Please select a problem statement from the list.');
+      showToast('error', 'Please select a theme from the list.');
       return;
     }
     setSavingPs(true);
@@ -520,7 +520,7 @@ export default function MyTeamPage() {
           <p className="page-subtitle">
             {team.problem_statements
               ? `${team.problem_statements.ps_code} — ${team.problem_statements.title}`
-              : 'No problem statement assigned'}
+              : 'No theme assigned'}
             {' · '}
             <span className={`pill-badge ${team.is_locked ? 'status-locked' : 'status-open'}`}>
               {team.is_locked ? 'Locked' : 'Open'}
@@ -536,7 +536,7 @@ export default function MyTeamPage() {
               className="btn btn-outline"
               onClick={handleUnlockTeam}
               style={{ borderColor: 'var(--orange)', color: 'var(--orange)', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '6px' }}
-              title="Unlock team to edit members, change problem statement, or update pitch links"
+              title="Unlock team to edit members, change theme, or update pitch links"
             >
               <span></span> Unlock Team for Editing
             </button>
@@ -717,7 +717,7 @@ export default function MyTeamPage() {
             <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
               {team.is_locked 
                 ? 'Team is locked — Problem statement is finalized for SIH / SAH evaluation.' 
-                : 'Choose or change the problem statement your team will solve.'}
+                : 'Choose or change the theme your team will solve.'}
             </p>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
@@ -751,10 +751,14 @@ export default function MyTeamPage() {
                 style={{ flex: 1, minWidth: '280px' }}
               >
                 <option value="">-- Select a Problem Statement --</option>
-                {allProblemStatements.map(ps => (
-                  <option key={ps.id} value={ps.id}>
-                    [{ps.ps_code}] {ps.title} ({ps.category} · {ps.domain})
-                  </option>
+                {Array.from(new Set(allProblemStatements.map(ps => ps.domain))).sort().map(domain => (
+                  <optgroup key={domain} label={domain}>
+                    {allProblemStatements.filter(ps => ps.domain === domain).map(ps => (
+                      <option key={ps.id} value={ps.id}>
+                        [{ps.ps_code}] {ps.title} ({ps.category})
+                      </option>
+                    ))}
+                  </optgroup>
                 ))}
               </select>
               <button
@@ -808,7 +812,7 @@ export default function MyTeamPage() {
             color: '#E65100',
             fontSize: '0.9rem'
           }}>
-             No problem statement chosen yet. {isLeader ? 'Please select one from the dropdown above to satisfy SIH compliance.' : 'Ask your Team Leader to assign a problem statement.'}
+             No theme chosen yet. {isLeader ? 'Please select one from the dropdown above to satisfy SIH compliance.' : 'Ask your Team Leader to assign a theme.'}
           </div>
         )}
       </div>

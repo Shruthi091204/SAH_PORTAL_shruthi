@@ -105,7 +105,7 @@ export default function JudgePanelsAdmin() {
     return map;
   }, [problemStatements]);
 
-  // Map each problem statement to which panel it is currently assigned to
+  // Map each theme to which panel it is currently assigned to
   const psToPanelMap = useMemo(() => {
     const map = {};
     panelPS.forEach(item => {
@@ -355,12 +355,12 @@ export default function JudgePanelsAdmin() {
         if (insertErr) throw insertErr;
       }
 
-      showToast('success', `Assigned ${selectedArray.length} problem statements to "${psModalPanel.name}"!`);
+      showToast('success', `Assigned ${selectedArray.length} themes to "${psModalPanel.name}"!`);
       setPsModalPanel(null);
       await fetchAllData();
     } catch (err) {
       console.error('Save PS assignments error:', err);
-      showToast('error', err.message || 'Failed to update problem statement assignments.');
+      showToast('error', err.message || 'Failed to update theme assignments.');
     } finally {
       setSavingPs(false);
     }
@@ -404,7 +404,7 @@ export default function JudgePanelsAdmin() {
         <div>
           <h1 className="page-title">Judge Panels Management</h1>
           <p className="page-subtitle">
-            Create panels with 2–3 judges, assign problem statements, and control evaluation scopes
+            Create panels with 2–3 judges, assign themes, and control evaluation scopes
           </p>
         </div>
         <button
@@ -615,7 +615,7 @@ CREATE POLICY "Admin delete panel_problem_statements" ON panel_problem_statement
       <div className="filter-bar" style={{ marginBottom: '20px' }}>
         <input
           className="search-input"
-          placeholder="Search panels by name, judge name, or problem statement..."
+          placeholder="Search panels by name, judge name, or theme..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -635,7 +635,7 @@ CREATE POLICY "Admin delete panel_problem_statements" ON panel_problem_statement
           </h3>
           <p style={{ color: 'var(--text-secondary)', maxWidth: '460px', margin: '0 auto 20px', fontSize: '0.9rem' }}>
             {panels.length === 0
-              ? 'Organize evaluation teams by creating panels with 2 to 3 judges and assigning relevant problem statements.'
+              ? 'Organize evaluation teams by creating panels with 2 to 3 judges and assigning relevant themes.'
               : 'Try clearing your search query to see all panels.'}
           </p>
           {panels.length === 0 && judges.length >= 2 && (
@@ -743,7 +743,7 @@ CREATE POLICY "Admin delete panel_problem_statements" ON panel_problem_statement
                         color: '#92400E',
                         fontSize: '0.8rem'
                       }}>
-                        No problem statements assigned yet.
+                        No themes assigned yet.
                       </div>
                     ) : (
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', maxHeight: '120px', overflowY: 'auto' }}>
@@ -1093,7 +1093,7 @@ CREATE POLICY "Admin delete panel_problem_statements" ON panel_problem_statement
                   Assign Problem Statements to {psModalPanel.name}
                 </h2>
                 <p style={{ margin: '2px 0 0', fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
-                  Each problem statement can belong to only one judge panel.
+                  Each theme can belong to only one judge panel.
                 </p>
               </div>
               <button
@@ -1111,7 +1111,7 @@ CREATE POLICY "Admin delete panel_problem_statements" ON panel_problem_statement
               <input
                 className="search-input"
                 style={{ flex: 1, minWidth: '200px' }}
-                placeholder="Search problem statements..."
+                placeholder="Search themes..."
                 value={psSearch}
                 onChange={(e) => setPsSearch(e.target.value)}
               />
@@ -1129,7 +1129,7 @@ CREATE POLICY "Admin delete panel_problem_statements" ON panel_problem_statement
             {/* Quick Bulk Selection Bar */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', fontSize: '0.82rem' }}>
               <div>
-                <strong>{assignedPsIds.size}</strong> problem statement(s) selected for this panel
+                <strong>{assignedPsIds.size}</strong> theme(s) selected for this panel
               </div>
               <div style={{ display: 'flex', gap: '8px' }}>
                 <button
@@ -1162,7 +1162,7 @@ CREATE POLICY "Admin delete panel_problem_statements" ON panel_problem_statement
             }}>
               {filteredProblemStatements.length === 0 ? (
                 <div style={{ padding: '24px', textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.88rem' }}>
-                  No problem statements found matching criteria.
+                  No themes found matching criteria.
                 </div>
               ) : (
                 filteredProblemStatements.map(ps => {
@@ -1278,7 +1278,7 @@ CREATE POLICY "Admin delete panel_problem_statements" ON panel_problem_statement
             <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '20px' }}>
               Are you sure you want to delete <strong>{deletingPanel.name}</strong>?
               <br /><br />
-              This will remove the panel and its judge & problem statement assignments.
+              This will remove the panel and its judge & theme assignments.
               <br />
               <span style={{ color: 'var(--green)', fontWeight: 600 }}>
                 ✓ Judge user accounts, Problem Statements, Teams, and Evaluation scores will NOT be deleted.

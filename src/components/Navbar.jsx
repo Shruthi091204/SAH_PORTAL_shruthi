@@ -12,13 +12,13 @@ export default function Navbar() {
     { path: '/dashboard', label: 'Dashboard' },
     { path: '/marketplace', label: 'Team Recruitment' },
     { path: '/my-team', label: 'My Team & Pitch' },
-    { path: '/problem-statements', label: 'Problem Statements' },
+    { path: '/themes', label: 'Themes' },
     { path: '/profile', label: 'My Profile' },
   ];
 
   const adminTabs = [
     { path: '/dashboard', label: 'Dashboard' },
-    { path: '/admin/problem-statements', label: 'Problem Statements' },
+    { path: '/admin/themes', label: 'Themes' },
     { path: '/admin/judge-panels', label: 'Judge Panels' },
     { path: '/admin/roster', label: 'Master Roster' },
     { path: '/admin/analytics', label: 'Analytics' },
@@ -33,7 +33,7 @@ export default function Navbar() {
     { path: '/admin/roster', label: 'Master Roster' },
     { path: '/admin/analytics', label: 'Analytics' },
     { path: '/admin/bootcamp', label: 'Top 50 Shortlist' },
-    { path: '/problem-statements', label: 'Problem Statements' },
+    { path: '/themes', label: 'Themes' },
     { path: '/profile', label: 'My Profile' },
   ];
 
@@ -41,7 +41,7 @@ export default function Navbar() {
     { path: '/dashboard', label: 'Dashboard' },
     { path: '/judge/evaluate', label: 'Evaluate Teams' },
     { path: '/judge/history', label: 'My Evaluations' },
-    { path: '/problem-statements', label: 'Problem Statements' },
+    { path: '/themes', label: 'Themes' },
     { path: '/profile', label: 'My Profile' },
   ];
 
@@ -54,7 +54,7 @@ export default function Navbar() {
   if (!isAuthenticated) {
     tabs = [
       { path: '/', label: 'Home' },
-      { path: '/problem-statements', label: 'Problem Statements' },
+      { path: '/themes', label: 'Themes' },
     ];
   }
 

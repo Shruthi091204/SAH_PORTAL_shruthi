@@ -88,7 +88,7 @@ export default function EvaluationPage() {
         }
       }
 
-      // Query all teams registered under the panel's problem statements
+      // Query all teams registered under the panel's themes
       let query = supabase
         .from('teams')
         .select('*, problem_statements(ps_code, title)')
@@ -97,7 +97,7 @@ export default function EvaluationPage() {
 
       if (allowedPsIds !== null) {
         if (allowedPsIds.length === 0) {
-          // Panel has no problem statements assigned yet
+          // Panel has no themes assigned yet
           setTeams([]);
           setLoading(false);
           return;
@@ -283,7 +283,7 @@ export default function EvaluationPage() {
           marginBottom: '24px',
           fontSize: '0.92rem'
         }}>
-          You have not been assigned to a Judge Panel yet. Please contact an Admin to be assigned to a panel and receive problem statements for evaluation.
+          You have not been assigned to a Judge Panel yet. Please contact an Admin to be assigned to a panel and receive themes for evaluation.
         </div>
       )}
 
@@ -299,7 +299,7 @@ export default function EvaluationPage() {
               <div className="card" style={{ padding: '28px 20px', textAlign: 'center', color: 'var(--text-secondary)' }}>
                 <p style={{ margin: 0, fontSize: '0.9rem' }}>
                   {profile?.role === 'judge'
-                    ? 'No teams have registered under your panel\'s assigned problem statements yet.'
+                    ? 'No teams have registered under your panel\'s assigned themes yet.'
                     : 'No teams available for evaluation.'}
                 </p>
               </div>

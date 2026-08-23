@@ -204,7 +204,7 @@ export default function DashboardPage() {
         ? panelJudgesList.join(', ')
         : 'No judges assigned';
 
-      // 2. Assigned problem statements
+      // 2. Assigned themes
       const assignedPsIds = allPanelPS
         .filter(pps => pps.panel_id === panel.id)
         .map(pps => pps.ps_id);
@@ -407,7 +407,7 @@ export default function DashboardPage() {
           <StatCard
             number={judgeAssignedTeamsCount}
             label="Assigned Teams"
-            hint="Teams registered under your panel's problem statements"
+            hint="Teams registered under your panel's themes"
           />
           <StatCard
             number={judgeEvaluatedCount}
@@ -475,7 +475,7 @@ export default function DashboardPage() {
               fontSize: '0.9rem',
               lineHeight: 1.5
             }}>
-              You have not been assigned to a Judge Panel yet. Please contact an Admin to receive problem statement assignments.
+              You have not been assigned to a Judge Panel yet. Please contact an Admin to receive theme assignments.
             </div>
           ) : (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
@@ -526,7 +526,7 @@ export default function DashboardPage() {
                 </div>
                 {judgePanelInfo.problemStatements.length === 0 ? (
                   <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontStyle: 'italic', padding: '8px 0' }}>
-                    No problem statements assigned to this panel yet.
+                    No themes assigned to this panel yet.
                   </div>
                 ) : (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '180px', overflowY: 'auto' }}>
@@ -765,7 +765,7 @@ export default function DashboardPage() {
                     </svg>
                   </div>
                   <div className="action-title">Create a Team</div>
-                  <div className="action-desc">Start your team, invite members & register for a problem statement</div>
+                  <div className="action-desc">Start your team, invite members & register for a theme</div>
                 </Link>
                 <Link to="/marketplace" className="quick-action-card">
                   <div className="action-icon">
@@ -794,7 +794,7 @@ export default function DashboardPage() {
               </Link>
             )}
 
-            <Link to="/problem-statements" className="quick-action-card">
+            <Link to="/themes" className="quick-action-card">
               <div className="action-icon">
                 <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
@@ -832,7 +832,7 @@ export default function DashboardPage() {
               <div className="action-title">My Evaluation History</div>
               <div className="action-desc">Review and inspect your submitted scores</div>
             </Link>
-            <Link to="/problem-statements" className="quick-action-card">
+            <Link to="/themes" className="quick-action-card">
               <div className="action-icon">
                 <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
@@ -902,9 +902,9 @@ export default function DashboardPage() {
                     </svg>
                   </div>
                   <div className="action-title">Judge Panels</div>
-                  <div className="action-desc">Create panels & assign problem statements</div>
+                  <div className="action-desc">Create panels & assign themes</div>
                 </Link>
-                <Link to="/admin/problem-statements" className="quick-action-card">
+                <Link to="/admin/themes" className="quick-action-card">
                   <div className="action-icon">
                     <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -913,7 +913,7 @@ export default function DashboardPage() {
                     </svg>
                   </div>
                   <div className="action-title">Upload Problem Statements</div>
-                  <div className="action-desc">Manage & import problem statements</div>
+                  <div className="action-desc">Manage & import themes</div>
                 </Link>
               </>
             )}

@@ -38,7 +38,7 @@ export default function TeamMarketplace() {
       .eq('is_locked', false)
       .order('created_at', { ascending: false });
 
-    // Fetch all problem statements for lookup
+    // Fetch all themes for lookup
     const { data: psData } = await supabase
       .from('problem_statements')
       .select('*');
@@ -219,7 +219,7 @@ export default function TeamMarketplace() {
         <input
           type="text"
           className="search-input"
-          placeholder="Search teams, problem statements, or skills..."
+          placeholder="Search teams, themes, or skills..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
