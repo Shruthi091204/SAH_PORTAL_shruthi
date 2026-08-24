@@ -13,12 +13,14 @@ export default function Navbar() {
     { path: '/marketplace', label: 'Team Recruitment' },
     { path: '/my-team', label: 'My Team & Pitch' },
     { path: '/themes', label: 'Themes' },
+    { path: '/problem-statements', label: 'Problem Statements' },
     { path: '/profile', label: 'My Profile' },
   ];
 
   const adminTabs = [
     { path: '/dashboard', label: 'Dashboard' },
     { path: '/admin/themes', label: 'Themes' },
+    { path: '/problem-statements', label: 'Problem Statements' },
     { path: '/admin/judge-panels', label: 'Judge Panels' },
     { path: '/admin/roster', label: 'Master Roster' },
     { path: '/admin/analytics', label: 'Analytics' },
@@ -34,6 +36,7 @@ export default function Navbar() {
     { path: '/admin/analytics', label: 'Analytics' },
     { path: '/admin/bootcamp', label: 'Top 50 Shortlist' },
     { path: '/themes', label: 'Themes' },
+    { path: '/problem-statements', label: 'Problem Statements' },
     { path: '/profile', label: 'My Profile' },
   ];
 
@@ -42,6 +45,7 @@ export default function Navbar() {
     { path: '/judge/evaluate', label: 'Evaluate Teams' },
     { path: '/judge/history', label: 'My Evaluations' },
     { path: '/themes', label: 'Themes' },
+    { path: '/problem-statements', label: 'Problem Statements' },
     { path: '/profile', label: 'My Profile' },
   ];
 
@@ -55,6 +59,7 @@ export default function Navbar() {
     tabs = [
       { path: '/sah', label: 'Home' },
       { path: '/themes', label: 'Themes' },
+      { path: '/problem-statements', label: 'Problem Statements' },
     ];
   }
 
