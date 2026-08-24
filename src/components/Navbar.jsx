@@ -76,6 +76,28 @@ export default function Navbar() {
             {tab.label}
           </NavLink>
         ))}
+
+        {/* Other Events Links for Students */}
+        {isAuthenticated && tabs === studentTabs && (
+          <>
+            <a 
+              href="#" 
+              className="nav-tab" 
+              onClick={(e) => { e.preventDefault(); window.open('https://project-expo.amrita.edu', '_blank'); }}
+              style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
+            >
+              Project Expo ↗
+            </a>
+            <a 
+              href="#" 
+              className="nav-tab" 
+              onClick={(e) => { e.preventDefault(); window.open('https://poster-presentation.amrita.edu', '_blank'); }}
+              style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
+            >
+              Poster Presentation ↗
+            </a>
+          </>
+        )}
       </div>
     </nav>
   );
