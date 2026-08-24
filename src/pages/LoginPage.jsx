@@ -1,11 +1,14 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import sahLogo from '../assets/Logo.png';
 
 export default function LoginPage() {
   const { signIn, signUp, signOut, user, profile, isAuthenticated, error: authError } = useAuth();
+  const location = useLocation();
   const navigate = useNavigate();
+  const isExpo = location.state?.from?.includes('project-expo');
+
   const [userType, setUserType] = useState('student');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -26,7 +29,7 @@ export default function LoginPage() {
     if (signInError) {
       setError(signInError.message || 'Login failed. Please check your credentials or register a new account.');
     } else {
-      navigate('/dashboard');
+      navigate(location.state?.from || '/dashboard');
     }
     setLoading(false);
   };
@@ -35,15 +38,15 @@ export default function LoginPage() {
     <div className="login-page">
       <div className="login-card">
         <div className="login-logo">
-          <img src={sahLogo} alt="SAH 2026 Logo" style={{ display: 'block', margin: '0 auto 16px', maxHeight: '80px', width: 'auto' }} />
+          <img src={sahLogo} alt={isExpo ? "Project Expo 2026 Logo" : "SAH 2026 Logo"} style={{ display: 'block', margin: '0 auto 16px', maxHeight: '80px', width: 'auto' }} />
         </div>
 
         <h2 className="login-heading">
-          SAH 2026 Portal Login
+          {isExpo ? 'Project Expo 2026 Login' : 'SAH 2026 Portal Login'}
         </h2>
 
         <p className="login-subheading">
-          Smart Amrita Hackathon — Amrita Chennai Campus
+          {isExpo ? 'Project Expo — Amrita Chennai Campus' : 'Smart Amrita Hackathon — Amrita Chennai Campus'}
         </p>
 
         {isAuthenticated && (
@@ -128,13 +131,15 @@ export default function LoginPage() {
             className="btn btn-primary btn-lg w-full"
             disabled={loading}
           >
-            {loading ? 'Signing in...' : 'Sign In to SAH Portal'}
+            {loading ? 'Signing in...' : (isExpo ? 'Sign In to Project Expo' : 'Sign In to SAH Portal')}
           </button>
         </form>
 
         <div className="auth-link">
           Don't have an account?{' '}
-          <Link to="/register">Register for SAH 2026</Link>
+          <Link to="/register" state={{ from: location.state?.from }}>
+            {isExpo ? 'Register for Project Expo 2026' : 'Register for SAH 2026'}
+          </Link>
         </div>
       </div>
     </div>

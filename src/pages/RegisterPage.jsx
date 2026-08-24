@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import SkillTagSelector from '../components/SkillTagSelector';
 import { DEPARTMENTS, YEARS_OF_STUDY } from '../data/departments';
@@ -9,6 +9,8 @@ import sahLogo from '../assets/Logo.png';
 export default function RegisterPage() {
   const { sendRegistrationOtp, verifyRegistrationOtpAndCreateAccount } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const isExpo = location.state?.from?.includes('project-expo');
 
   const [step, setStep] = useState(1); // 1 = Registration Details, 2 = Verify College Email OTP
   const [form, setForm] = useState({
@@ -122,9 +124,9 @@ export default function RegisterPage() {
           <h2 style={{ color: 'var(--green)', marginBottom: '12px' }}>Registration Successful!</h2>
           <p style={{ color: 'var(--text-secondary)', marginBottom: '24px' }}>
             Account verified and created for <strong>{form.collegeEmail}</strong>.
-            You can now log in to the SAH Portal using either your Personal Email or College Mail ID.
+            You can now log in using either your Personal Email or College Mail ID.
           </p>
-          <Link to="/login" className="btn btn-primary btn-lg">
+          <Link to="/login" state={{ from: location.state?.from }} className="btn btn-primary btn-lg">
             Go to Login
           </Link>
         </div>
@@ -136,16 +138,16 @@ export default function RegisterPage() {
     <div className="login-page" style={{ alignItems: 'flex-start', paddingTop: '40px' }}>
       <div className="login-card" style={{ maxWidth: '580px' }}>
         <div className="login-logo">
-          <img src={sahLogo} alt="SAH 2026 Logo" style={{ display: 'block', margin: '0 auto 16px', maxHeight: '80px', width: 'auto' }} />
+          <img src={sahLogo} alt={isExpo ? "Project Expo 2026 Logo" : "SAH 2026 Logo"} style={{ display: 'block', margin: '0 auto 16px', maxHeight: '80px', width: 'auto' }} />
         </div>
 
         <h2 className="login-heading" style={{ fontSize: '1.3rem' }}>
-          {step === 1 ? 'Student Registration' : 'Verify College Mail ID'}
+          {step === 1 ? (isExpo ? 'Project Expo Registration' : 'Student Registration') : 'Verify College Mail ID'}
         </h2>
 
         <p className="login-subheading">
           {step === 1
-            ? 'Amrita Chennai Campus — SAH 2026'
+            ? (isExpo ? 'Project Expo — Amrita Chennai Campus' : 'Amrita Chennai Campus — SAH 2026')
             : `A 6-digit OTP security code has been sent to ${dispatchedCollegeEmail || form.collegeEmail}.`}
         </p>
 

@@ -153,6 +153,7 @@ export const ConnoisseurStackInteractor = ({
                     )}>
                       {item.name}
                     </h2>
+
                   </div>
                 </div>
               </li>
@@ -209,6 +210,9 @@ export const ConnoisseurStackInteractor = ({
               if (items[activeIndex].name === "Internal Hackathon") {
                 window.scrollTo(0, 0);
                 navigate('/sah');
+              } else if (items[activeIndex].name === "Project Expo") {
+                window.scrollTo(0, 0);
+                navigate('/events/project-expo');
               } else {
                 alert(`The ${items[activeIndex].name} portal is coming soon.`);
               }
