@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import StatCard from '../components/StatCard';
+import problemStatementsData from '../../data/sihProblemStatements.json';
 
 export default function ThemesPage() {
   const { profile } = useAuth();
@@ -59,11 +60,15 @@ export default function ThemesPage() {
           setStatements([]);
         }
       } else {
-        // Admin, SPOC, Student, or Public: Fetch all
-        const { data } = await supabase
-          .from('problem_statements')
-          .select('*')
-          .order('ps_code');
+        // Admin, SPOC, Student, or Public: Fetch all from local data
+        const data = problemStatementsData.map(ps => ({
+          id: ps.sno,
+          ps_code: ps.psNumber,
+          title: ps.title,
+          category: ps.category,
+          domain: ps.theme,
+          organization: ps.org
+        }));
 
         setStatements(data || []);
       }
@@ -75,33 +80,31 @@ export default function ThemesPage() {
     }
   }
 
-  const domains = [
-    'AI & Data Science',
-    'Healthcare & MedTech',
-    'FinTech & Commerce',
-    'Smart Education',
-    'Clean & Green Technology',
-    'Agriculture & Rural Development',
-    'Disaster Management',
-    'Smart Vehicles & Mobility',
-    'SpaceTech',
-    'Social Impact'
-  ];
-
-  const themeColors = {
-    'AI & Data Science': { bg: '#E0E7FF', text: '#3730A3', border: '#A5B4FC' },
-    'Healthcare & MedTech': { bg: '#FCE7F3', text: '#9D174D', border: '#F9A8D4' },
-    'FinTech & Commerce': { bg: '#FEF08A', text: '#854D0E', border: '#FDE047' },
-    'Smart Education': { bg: '#FFEDD5', text: '#9A3412', border: '#FDBA74' },
-    'Clean & Green Technology': { bg: '#D1FAE5', text: '#065F46', border: '#6EE7B7' },
-    'Agriculture & Rural Development': { bg: '#FEF3C7', text: '#92400E', border: '#FCD34D' },
-    'Disaster Management': { bg: '#FEE2E2', text: '#991B1B', border: '#FCA5A5' },
-    'Smart Vehicles & Mobility': { bg: '#DBEAFE', text: '#1E40AF', border: '#93C5FD' },
-    'SpaceTech': { bg: '#F3E8FF', text: '#6B21A8', border: '#D8B4FE' },
-    'Social Impact': { bg: '#ECFCCB', text: '#3F6212', border: '#BEF264' }
-  };
+  const domains = useMemo(() => {
+    return Array.from(new Set(statements.map(ps => ps.domain))).sort();
+  }, [statements]);
 
   const getThemeStyle = (domain) => {
+    const themeColors = {
+      'Disaster Management': { bg: '#FEE2E2', text: '#991B1B', border: '#FCA5A5' },
+      'Smart Automation': { bg: '#E0E7FF', text: '#3730A3', border: '#A5B4FC' },
+      'Space Technology': { bg: '#F3E8FF', text: '#6B21A8', border: '#D8B4FE' },
+      'Smart Vehicles': { bg: '#DBEAFE', text: '#1E40AF', border: '#93C5FD' },
+      'Transportation & Logistics': { bg: '#E0F2FE', text: '#0369A1', border: '#7DD3FC' },
+      'Robotics and Drones': { bg: '#FFE4E6', text: '#9F1239', border: '#FDA4AF' },
+      'Miscellaneous': { bg: '#F3F4F6', text: '#374151', border: '#D1D5DB' },
+      'Agriculture, FoodTech & Rural Development': { bg: '#FEF3C7', text: '#92400E', border: '#FCD34D' },
+      'MedTech / BioTech / HealthTech': { bg: '#FCE7F3', text: '#9D174D', border: '#F9A8D4' },
+      'Blockchain & Cybersecurity': { bg: '#CCFBF1', text: '#0F766E', border: '#5EEAD4' },
+      'Fitness & Sports': { bg: '#FFEDD5', text: '#9A3412', border: '#FDBA74' },
+      'Heritage & Culture': { bg: '#FAFAF9', text: '#44403C', border: '#D6D3D1' },
+      'Smart Education': { bg: '#FEF08A', text: '#854D0E', border: '#FDE047' },
+      'Travel & Tourism': { bg: '#ECFCCB', text: '#3F6212', border: '#BEF264' },
+      'Renewable / Sustainable Energy': { bg: '#D1FAE5', text: '#065F46', border: '#6EE7B7' },
+      'Clean & Green Technology': { bg: '#DCFCE7', text: '#166534', border: '#86EFAC' },
+      'Smart Resource Conservation': { bg: '#E0F2FE', text: '#075985', border: '#38BDF8' },
+      'Toys & Games': { bg: '#F5F3FF', text: '#5B21B6', border: '#C4B5FD' }
+    };
     return themeColors[domain] || { bg: '#F3F4F6', text: '#374151', border: '#D1D5DB' };
   };
 
