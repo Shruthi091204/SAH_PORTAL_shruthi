@@ -28,6 +28,7 @@ import ProfilePage from './pages/ProfilePage';
 import ThemesPage from './pages/ThemesPage';
 import EventLandingPage from './pages/EventLandingPage';
 import PortalHubPage from './pages/PortalHubPage';
+import ProblemStatementsPage from './pages/ProblemStatementsPage';
 import { ConnoisseurStackInteractor } from './components/ui/connoisseur-stack-interactor';
 
 // Admin Pages
@@ -274,6 +275,7 @@ export default function App() {
               {/* Public */}
               <Route path="/sah" element={<SahHomePage />} />
               <Route path="/themes" element={<ThemesPage />} />
+              <Route path="/problem-statements" element={<ProblemStatementsPage />} />
 
               {/* Student / Team Leader */}
               <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
