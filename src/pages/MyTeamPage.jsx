@@ -25,6 +25,7 @@ export default function MyTeamPage() {
   const [isLeader, setIsLeader] = useState(false);
   const [allProblemStatements, setAllProblemStatements] = useState([]);
   const [selectedPsId, setSelectedPsId] = useState('');
+  const [selectedPsId2, setSelectedPsId2] = useState('');
   const [savingPs, setSavingPs] = useState(false);
 
   // Profile Preview Modal
@@ -82,12 +83,13 @@ export default function MyTeamPage() {
     // Fetch team with full theme details
     const { data: teamData } = await supabase
       .from('teams')
-      .select('*, problem_statements(id, ps_code, title, category, domain, organization, description)')
+      .select('*')
       .eq('id', memberData.team_id)
       .single();
 
     setTeam(teamData);
     setSelectedPsId(teamData?.ps_id || '');
+    setSelectedPsId2(teamData?.ps_id_2 || '');
     setPptUrl(teamData?.ppt_url || '');
     setGithubUrl(teamData?.github_url || '');
     setVideoUrl(teamData?.video_url || '');
@@ -356,19 +358,23 @@ export default function MyTeamPage() {
   // Save or update Problem Statement
   const handleSaveProblemStatement = async () => {
     if (!selectedPsId) {
-      showToast('error', 'Please select a theme from the list.');
+      showToast('error', 'Please select a Primary Problem Statement.');
+      return;
+    }
+    if (selectedPsId2 && selectedPsId === selectedPsId2) {
+      showToast('error', 'Secondary problem statement must be different from primary.');
       return;
     }
     setSavingPs(true);
     const { error } = await supabase
       .from('teams')
-      .update({ ps_id: selectedPsId })
+      .update({ ps_id: selectedPsId, ps_id_2: selectedPsId2 || null })
       .eq('id', team.id);
 
     if (error) {
       showToast('error', error.message);
     } else {
-      showToast('success', 'Problem Statement updated successfully!');
+      showToast('success', 'Problem Statements updated successfully!');
       fetchTeamData();
     }
     setSavingPs(false);
@@ -396,6 +402,7 @@ export default function MyTeamPage() {
     const updates = { ppt_url: pptUrl, github_url: githubUrl, video_url: videoUrl };
     if (selectedPsId) {
       updates.ps_id = selectedPsId;
+      updates.ps_id_2 = selectedPsId2 || null;
     }
     const { error } = await supabase
       .from('teams')
@@ -484,7 +491,8 @@ export default function MyTeamPage() {
 
   // Female member count
   const femaleCount = members.filter(m => memberProfiles[m.student_id]?.gender === 'Female').length;
-  const currentPs = allProblemStatements.find(p => p.id === (selectedPsId || team?.ps_id)) || team?.problem_statements;
+  const currentPs1 = allProblemStatements.find(p => p.id === (selectedPsId || team?.ps_id));
+  const currentPs2 = allProblemStatements.find(p => p.id === (selectedPsId2 || team?.ps_id_2));
 
   // Filter candidate students for invite modal (only unassigned students not in ANY team)
   const filteredCandidates = useMemo(() => {
@@ -746,7 +754,12 @@ export default function MyTeamPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
             {team.ps_id && (
               <span className="pill-badge status-verified">
-                 Assigned: {currentPs?.ps_code || 'Assigned'}
+                 Primary: {currentPs1?.ps_code || 'Assigned'}
+              </span>
+            )}
+            {team.ps_id_2 && (
+              <span className="pill-badge status-verified">
+                 Secondary: {currentPs2?.ps_code || 'Assigned'}
               </span>
             )}
             {isLeader && team.is_locked && (
@@ -764,20 +777,41 @@ export default function MyTeamPage() {
         {isLeader && !team.is_locked && (
           <div style={{ marginBottom: '20px', background: '#F8FAFC', padding: '16px', borderRadius: 'var(--radius-md)', border: '1px solid #E2E8F0' }}>
             <label className="form-label"style={{ fontWeight: 600 }}>
-              Choose / Change Problem Statement <span className="required">*</span>
+              Primary Problem Statement <span className="required">*</span>
+            </label>
+            <select
+              className="form-select"
+              value={selectedPsId}
+              onChange={(e) => setSelectedPsId(e.target.value)}
+              style={{ flex: 1, minWidth: '280px', marginBottom: '12px' }}
+            >
+              <option value="">-- Select Primary Problem Statement --</option>
+              {Array.from(new Set(allProblemStatements.map(ps => ps.domain))).sort().map(domain => (
+                <optgroup key={`p-${domain}`} label={domain}>
+                  {allProblemStatements.filter(ps => ps.domain === domain).map(ps => (
+                    <option key={`p-${ps.id}`} value={ps.id}>
+                      [{ps.ps_code}] {ps.title} ({ps.category})
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
+            </select>
+
+            <label className="form-label"style={{ fontWeight: 600 }}>
+              Secondary Problem Statement (Optional)
             </label>
             <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
               <select
                 className="form-select"
-                value={selectedPsId}
-                onChange={(e) => setSelectedPsId(e.target.value)}
+                value={selectedPsId2}
+                onChange={(e) => setSelectedPsId2(e.target.value)}
                 style={{ flex: 1, minWidth: '280px' }}
               >
-                <option value="">-- Select a Problem Statement --</option>
+                <option value="">-- Select Secondary Problem Statement --</option>
                 {Array.from(new Set(allProblemStatements.map(ps => ps.domain))).sort().map(domain => (
-                  <optgroup key={domain} label={domain}>
+                  <optgroup key={`s-${domain}`} label={domain}>
                     {allProblemStatements.filter(ps => ps.domain === domain).map(ps => (
-                      <option key={ps.id} value={ps.id}>
+                      <option key={`s-${ps.id}`} value={ps.id}>
                         [{ps.ps_code}] {ps.title} ({ps.category})
                       </option>
                     ))}
@@ -787,57 +821,93 @@ export default function MyTeamPage() {
               <button
                 className="btn btn-primary"
                 onClick={handleSaveProblemStatement}
-                disabled={savingPs || !selectedPsId || selectedPsId === team.ps_id}
+                disabled={savingPs || !selectedPsId || (selectedPsId === team.ps_id && selectedPsId2 === (team.ps_id_2 || ''))}
               >
-                {savingPs ? 'Saving...' : 'Save Problem Statement'}
+                {savingPs ? 'Saving...' : 'Save Themes'}
               </button>
             </div>
           </div>
         )}
 
         {/* Display selected PS details card */}
-        {currentPs ? (
-          <div style={{
-            background: 'var(--off-white)',
-            border: '1px solid var(--border-light)',
-            borderRadius: 'var(--radius-md)',
-            padding: '20px'
-          }}>
-            <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '10px', flexWrap: 'wrap' }}>
-              <span style={{ fontWeight: 800, color: 'var(--navy)', fontSize: '1.1rem' }}>
-                {currentPs.ps_code}
-              </span>
-              <span className={`pill-badge ${currentPs.category === 'Hardware' ? 'domain' : 'skill'}`}>
-                {currentPs.category}
-              </span>
-              <span className="pill-badge domain"style={{ background: '#E3F2FD', color: '#1565C0' }}>
-                {currentPs.domain}
-              </span>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {currentPs1 ? (
+            <div style={{
+              background: 'var(--off-white)',
+              border: '1px solid var(--border-light)',
+              borderRadius: 'var(--radius-md)',
+              padding: '20px'
+            }}>
+              <h4 style={{ margin: '0 0 12px 0', color: 'var(--navy)' }}>Primary Problem Statement</h4>
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '10px', flexWrap: 'wrap' }}>
+                <span style={{ fontWeight: 800, color: 'var(--navy)', fontSize: '1.1rem' }}>
+                  {currentPs1.ps_code}
+                </span>
+                <span className={`pill-badge ${currentPs1.category === 'Hardware' ? 'domain' : 'skill'}`}>
+                  {currentPs1.category}
+                </span>
+                <span className="pill-badge domain"style={{ background: '#E3F2FD', color: '#1565C0' }}>
+                  {currentPs1.domain}
+                </span>
+              </div>
+              <h4 style={{ fontSize: '1.05rem', color: 'var(--navy)', marginBottom: '8px' }}>
+                {currentPs1.title}
+              </h4>
+              <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '12px' }}>
+                <strong>Organization / Ministry:</strong> {currentPs1.organization || 'Government of India'}
+              </div>
+              {currentPs1.description && (
+                <p style={{ fontSize: '0.88rem', lineHeight: 1.6, color: 'var(--text-primary)', margin: 0 }}>
+                  {currentPs1.description}
+                </p>
+              )}
             </div>
-            <h4 style={{ fontSize: '1.05rem', color: 'var(--navy)', marginBottom: '8px' }}>
-              {currentPs.title}
-            </h4>
-            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '12px' }}>
-               <strong>Organization / Ministry:</strong> {currentPs.organization || 'Government of India'}
+          ) : (
+            <div style={{
+              background: '#FFF3E0',
+              border: '1px solid #FFE0B2',
+              borderRadius: 'var(--radius-md)',
+              padding: '16px 20px',
+              color: '#E65100',
+              fontSize: '0.9rem'
+            }}>
+              No Primary theme chosen yet. {isLeader ? 'Please select one from the dropdown above to satisfy SIH compliance.' : 'Ask your Team Leader to assign a theme.'}
             </div>
-            {currentPs.description && (
-              <p style={{ fontSize: '0.88rem', lineHeight: 1.6, color: 'var(--text-primary)', margin: 0 }}>
-                {currentPs.description}
-              </p>
-            )}
-          </div>
-        ) : (
-          <div style={{
-            background: '#FFF3E0',
-            border: '1px solid #FFE0B2',
-            borderRadius: 'var(--radius-md)',
-            padding: '16px 20px',
-            color: '#E65100',
-            fontSize: '0.9rem'
-          }}>
-             No theme chosen yet. {isLeader ? 'Please select one from the dropdown above to satisfy SIH compliance.' : 'Ask your Team Leader to assign a theme.'}
-          </div>
-        )}
+          )}
+
+          {currentPs2 && (
+            <div style={{
+              background: 'var(--off-white)',
+              border: '1px dashed var(--border-light)',
+              borderRadius: 'var(--radius-md)',
+              padding: '20px'
+            }}>
+              <h4 style={{ margin: '0 0 12px 0', color: 'var(--navy)' }}>Secondary Problem Statement</h4>
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '10px', flexWrap: 'wrap' }}>
+                <span style={{ fontWeight: 800, color: 'var(--navy)', fontSize: '1.1rem' }}>
+                  {currentPs2.ps_code}
+                </span>
+                <span className={`pill-badge ${currentPs2.category === 'Hardware' ? 'domain' : 'skill'}`}>
+                  {currentPs2.category}
+                </span>
+                <span className="pill-badge domain"style={{ background: '#E3F2FD', color: '#1565C0' }}>
+                  {currentPs2.domain}
+                </span>
+              </div>
+              <h4 style={{ fontSize: '1.05rem', color: 'var(--navy)', marginBottom: '8px' }}>
+                {currentPs2.title}
+              </h4>
+              <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '12px' }}>
+                <strong>Organization / Ministry:</strong> {currentPs2.organization || 'Government of India'}
+              </div>
+              {currentPs2.description && (
+                <p style={{ fontSize: '0.88rem', lineHeight: 1.6, color: 'var(--text-primary)', margin: 0 }}>
+                  {currentPs2.description}
+                </p>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Mentor Details */}
