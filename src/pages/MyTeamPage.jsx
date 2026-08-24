@@ -180,6 +180,11 @@ export default function MyTeamPage() {
       member_role: 'Member'
     });
 
+    // If team becomes full (6 members now), close recruitment
+    if (members.length + 1 >= 6) {
+      await supabase.from('teams').update({ is_open_for_recruitment: false }).eq('id', team.id);
+    }
+
     // Notify student
     await sendNotification({
       userId: request.student_id,
@@ -217,6 +222,9 @@ export default function MyTeamPage() {
   const handleRemoveMember = async (memberId, studentId) => {
     await supabase.from('team_members').delete().eq('id', memberId);
 
+    // Ensure recruitment is open if a member is removed
+    await supabase.from('teams').update({ is_open_for_recruitment: true }).eq('id', team.id);
+
     await sendNotification({
       userId: studentId,
       type: 'request_declined',
@@ -227,6 +235,35 @@ export default function MyTeamPage() {
 
     showToast('info', 'Member removed.');
     fetchTeamData();
+  };
+
+  // Disband Team (Leader Only)
+  const handleDisbandTeam = async () => {
+    const confirmDisband = window.confirm(
+      "Are you sure you want to completely disband and delete this team? This action is permanent and will remove all members."
+    );
+    if (!confirmDisband) return;
+
+    try {
+      // 1. Cancel all pending requests
+      await supabase.from('join_requests').delete().eq('team_id', team.id);
+      
+      // 2. Cancel all pending invitations
+      await supabase.from('team_invitations').delete().eq('team_id', team.id);
+      
+      // 3. Remove all team members
+      await supabase.from('team_members').delete().eq('team_id', team.id);
+      
+      // 4. Delete the team itself
+      await supabase.from('teams').delete().eq('id', team.id);
+      
+      showToast('success', 'Team disbanded successfully.');
+      setTeam(null);
+      setMembers([]);
+      fetchTeamData();
+    } catch (err) {
+      showToast('error', err.message);
+    }
   };
 
   // Fetch candidate students, existing team memberships, and pending invitations
@@ -627,7 +664,7 @@ export default function MyTeamPage() {
               member={member}
               profile={memberProfiles[member.student_id]}
               isLeader={member.member_role === 'Leader'}
-              canRemove={isLeader && !team.is_locked}
+              canRemove={isLeader && !team.is_locked && member.member_role !== 'Leader'}
               onRemove={handleRemoveMember}
               onClickProfile={(prof, role) => {
                 setViewingProfile(prof);
@@ -643,6 +680,14 @@ export default function MyTeamPage() {
             />
           ))}
         </div>
+
+        {isLeader && !team.is_locked && (
+          <div style={{ marginTop: '24px', paddingTop: '16px', borderTop: '1px solid var(--border-light)', display: 'flex', justifyContent: 'flex-end' }}>
+            <button className="btn btn-outline" style={{ borderColor: 'var(--red)', color: 'var(--red)', fontWeight: 600, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }} onClick={handleDisbandTeam}>
+              <span>⚠️</span> Disband Team
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Sent Team Invitations (Leader only) */}

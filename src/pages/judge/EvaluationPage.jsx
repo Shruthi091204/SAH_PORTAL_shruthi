@@ -88,11 +88,11 @@ export default function EvaluationPage() {
         }
       }
 
-      // Query all teams registered under the panel's themes
+      // Query all teams registered under the panel's themes (only locked teams are eligible for judging)
       let query = supabase
         .from('teams')
-        .select('*, problem_statements(ps_code, title)')
-        .not('ps_id', 'is', null)
+        .select('*, problem_statements!ps_id(ps_code, title)')
+        .eq('is_locked', true)
         .order('team_name');
 
       if (allowedPsIds !== null) {
@@ -102,7 +102,13 @@ export default function EvaluationPage() {
           setLoading(false);
           return;
         }
-        query = query.in('ps_id', allowedPsIds);
+        // Match if the panel is assigned to either the primary OR secondary problem statement
+        // Using .eq. instead of .in. inside .or() to avoid PostgREST UUID parsing quirks with hyphens
+        const orConditions = allowedPsIds.map(id => `ps_id.eq.${id},ps_id_2.eq.${id}`).join(',');
+        query = query.or(orConditions);
+      } else {
+        // Admin view fallback: only show teams that have at least a primary problem statement
+        query = query.not('ps_id', 'is', null);
       }
 
       const { data: teamsData } = await query;
