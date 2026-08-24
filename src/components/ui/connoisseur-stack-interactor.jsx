@@ -7,20 +7,29 @@ const defaultItems = [
   {
     num: "01",
     name: "Project Expo",
+    tag: "Annual Engineering Showcase",
+    desc: "Exhibition of capstone engineering projects, hardware prototypes & live software modules judged by industry experts.",
+    buttonText: "EXPLORE EXPO ARENA ⚡",
     clipId: "clip-pixels",
-    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
   },
   {
     num: "02",
     name: "Internal Hackathon",
+    tag: "Smart Amrita Hackathon (SAH 2026)",
+    desc: "Official campus qualifying hackathon for Smart India Hackathon (SIH 2026). Pitch solutions under the official 50-mark rubric.",
+    buttonText: "LAUNCH SAH 2026 PORTAL 🚀",
     clipId: "clip-pixels",
-    image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+    image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
   },
   {
     num: "03",
     name: "Poster Presentation",
+    tag: "Research & Innovation Track",
+    desc: "Academic poster exhibition showcasing novel research methodologies, literature findings, and scientific discoveries.",
+    buttonText: "ACCESS POSTER GALLERY ✦",
     clipId: "clip-pixels",
-    image: "https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+    image: "https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
   }
 ];
 
@@ -98,20 +107,33 @@ export const ConnoisseurStackInteractor = ({
       )}
     >
 
-      {/* LEFT SIDE: HIGH CONTRAST MENU */}
-      <div className="z-20 w-full md:w-1/2">
+      {/* LEFT SIDE: HIGH CONTRAST MENU & CRISP EXPLANATION */}
+      <div className="z-20 w-full md:w-7/12">
+        {/* Catchy Header for Our Events */}
+        <div className="mb-8">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-orange-500/10 border border-orange-500/30 text-orange-500 text-xs font-bold uppercase tracking-widest mb-3">
+            ✦ Flagship Arenas
+          </div>
+          <h1 className="text-3xl md:text-5xl font-black tracking-tight text-zinc-900 dark:text-white uppercase">
+            CHRONICLES OF <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-500">INNOVATION</span>
+          </h1>
+          <p className="text-xs md:text-sm text-zinc-500 dark:text-zinc-400 mt-2 font-medium">
+            Explore our premier campus hackathons, project showcases & research poster arenas.
+          </p>
+        </div>
+
         <nav>
-          <ul className="flex flex-col gap-14">
+          <ul className="flex flex-col gap-8 md:gap-10">
             {items.map((item, index) => (
               <li
                 key={item.num}
                 onMouseEnter={() => handleItemHover(index)}
                 className="group cursor-pointer"
               >
-                <div className="flex items-start gap-6">
-                  {/* Numbers: Increased visibility for non-hover state */}
+                <div className="flex items-start gap-5">
+                  {/* Numbers */}
                   <span className={cn(
-                    "text-3xl font-bold transition-all duration-500 mt-2",
+                    "text-3xl md:text-4xl font-bold transition-all duration-500 mt-1",
                     activeIndex === index
                       ? "text-orange-500 scale-110"
                       : "text-zinc-400 dark:text-zinc-600"
@@ -119,40 +141,18 @@ export const ConnoisseurStackInteractor = ({
                     {item.num}
                   </span>
 
-                  {/* Main Text: Enhanced visibility logic */}
-                  <div className="flex flex-col">
+                  {/* Title */}
+                  <div className="flex flex-col justify-center flex-1">
                     <h2 className={cn(
-                      "text-5xl md:text-6xl font-black uppercase tracking-tighter leading-[0.85] transition-all duration-700",
+                      "text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[0.9] transition-all duration-500",
                       activeIndex === index
                         ? "text-zinc-950 dark:text-white opacity-100 translate-x-4"
-                        // INACTIVE STATE: Increased from Zinc-200 to Zinc-400 for Light Mode
-                        // Increased stroke visibility for Dark Mode (#52525b is Zinc-600)
                         : "opacity-40 translate-x-0 " +
                         "text-zinc-500 dark:text-transparent " +
                         "dark:[text-stroke:1.5px_#52525b] dark:[-webkit-text-stroke:1.5px_#52525b]"
                     )}>
-                      {item.name.split(' ')[0]}<br />
-                      {item.name.split(' ').slice(1).join(' ')}
+                      {item.name}
                     </h2>
-
-                    {activeIndex === index && (
-                      <div className="mt-4 translate-x-4 animate-in fade-in slide-in-from-left-4 duration-500 delay-300">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (item.name === "Internal Hackathon") {
-                              window.scrollTo(0, 0);
-                              navigate('/sah');
-                            } else {
-                              alert(`The ${item.name} portal is not yet available.`);
-                            }
-                          }}
-                          className="px-6 py-2.5 rounded-full bg-orange-500 hover:bg-orange-600 text-white font-semibold text-sm transition-colors shadow-lg hover:shadow-orange-500/25 flex items-center gap-2"
-                        >
-                          Enter Website <span className="text-lg leading-none">→</span>
-                        </button>
-                      </div>
-                    )}
                   </div>
                 </div>
               </li>
@@ -161,30 +161,12 @@ export const ConnoisseurStackInteractor = ({
         </nav>
       </div>
 
-      {/* RIGHT SIDE: SQUARE GRID (Sharp Squares) */}
-      <div className="relative w-full md:w-1/2 flex justify-center items-center mt-16 md:mt-0">
-        <div className="absolute w-[120%] h-[120%] bg-orange-500/10 dark:bg-orange-600/5 blur-[120px] rounded-full transition-opacity duration-1000" />
+      {/* RIGHT SIDE: COMPACT ELEGANT PHOTO PREVIEW WITH EXPLANATION */}
+      <div className="relative w-full md:w-5/12 flex flex-col justify-center items-center mt-12 md:mt-0">
+        <div className="absolute w-[100%] h-[100%] bg-orange-500/10 dark:bg-orange-600/5 blur-[100px] rounded-full transition-opacity duration-1000" />
 
-        <svg viewBox="0 0 500 500" className="w-[100%] max-w-[500px] h-auto z-10 drop-shadow-xl dark:drop-shadow-[0_0_60px_rgba(0,0,0,0.8)]">
+        <svg viewBox="0 0 500 500" className="w-[90%] max-w-[420px] h-auto z-10 drop-shadow-xl dark:drop-shadow-[0_0_40px_rgba(0,0,0,0.8)] border border-white/10 rounded-2xl p-2 bg-white/5 backdrop-blur-sm mb-8 transition-transform duration-500 hover:scale-105">
           <defs>
-            <clipPath id="clip-original">
-              <circle className="path" cx="250" cy="250" r="60" />
-              <ellipse className="path" cx="250" cy="110" rx="30" ry="70" />
-              <ellipse className="path" cx="250" cy="390" rx="30" ry="70" />
-              <ellipse className="path" cx="110" cy="250" rx="70" ry="30" />
-              <ellipse className="path" cx="390" cy="250" rx="70" ry="30" />
-            </clipPath>
-
-            <clipPath id="clip-hexagons">
-              <rect className="path" x="20" y="20" width="200" height="280" rx="12" />
-              <rect className="path" x="20" y="320" width="200" height="160" rx="12" />
-              <rect className="path" x="240" y="20" width="240" height="140" rx="12" />
-              <rect className="path" x="240" y="180" width="110" height="160" rx="12" />
-              <rect className="path" x="370" y="180" width="110" height="160" rx="12" />
-              <rect className="path" x="240" y="360" width="240" height="120" rx="12" />
-            </clipPath>
-
-            {/* Grid Squares with rx="4" as requested */}
             <clipPath id="clip-pixels">
               {Array.from({ length: 9 }).map((_, i) => (
                 <rect
@@ -194,7 +176,7 @@ export const ConnoisseurStackInteractor = ({
                   y={Math.floor(i / 3) * 160 + 20}
                   width="140"
                   height="140"
-                  rx="4"
+                  rx="6"
                 />
               ))}
             </clipPath>
@@ -210,6 +192,32 @@ export const ConnoisseurStackInteractor = ({
             />
           </g>
         </svg>
+
+        {/* Explanation on the Image Side */}
+        <div key={activeIndex} className="z-20 w-[90%] max-w-[420px] text-center flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
+          {items[activeIndex].tag && (
+            <div className="inline-flex items-center gap-1.5 text-xs font-extrabold text-orange-500 bg-orange-500/10 px-4 py-1.5 rounded-full mb-4 uppercase tracking-wider">
+              ✦ {items[activeIndex].tag}
+            </div>
+          )}
+          <p className="text-base md:text-lg text-zinc-600 dark:text-zinc-300 leading-relaxed font-medium mb-8">
+            {items[activeIndex].desc}
+          </p>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              if (items[activeIndex].name === "Internal Hackathon") {
+                window.scrollTo(0, 0);
+                navigate('/sah');
+              } else {
+                alert(`The ${items[activeIndex].name} portal is coming soon.`);
+              }
+            }}
+            className="px-10 py-4 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-extrabold text-sm md:text-base tracking-widest uppercase transition-all duration-300 shadow-xl shadow-orange-500/30 hover:shadow-orange-500/50 hover:-translate-y-1 flex items-center gap-2"
+          >
+            <span>{items[activeIndex].buttonText}</span>
+          </button>
+        </div>
       </div>
     </div>
   );
