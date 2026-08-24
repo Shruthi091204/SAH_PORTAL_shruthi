@@ -143,6 +143,9 @@ export const ConnoisseurStackInteractor = ({
                             if (item.name === "Internal Hackathon") {
                               window.scrollTo(0, 0);
                               navigate('/sah');
+                            } else if (item.name === "Project Expo") {
+                              window.scrollTo(0, 0);
+                              navigate('/events/project-expo');
                             } else {
                               alert(`The ${item.name} portal is not yet available.`);
                             }

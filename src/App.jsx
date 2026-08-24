@@ -2,8 +2,11 @@ import { useRef } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import AnnouncementBanner from './components/AnnouncementBanner';
+import ExpoAnnouncementBanner from './components/ExpoAnnouncementBanner';
 import Header from './components/Header';
+import ExpoHeader from './components/ExpoHeader';
 import Navbar from './components/Navbar';
+import ExpoNavbar from './components/ExpoNavbar';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 import flowchart from './assets/FLOWCHART.png';
@@ -26,6 +29,7 @@ import MyTeamPage from './pages/MyTeamPage';
 import CreateTeamPage from './pages/CreateTeamPage';
 import ProfilePage from './pages/ProfilePage';
 import ProjectExpo from './pages/student/ProjectExpo';
+import ProjectExpoRegister from './pages/student/ProjectExpoRegister';
 import ThemesPage from './pages/ThemesPage';
 import EventLandingPage from './pages/EventLandingPage';
 import PortalHubPage from './pages/PortalHubPage';
@@ -266,7 +270,30 @@ export default function App() {
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
 
-        {/* All other pages with layout */}
+        {/* Project Expo Dedicated Layout */}
+        <Route path="/events/project-expo/*" element={
+          <>
+            <ExpoAnnouncementBanner />
+            <ExpoHeader />
+            <ExpoNavbar />
+            <Routes>
+              <Route path="/" element={<ProtectedRoute><ProjectExpo /></ProtectedRoute>} />
+              <Route path="/register" element={<ProtectedRoute><ProjectExpoRegister /></ProtectedRoute>} />
+              <Route path="*" element={
+                <div className="page-container">
+                  <div className="empty-state">
+                    <div className="empty-icon"></div>
+                    <h3>Page Not Found</h3>
+                    <p>The page you're looking for doesn't exist in Project Expo.</p>
+                  </div>
+                </div>
+              } />
+            </Routes>
+            <Footer />
+          </>
+        } />
+
+        {/* All other pages with Hackathon layout */}
         <Route path="*" element={
           <>
             <AnnouncementBanner />
@@ -284,7 +311,6 @@ export default function App() {
               <Route path="/my-team" element={<ProtectedRoute><MyTeamPage /></ProtectedRoute>} />
               <Route path="/create-team" element={<ProtectedRoute><CreateTeamPage /></ProtectedRoute>} />
               <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
-              <Route path="/events/project-expo" element={<ProtectedRoute><ProjectExpo /></ProtectedRoute>} />
 
               {/* Admin & SPOC Shared Management */}
               <Route path="/admin/themes" element={<ProtectedRoute roles={['admin', 'spoc']}><ThemesAdmin /></ProtectedRoute>} />
