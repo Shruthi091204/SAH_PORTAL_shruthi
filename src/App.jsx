@@ -277,8 +277,8 @@ export default function App() {
             <ExpoHeader />
             <ExpoNavbar />
             <Routes>
-              <Route path="/" element={<ProtectedRoute><ProjectExpo /></ProtectedRoute>} />
-              <Route path="/register" element={<ProtectedRoute><ProjectExpoRegister /></ProtectedRoute>} />
+              <Route path="/" element={<ProjectExpo />} />
+              <Route path="/register" element={<ProjectExpoRegister />} />
               <Route path="*" element={
                 <div className="page-container">
                   <div className="empty-state">

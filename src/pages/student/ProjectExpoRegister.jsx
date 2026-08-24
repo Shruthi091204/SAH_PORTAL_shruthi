@@ -23,6 +23,11 @@ export default function ProjectExpoRegister() {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
 
+  // Leader Details (Auto-filled if logged in, manual if guest)
+  const [leaderName, setLeaderName] = useState('');
+  const [leaderRoll, setLeaderRoll] = useState('');
+  const [leaderEmail, setLeaderEmail] = useState('');
+
   const [projectTitle, setProjectTitle] = useState('');
   const [domain, setDomain] = useState('');
   const [outputType, setOutputType] = useState('');
@@ -40,9 +45,13 @@ export default function ProjectExpoRegister() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
-  // Check if user has already registered
+  // Auto-fill leader details if logged in, and check if already registered
   useEffect(() => {
     if (profile) {
+      setLeaderName(profile.full_name || '');
+      setLeaderRoll(profile.roll_no || '');
+      setLeaderEmail(profile.college_email || profile.email || '');
+
       supabase
         .from('project_expo_registrations')
         .select('id')
@@ -50,7 +59,7 @@ export default function ProjectExpoRegister() {
         .limit(1)
         .then(({ data }) => {
           if (data && data.length > 0) {
-            navigate('/dashboard'); // or route to a dedicated "my registration" view if you add one later
+            navigate('/dashboard'); // Already registered
           }
         });
     }
@@ -61,7 +70,7 @@ export default function ProjectExpoRegister() {
     setError('');
 
     // Basic Validation
-    if (!projectTitle || !domain || !outputType || !member2Name || !member2Roll || !facultyMentorName || !facultyMentorEmail) {
+    if (!projectTitle || !domain || !outputType || !member2Name || !member2Roll || !facultyMentorName || !facultyMentorEmail || !leaderName || !leaderRoll || !leaderEmail) {
       setError("Please fill in all required fields.");
       return;
     }
@@ -80,7 +89,10 @@ export default function ProjectExpoRegister() {
       const { error: insertError } = await supabase
         .from('project_expo_registrations')
         .insert([{
-          leader_id: user.id,
+          leader_id: user?.id || null,
+          leader_name: leaderName.trim(),
+          leader_roll: leaderRoll.trim(),
+          leader_email: leaderEmail.trim(),
           project_title: projectTitle.trim(),
           domain: domain,
           output_type: outputType,
@@ -97,9 +109,36 @@ export default function ProjectExpoRegister() {
 
       if (insertError) throw insertError;
       
+      // Trigger confirmation email
+      try {
+        await fetch('/api/send-expo-mail', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            leaderName: leaderName.trim(),
+            leaderEmail: leaderEmail.trim(),
+            projectTitle: projectTitle.trim(),
+            domain: domain,
+            teamSize: teamSize,
+            member2Name: member2Name.trim(),
+            member3Name: teamSize === 3 ? member3Name.trim() : null,
+            mentorName: facultyMentorName.trim()
+          })
+        });
+      } catch (mailErr) {
+        console.error("Failed to send confirmation mail:", mailErr);
+        // We don't throw here because registration was still successful
+      }
+      
       setSuccess(true);
       setTimeout(() => {
-        navigate('/dashboard');
+        if (user) {
+          navigate('/dashboard');
+        } else {
+          navigate('/events/project-expo');
+        }
       }, 3000);
       
     } catch (err) {
@@ -115,7 +154,7 @@ export default function ProjectExpoRegister() {
       <div className="page-container" style={{ maxWidth: '640px', margin: '0 auto', padding: '30px', textAlign: 'center' }}>
         <div className="card">
           <h2 style={{ color: 'var(--green)', marginBottom: '16px' }}>Registration Successful!</h2>
-          <p>Your project has been officially submitted for the Project Expo 2026. Redirecting to dashboard...</p>
+          <p>Your project has been officially submitted for the Project Expo 2026. Redirecting...</p>
         </div>
       </div>
     );
@@ -141,6 +180,40 @@ export default function ProjectExpoRegister() {
 
         <form onSubmit={handleSubmit}>
           
+          <h3 style={{ marginBottom: '16px', color: 'var(--navy-primary)' }}>Leader Details (Member 1)</h3>
+          
+          {user ? (
+            <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '8px', borderLeft: '4px solid var(--blue)', marginBottom: '24px' }}>
+              <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '12px' }}>
+                Your details are automatically linked from your SAH Portal account.
+              </p>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', fontSize: '0.95rem' }}>
+                <div><strong>Name:</strong> {leaderName}</div>
+                <div><strong>Roll No:</strong> {leaderRoll}</div>
+                <div style={{ gridColumn: 'span 2' }}><strong>Email:</strong> {leaderEmail}</div>
+              </div>
+            </div>
+          ) : (
+            <div style={{ marginBottom: '24px' }}>
+              <div className="form-group">
+                <label className="form-label">Full Name <span className="required">*</span></label>
+                <input type="text" className="form-input" value={leaderName} onChange={(e) => setLeaderName(e.target.value)} required />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Roll Number <span className="required">*</span></label>
+                <input type="text" className="form-input" value={leaderRoll} onChange={(e) => setLeaderRoll(e.target.value)} required />
+              </div>
+              <div className="form-group">
+                <label className="form-label">College Mail ID <span className="required">*</span></label>
+                <input type="email" className="form-input" value={leaderEmail} onChange={(e) => setLeaderEmail(e.target.value)} required />
+              </div>
+            </div>
+          )}
+
+          <hr style={{ margin: '24px 0', border: 'none', borderTop: '1px solid #E2E8F0' }} />
+
+          <h3 style={{ marginBottom: '16px', color: 'var(--navy-primary)' }}>Project Details</h3>
+
           <div className="form-group">
             <label className="form-label">Project Title <span className="required">*</span></label>
             <input 
@@ -193,6 +266,8 @@ export default function ProjectExpoRegister() {
           </div>
 
           <hr style={{ margin: '24px 0', border: 'none', borderTop: '1px solid #E2E8F0' }} />
+
+          <h3 style={{ marginBottom: '16px', color: 'var(--navy-primary)' }}>Team Members</h3>
 
           <div className="form-group">
             <label className="form-label">Member 2: Full Name <span className="required">*</span></label>
