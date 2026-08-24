@@ -25,6 +25,7 @@ import TeamMarketplace from './pages/TeamMarketplace';
 import MyTeamPage from './pages/MyTeamPage';
 import CreateTeamPage from './pages/CreateTeamPage';
 import ProfilePage from './pages/ProfilePage';
+import ProjectExpo from './pages/student/ProjectExpo';
 import ThemesPage from './pages/ThemesPage';
 import EventLandingPage from './pages/EventLandingPage';
 import PortalHubPage from './pages/PortalHubPage';
@@ -283,6 +284,7 @@ export default function App() {
               <Route path="/my-team" element={<ProtectedRoute><MyTeamPage /></ProtectedRoute>} />
               <Route path="/create-team" element={<ProtectedRoute><CreateTeamPage /></ProtectedRoute>} />
               <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+              <Route path="/events/project-expo" element={<ProtectedRoute><ProjectExpo /></ProtectedRoute>} />
 
               {/* Admin & SPOC Shared Management */}
               <Route path="/admin/themes" element={<ProtectedRoute roles={['admin', 'spoc']}><ThemesAdmin /></ProtectedRoute>} />
