@@ -171,7 +171,7 @@ function SahHomePage() {
 
         {/* Co-Patrons */}
         <div className="oc-tier">
-          <div className="oc-tier-label">Co-Patrons</div>
+          <div className="oc-tier-label">Co-Ordinators</div>
           <div className="oc-cards-row oc-cards-center">
             <div className="oc-card">
               <div className="oc-avatar oc-avatar-md">

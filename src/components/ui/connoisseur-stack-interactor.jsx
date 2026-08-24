@@ -6,7 +6,7 @@ import gsap from "gsap";
 const defaultItems = [
   {
     num: "01",
-    name: "APRIL Program",
+    name: "Project Expo",
     clipId: "clip-pixels",
     image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
   },
@@ -18,7 +18,7 @@ const defaultItems = [
   },
   {
     num: "03",
-    name: "Poster Competition",
+    name: "Poster Presentation",
     clipId: "clip-pixels",
     image: "https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
   }
