@@ -11,7 +11,8 @@ export default function CreateTeamPage() {
   const [teamName, setTeamName] = useState('');
   const [mentorName, setMentorName] = useState('');
   const [mentorDepartment, setMentorDepartment] = useState('');
-  const [psId, setPsId] = useState('');
+  const [psId1, setPsId1] = useState('');
+  const [psId2, setPsId2] = useState('');
   const [neededSkills, setNeededSkills] = useState([]);
   const [problemStatements, setProblemStatements] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -49,6 +50,15 @@ export default function CreateTeamPage() {
       return;
     }
 
+    if (!psId1) {
+      setError('Problem Statement 1 (Primary) is mandatory.');
+      return;
+    }
+    if (psId2 && psId1 === psId2) {
+      setError('Problem Statement 2 must be different from Problem Statement 1.');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -58,7 +68,8 @@ export default function CreateTeamPage() {
         .insert({
           team_name: teamName.trim(),
           leader_id: profile.id,
-          ps_id: psId || null,
+          ps_id: psId1,
+          ps_id_2: psId2 || null,
           needed_skills: neededSkills,
           mentor_name: mentorName.trim() || null,
           mentor_department: mentorDepartment.trim() || null
@@ -144,20 +155,35 @@ export default function CreateTeamPage() {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Problem Statement</label>
+            <label className="form-label">Problem Statement 1 (Primary) <span className="required">*</span></label>
             <select
               className="form-select"
-              value={psId}
-              onChange={(e) => setPsId(e.target.value)}
+              value={psId1}
+              onChange={(e) => setPsId1(e.target.value)}
             >
-              <option value="">Select a Problem Statement (optional)</option>
+              <option value="">Select a Primary Problem Statement</option>
               {problemStatements.map(ps => (
                 <option key={ps.id} value={ps.id}>
                   [{ps.ps_code}] {ps.title} ({ps.category})
                 </option>
               ))}
             </select>
-            <div className="form-hint">You can assign a theme later</div>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Problem Statement 2 (Secondary - Optional)</label>
+            <select
+              className="form-select"
+              value={psId2}
+              onChange={(e) => setPsId2(e.target.value)}
+            >
+              <option value="">Select a Secondary Problem Statement (optional)</option>
+              {problemStatements.map(ps => (
+                <option key={ps.id} value={ps.id}>
+                  [{ps.ps_code}] {ps.title} ({ps.category})
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="form-group">
