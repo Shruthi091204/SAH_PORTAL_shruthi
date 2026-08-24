@@ -7,6 +7,8 @@ import TeamInvitationsCard from '../components/TeamInvitationsCard';
 import AdminDashboardDetailsModal from '../components/AdminDashboardDetailsModal';
 import JudgePanelDetailModal from '../components/JudgePanelDetailModal';
 import UserProfileModal from '../components/UserProfileModal';
+import OfficialRubricCard from '../components/OfficialRubricCard';
+import { downloadPPTTemplate, downloadGuidelines } from '../utils/downloadResources';
 
 export default function DashboardPage() {
   const { profile } = useAuth();
@@ -37,6 +39,7 @@ export default function DashboardPage() {
   const [detailsModalTab, setDetailsModalTab] = useState(null);
   const [selectedPanelDetailId, setSelectedPanelDetailId] = useState(null);
   const [viewingProfile, setViewingProfile] = useState(null);
+  const [showRubricModal, setShowRubricModal] = useState(false);
 
   useEffect(() => {
     fetchDashboardData();
@@ -313,6 +316,8 @@ export default function DashboardPage() {
         </p>
       </div>
 
+
+
       {/* ADMIN & SPOC: Live Panel Details Section (placed above the stats cards) */}
       {(isAdmin || isSpoc) && (
         <div className="live-sync-section">
@@ -428,30 +433,7 @@ export default function DashboardPage() {
             hint="Problem statements assigned to your panel"
           />
         </div>
-      ) : (isAdmin || isSpoc) ? (
-        null
-      ) : (
-        /* Student Stats Row — Count displays only (drill-down details restricted to Admin/SPOC) */
-        <div className="stats-row">
-          <StatCard
-            number={stats.totalTeams}
-            label="Total Teams"
-          />
-          <StatCard
-            number={stats.totalStudents}
-            label="Registered Students"
-          />
-          <StatCard
-            number={stats.unassignedStudents}
-            label="Students Without Team"
-            accent
-          />
-          <StatCard
-            number={stats.femaleRatio}
-            label="Female Participation"
-          />
-        </div>
-      )}
+      ) : null}
 
       {/* Pending Team Invitations for Student */}
       {!isAdmin && !isJudge && !isSpoc && (
@@ -745,6 +727,130 @@ export default function DashboardPage() {
         </div>
       )}
 
+      {/* STUDENT: Official Downloads Bar Above Quick Actions */}
+      {!isAdmin && !isJudge && !isSpoc && (
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '14px',
+          background: 'var(--white)',
+          padding: '16px 20px',
+          borderRadius: 'var(--radius-lg)',
+          border: '1px solid var(--border)',
+          marginBottom: '20px',
+          boxShadow: 'var(--shadow-sm)'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{
+              width: '38px',
+              height: '38px',
+              borderRadius: '10px',
+              background: '#FFF3EB',
+              color: 'var(--orange)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 700,
+              flexShrink: 0
+            }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+            </div>
+            <div>
+              <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--navy)' }}>Official SAH 2026 Downloads</div>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>Download pitch presentation template & competition guidelines</div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+            <button
+              type="button"
+              className="btn btn-sm"
+              onClick={downloadPPTTemplate}
+              style={{
+                background: 'linear-gradient(135deg, #FF6B00 0%, #FF8800 100%)',
+                color: '#FFFFFF',
+                border: 'none',
+                fontWeight: 600,
+                fontSize: '0.82rem',
+                padding: '8px 16px',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                boxShadow: '0 2px 8px rgba(255, 107, 0, 0.25)'
+              }}
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              Download PPT Template
+            </button>
+
+            <button
+              type="button"
+              className="btn btn-sm btn-outline"
+              onClick={downloadGuidelines}
+              style={{
+                borderColor: '#0284C7',
+                color: '#0284C7',
+                background: '#F0F9FF',
+                fontWeight: 600,
+                fontSize: '0.82rem',
+                padding: '8px 16px',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+              </svg>
+              Download Guidelines
+            </button>
+
+            <button
+              type="button"
+              className="btn btn-sm btn-outline"
+              onClick={() => setShowRubricModal(true)}
+              style={{
+                borderColor: '#8B5CF6',
+                color: '#8B5CF6',
+                background: '#F5F3FF',
+                fontWeight: 600,
+                fontSize: '0.82rem',
+                padding: '8px 16px',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 16v-4" />
+                <path d="M12 8h.01" />
+              </svg>
+              View 50-Mark Rubric
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Quick Actions */}
       <div className="admin-section-header" style={{ marginTop: '8px' }}>
         <h3>Quick Actions</h3>
@@ -938,13 +1044,12 @@ export default function DashboardPage() {
         <h3 style={{ marginBottom: '16px' }}> SAH 2026 Timeline</h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
           {[
-            { date: '21st – 25th Aug 2026', event: 'Stage 1: Problem Statement Release', status: 'active' },
-            { date: '27th Aug – 5th Sept 2026', event: 'Stage 2: Team Formation & Internal Registration', status: 'upcoming' },
-            { date: '11th – 12th Sept 2026', event: 'Stage 3: Smart Amrita Internal Hackathon', status: 'upcoming' },
-            { date: 'By 15th Sept 2026', event: 'Stage 4: Collegiate Result & Selection', status: 'upcoming' },
-            { date: '16th – 23rd Sept 2026', event: 'Stage 5: Intensive Campus Mentorship Bootcamp', status: 'upcoming' },
-            { date: '23rd – 24th Sept 2026', event: 'Stage 6: SIH Solution Screening & Verification', status: 'upcoming' },
-            { date: 'By 24th Sept 2026', event: 'Stage 7: National Portal Idea Submission', status: 'upcoming' },
+            { date: 'Mon, 24 Aug 2026', event: 'Stage 1: Curtain Raiser & Registration Opens (Online)', status: 'active' },
+            { date: 'Sat, 5 Sep 2026 (5:00 PM)', event: 'Stage 2: Registration Closes (6-Member Team, PS ID, Mentor & 6-Slide PPT)', status: 'upcoming' },
+            { date: 'Thu, 10 Sep 2026', event: 'Stage 3: Smart Amrita Hackathon (SAH 2026) — Live Pitch & Jury Evaluation (50 Marks)', status: 'upcoming' },
+            { date: 'Fri, 11 Sep 2026', event: 'Stage 4: Announcement of Nominated Teams & Rank-Ordered Waitlist', status: 'upcoming' },
+            { date: 'Tue–Sat, 15–19 Sep 2026', event: 'Stage 5: Five-Day Intensive Campus Mentorship Bootcamp', status: 'upcoming' },
+            { date: 'Sun, 20 Sep 2026 (5:00 PM)', event: 'Stage 6: Institutional Endorsement & SIH National Portal Upload by SPOC', status: 'upcoming' },
           ].map((item, i) => (
             <div key={i} style={{
               display: 'flex', alignItems: 'center', gap: '16px',
@@ -964,6 +1069,16 @@ export default function DashboardPage() {
           ))}
         </div>
       </div>
+
+      {/* STUDENT: Official 50-Mark Rubric Breakdown */}
+      {!isAdmin && !isJudge && !isSpoc && (
+        <OfficialRubricCard />
+      )}
+
+      {/* Official Rubric Modal Popup */}
+      {showRubricModal && (
+        <OfficialRubricCard isModal onClose={() => setShowRubricModal(false)} />
+      )}
 
       {/* Admin / SPOC Live Intelligence Drill-Down Modal */}
       {(isAdmin || isSpoc) && detailsModalTab && (

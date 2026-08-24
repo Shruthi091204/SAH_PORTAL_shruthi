@@ -5,36 +5,37 @@ export default function Footer() {
         <div className="footer-section">
           <h4>Smart Amrita Hackathon 2026</h4>
           <p>
-            An internal hackathon by Amrita Vishwa Vidyapeetham, Chennai Campus
-            to prepare teams for the Smart India Hackathon 2026.
+            Internal Hackathon by Amrita Vishwa Vidyapeetham, Chennai Campus
+            (Amrita School of Engineering and Computing) to nominate teams for Smart India Hackathon 2026.
           </p>
           <p style={{ marginTop: '12px', fontSize: '0.8rem', opacity: 0.7 }}>
-            Innovating India, Solving National Challenges
+            Organized by The Organising Committee, SAH 2026 & Campus SPOC
           </p>
         </div>
 
         <div className="footer-section">
-          <h4>Important Dates</h4>
-          <p> PS Release: <strong>21st – 25th Aug 2026</strong></p>
-          <p> Team Registration: <strong>27th Aug – 5th Sept 2026</strong></p>
-          <p> Internal Hackathon: <strong>11th – 12th Sept 2026</strong></p>
-          <p> Mentorship Bootcamp: <strong>16th – 23rd Sept 2026</strong></p>
-          <p> SIH Portal Submission: <strong>By 24th Sept 2026</strong></p>
+          <h4>Important Key Dates</h4>
+          <p> Curtain Raiser & Reg Opens: <strong>Mon, 24 Aug 2026</strong></p>
+          <p> Registration Deadline: <strong>Sat, 5 Sep 2026 (5 PM)</strong></p>
+          <p> SAH 2026 Live Pitch & Demo: <strong>Thu, 10 Sep 2026</strong></p>
+          <p> Nomination Announcement: <strong>Fri, 11 Sep 2026</strong></p>
+          <p> Intensive Mentorship Bootcamp: <strong>15th – 19th Sep 2026</strong></p>
+          <p> SIH Portal Upload: <strong>Sun, 20 Sep 2026 (5 PM)</strong></p>
         </div>
 
         <div className="footer-section">
           <h4>Quick Links</h4>
-          <p><a href="https://sih.gov.in"target="_blank"rel="noreferrer">Official SIH Portal →</a></p>
-          <p><a href="https://www.amrita.edu/campus/chennai/"target="_blank"rel="noreferrer">Amrita Chennai Campus →</a></p>
-          <p><a href="/themes">Browse Themes →</a></p>
-          <p><a href="/marketplace">Team Recruitment Marketplace →</a></p>
+          <p><a href="https://sih.gov.in" target="_blank" rel="noreferrer">Official SIH Portal (sih.gov.in) →</a></p>
+          <p><a href="https://www.amrita.edu/campus/chennai/" target="_blank" rel="noreferrer">Amrita Chennai Campus →</a></p>
+          <p><a href="/themes">Browse Problem Statements & Themes →</a></p>
+          <p><a href="/marketplace">Student Recruitment Marketplace →</a></p>
         </div>
 
         <div className="footer-section">
-          <h4>Contact</h4>
-          <p>Amrita Vishwa Vidyapeetham</p>
-          <p>Chennai Campus, Vengal Village</p>
-          <p>Thiruvallur District, Tamil Nadu</p>
+          <h4>Contact & Helpdesk</h4>
+          <p>Amrita School of Engineering & Computing</p>
+          <p>Amrita Vishwa Vidyapeetham, Chennai Campus</p>
+          <p>Vengal, Thiruvallur District, Tamil Nadu</p>
           <p style={{ marginTop: '8px' }}>
              sah2026@ch.amrita.edu
           </p>
@@ -42,7 +43,7 @@ export default function Footer() {
       </div>
 
       <div className="footer-bottom">
-         2026 Smart Amrita Hackathon — Amrita Vishwa Vidyapeetham, Chennai Campus. All rights reserved.
+         2026 Smart Amrita Hackathon (SAH 2026) — Amrita Vishwa Vidyapeetham, Chennai Campus. All rights reserved.
       </div>
     </footer>
   );

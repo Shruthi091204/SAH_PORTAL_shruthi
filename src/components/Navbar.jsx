@@ -67,7 +67,6 @@ export default function Navbar() {
     <nav className="main-navbar">
       <div className="navbar-container">
 
-        
         {tabs.map(tab => (
           <NavLink
             key={tab.path}

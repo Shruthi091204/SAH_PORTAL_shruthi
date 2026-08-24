@@ -92,13 +92,13 @@ function buildScanMaterial(baseR, baseG, baseB, accentR, accentG, accentB, opts 
 
     const isOne = step(0.5, rand);
     const drawOne = step(abs(localUV.x), 0.08).mul(step(abs(localUV.y), 0.35));
-    
+
     const boxX = abs(localUV.x);
     const boxY = abs(localUV.y);
     const drawZeroOuter = step(boxX, 0.22).mul(step(boxY, 0.35));
     const drawZeroInner = step(boxX, 0.1).mul(step(boxY, 0.25));
     const drawZero = drawZeroOuter.sub(drawZeroInner);
-    
+
     const rand2 = fract(rand.mul(13.543));
     const isFilled = step(0.3, rand2);
 
@@ -128,11 +128,11 @@ function buildScanMaterial(baseR, baseG, baseB, accentR, accentG, accentB, opts 
   // ── Compose: dark base + accent colored scan effects ──
   const base = vec3(baseR, baseG, baseB);
   const accent = vec3(accentR, accentG, accentB);
-  
+
   const baseIntensity = mainContour.mul(0.9).add(layerLines.mul(0.2)).add(edgeGlow.mul(0.08));
   const finalPattern = patternIntensity.mul(0.4).add(patternIntensity.mul(mainContour).mul(1.0));
   const intensity = baseIntensity.add(finalPattern);
-  
+
   const colorNode = mix(base, accent, intensity);
 
   const mat = new THREE.MeshBasicNodeMaterial({ colorNode, transparent, wireframe, side });
@@ -322,14 +322,14 @@ function BulbGlowHalo() {
 
     const centerDist = length(u.sub(vec2(0.5, 0.5))).mul(2.0);
     const radial = smoothstep(1.0, 0.1, centerDist);
-    
+
     // Mask out the bottom so it doesn't bleed over the grey bulb base
     const bottomMask = smoothstep(0.25, 0.45, u.y);
-    
+
     // Alternate left/right pulses
     const leftPulse = sin(float(uTime).mul(2.5)).mul(0.5).add(0.5);
     const rightPulse = sin(float(uTime).mul(2.5).add(3.14159)).mul(0.5).add(0.5);
-    
+
     const isRight = step(0.5, u.x);
     const sidePulse = mix(leftPulse, rightPulse, isRight);
 
@@ -338,9 +338,9 @@ function BulbGlowHalo() {
 
     const pulseIntensity = sidePulse.mul(wave).mul(0.35).add(0.02);
     const alpha = radial.mul(bottomMask).mul(pulseIntensity);
-    
+
     const color = mix(vec3(0.9, 0.45, 0.05), vec3(0.05, 0.6, 0.2), isRight);
-    
+
     const matNode = new THREE.MeshBasicNodeMaterial({
       colorNode: color,
       transparent: true,
@@ -348,7 +348,7 @@ function BulbGlowHalo() {
       blending: THREE.AdditiveBlending,
     });
     matNode.opacityNode = alpha;
-    
+
     return { material: matNode, uniforms: { uTime } };
   }, []);
 

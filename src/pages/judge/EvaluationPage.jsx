@@ -17,38 +17,38 @@ export default function EvaluationPage() {
   const [judgePanelAssigned, setJudgePanelAssigned] = useState(true);
 
   // 6 Official Rubric scoring parameters (initially null - no option selected)
-  const [understanding, setUnderstanding] = useState(null); // Max 5
-  const [innovation, setInnovation] = useState(null);       // Max 10
-  const [technical, setTechnical] = useState(null);         // Max 10
-  const [prototype, setPrototype] = useState(null);         // Max 15
-  const [impact, setImpact] = useState(null);               // Max 5
-  const [presentation, setPresentation] = useState(null);   // Max 5
+  const [novelty, setNovelty] = useState(null);         // Max 10
+  const [technical, setTechnical] = useState(null);       // Max 10
+  const [feasibility, setFeasibility] = useState(null);   // Max 10
+  const [impact, setImpact] = useState(null);             // Max 10
+  const [prototype, setPrototype] = useState(null);       // Max 5
+  const [presentation, setPresentation] = useState(null); // Max 5
   const [remarks, setRemarks] = useState('');
 
   // Check if all 6 parameters have a selected score
   const isAllSelected =
-    understanding !== null &&
-    innovation !== null &&
+    novelty !== null &&
     technical !== null &&
-    prototype !== null &&
+    feasibility !== null &&
     impact !== null &&
+    prototype !== null &&
     presentation !== null;
 
   // Total Score (Max 50)
   const total =
-    (understanding ?? 0) +
-    (innovation ?? 0) +
+    (novelty ?? 0) +
     (technical ?? 0) +
-    (prototype ?? 0) +
+    (feasibility ?? 0) +
     (impact ?? 0) +
+    (prototype ?? 0) +
     (presentation ?? 0);
 
   const selectedCount = [
-    understanding,
-    innovation,
+    novelty,
     technical,
-    prototype,
+    feasibility,
     impact,
+    prototype,
     presentation
   ].filter(v => v !== null).length;
 
@@ -138,20 +138,20 @@ export default function EvaluationPage() {
     if (existing?.parsed) {
       // Pre-fill existing submitted evaluation for this judge
       const { rubric, remarks: parsedRemarks } = existing.parsed;
-      setUnderstanding(rubric.understanding ?? null);
-      setInnovation(rubric.innovation ?? null);
+      setNovelty(rubric.novelty ?? rubric.innovation ?? null);
       setTechnical(rubric.technical ?? null);
-      setPrototype(rubric.prototype ?? null);
+      setFeasibility(rubric.feasibility ?? rubric.understanding ?? null);
       setImpact(rubric.impact ?? null);
+      setPrototype(rubric.prototype ?? null);
       setPresentation(rubric.presentation ?? null);
       setRemarks(parsedRemarks || '');
     } else {
       // Reset all 6 parameters to null (unselected)
-      setUnderstanding(null);
-      setInnovation(null);
+      setNovelty(null);
       setTechnical(null);
-      setPrototype(null);
+      setFeasibility(null);
       setImpact(null);
+      setPrototype(null);
       setPresentation(null);
       setRemarks('');
     }
@@ -162,12 +162,12 @@ export default function EvaluationPage() {
 
     // Strict validation: all 6 parameters must have a selected radio score
     const missing = [];
-    if (understanding === null) missing.push('Understanding (0-5)');
-    if (innovation === null) missing.push('Innovation (0-10)');
-    if (technical === null) missing.push('Technical (0-10)');
-    if (prototype === null) missing.push('Prototype (0-15)');
-    if (impact === null) missing.push('Impact (0-5)');
-    if (presentation === null) missing.push('Presentation (0-5)');
+    if (novelty === null) missing.push('Novelty & Innovation (0-10)');
+    if (technical === null) missing.push('Technical Approach & Complexity (0-10)');
+    if (feasibility === null) missing.push('Feasibility & Viability (0-10)');
+    if (impact === null) missing.push('Impact, Scale & Sustainability (0-10)');
+    if (prototype === null) missing.push('Prototype Readiness (0-5)');
+    if (presentation === null) missing.push('Presentation & Format (0-5)');
 
     if (missing.length > 0) {
       showToast('error', `Please select scores for all 6 parameters. Missing: ${missing.join(', ')}`);
@@ -176,11 +176,11 @@ export default function EvaluationPage() {
 
     // Strict range verification
     if (
-      understanding < 0 || understanding > 5 ||
-      innovation < 0 || innovation > 10 ||
+      novelty < 0 || novelty > 10 ||
       technical < 0 || technical > 10 ||
-      prototype < 0 || prototype > 15 ||
-      impact < 0 || impact > 5 ||
+      feasibility < 0 || feasibility > 10 ||
+      impact < 0 || impact > 10 ||
+      prototype < 0 || prototype > 5 ||
       presentation < 0 || presentation > 5
     ) {
       showToast('error', 'Invalid score selected. Please stay within the official rubric ranges.');
@@ -192,11 +192,11 @@ export default function EvaluationPage() {
     const payload = prepareEvaluationPayload({
       teamId: selectedTeam.id,
       judgeId: profile.id,
-      understanding,
-      innovation,
+      novelty,
       technical,
-      prototype,
+      feasibility,
       impact,
+      prototype,
       presentation,
       remarks
     });
@@ -381,55 +381,61 @@ export default function EvaluationPage() {
                 </div>
               </div>
 
-              {/* 1. Understanding of the Problem (0-5) */}
+              {/* 1. Novelty & Innovation (0-10) */}
               <RubricRadioGroup
-                name="understanding"
-                label="1. Understanding of the Problem"
-                max={5}
-                value={understanding}
-                onChange={setUnderstanding}
-              />
-
-              {/* 2. Innovation & Originality (0-10) */}
-              <RubricRadioGroup
-                name="innovation"
-                label="2. Innovation & Originality"
+                name="novelty"
+                label="1. Novelty & Innovation"
+                description="Originality against existing approaches; differentiation from earlier SIH submissions & off-the-shelf products"
                 max={10}
-                value={innovation}
-                onChange={setInnovation}
+                value={novelty}
+                onChange={setNovelty}
               />
 
-              {/* 3. Technical Solution (0-10) */}
+              {/* 2. Technical Approach & Complexity (0-10) */}
               <RubricRadioGroup
                 name="technical"
-                label="3. Technical Solution"
+                label="2. Technical Approach & Complexity"
+                description="Soundness of architecture & methodology; justification of tech stack; engineering depth & non-triviality"
                 max={10}
                 value={technical}
                 onChange={setTechnical}
               />
 
-              {/* 4. Prototype / Demo (0-15) */}
+              {/* 3. Feasibility & Viability (0-10) */}
               <RubricRadioGroup
-                name="prototype"
-                label="4. Prototype / Demo"
-                max={15}
-                value={prototype}
-                onChange={setPrototype}
+                name="feasibility"
+                label="3. Feasibility & Viability"
+                description="Buildability within Grand Finale window; risks identified with credible mitigation; realistic resource assumptions"
+                max={10}
+                value={feasibility}
+                onChange={setFeasibility}
               />
 
-              {/* 5. Impact & Future Scope (0-5) */}
+              {/* 4. Impact, Scale & Sustainability (0-10) */}
               <RubricRadioGroup
                 name="impact"
-                label="5. Impact & Future Scope"
-                max={5}
+                label="4. Impact, Scale & Sustainability"
+                description="Benefit to end user & sponsoring org; scale of impact; social, economic & environmental sustainability"
+                max={10}
                 value={impact}
                 onChange={setImpact}
               />
 
-              {/* 6. Presentation & Template (0-5) */}
+              {/* 5. Prototype & Demonstration Readiness (0-5) */}
+              <RubricRadioGroup
+                name="prototype"
+                label="5. Prototype & Demonstration Readiness"
+                description="Evidence of working module or validated POC; quality of live demonstration & measured results"
+                max={5}
+                value={prototype}
+                onChange={setPrototype}
+              />
+
+              {/* 6. Presentation & Format Compliance (0-5) */}
               <RubricRadioGroup
                 name="presentation"
-                label="6. Presentation & Template"
+                label="6. Presentation & Format Compliance"
+                description="Clarity of pitch; adherence to six-slide SIH format; quality of response to jury questions"
                 max={5}
                 value={presentation}
                 onChange={setPresentation}
@@ -437,22 +443,37 @@ export default function EvaluationPage() {
 
               {/* Total Score Display (Max 50) */}
               <div style={{
-                background: 'linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%)',
-                color: 'white',
-                borderRadius: 'var(--radius-lg)',
-                padding: '20px',
+                background: 'linear-gradient(135deg, #0B192C 0%, #1E293B 100%)',
+                color: '#FFFFFF',
+                borderRadius: '16px',
+                padding: '24px',
                 textAlign: 'center',
                 marginBottom: '20px',
-                boxShadow: 'var(--shadow-md)'
+                boxShadow: '0 8px 24px rgba(11, 25, 44, 0.25)',
+                border: '1px solid rgba(255, 107, 0, 0.3)'
               }}>
-                <div style={{ fontSize: '0.78rem', opacity: 0.85, textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600 }}>
-                  TOTAL SCORE
+                <div style={{ fontSize: '0.78rem', opacity: 0.85, textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 700, color: '#FF8800' }}>
+                  TOTAL SCORE EVALUATION
                 </div>
-                <div style={{ fontSize: '3rem', fontFamily: 'var(--font-heading)', fontWeight: 900, lineHeight: 1.1, margin: '4px 0' }}>
-                  {total}<span style={{ fontSize: '1.3rem', opacity: 0.6 }}> / 50</span>
+                <div style={{ fontSize: '3rem', fontWeight: 900, fontFamily: 'var(--font-heading)', color: '#FFFFFF', lineHeight: 1.1, margin: '6px 0' }}>
+                  {total} <span style={{ fontSize: '1.4rem', color: '#94A3B8', fontWeight: 600 }}>/ 50</span>
                 </div>
-                <div style={{ fontSize: '0.76rem', color: isAllSelected ? '#86efac' : '#fed7aa', fontWeight: 600 }}>
-                  {isAllSelected ? '✓ All 6 parameters scored' : `${selectedCount} of 6 parameters selected`}
+
+                {/* Score Progress Bar */}
+                <div style={{ background: 'rgba(255,255,255,0.1)', height: '8px', borderRadius: '4px', overflow: 'hidden', margin: '12px 0 8px' }}>
+                  <div style={{
+                    width: `${(total / 50) * 100}%`,
+                    height: '100%',
+                    background: total >= 40 ? '#10B981' : total >= 25 ? '#FF8800' : '#EF4444',
+                    transition: 'width 0.3s ease, background 0.3s ease'
+                  }} />
+                </div>
+
+                <div style={{ fontSize: '0.78rem', color: '#CBD5E1', display: 'flex', justifyContent: 'space-between' }}>
+                  <span>{selectedCount} of 6 Criteria Rated</span>
+                  <strong style={{ color: total >= 40 ? '#34D399' : total >= 25 ? '#FBBF24' : '#F87171' }}>
+                    {total >= 40 ? 'Top Contender' : total >= 25 ? 'Solid Solution' : 'Needs Improvement'}
+                  </strong>
                 </div>
               </div>
 
