@@ -46,6 +46,9 @@ export default function MyTeamPage() {
   const [pptUrl, setPptUrl] = useState('');
   const [githubUrl, setGithubUrl] = useState('');
   const [videoUrl, setVideoUrl] = useState('');
+  const [mentorName, setMentorName] = useState('');
+  const [mentorDepartment, setMentorDepartment] = useState('');
+  const [savingMentor, setSavingMentor] = useState(false);
 
   useEffect(() => {
     if (profile) fetchTeamData();
@@ -88,6 +91,8 @@ export default function MyTeamPage() {
     setPptUrl(teamData?.ppt_url || '');
     setGithubUrl(teamData?.github_url || '');
     setVideoUrl(teamData?.video_url || '');
+    setMentorName(teamData?.mentor_name || '');
+    setMentorDepartment(teamData?.mentor_department || '');
 
     // Fetch all members
     const { data: membersData } = await supabase
@@ -367,6 +372,23 @@ export default function MyTeamPage() {
       fetchTeamData();
     }
     setSavingPs(false);
+  };
+
+  // Save or update Mentor Details
+  const handleSaveMentor = async () => {
+    setSavingMentor(true);
+    const { error } = await supabase
+      .from('teams')
+      .update({ mentor_name: mentorName, mentor_department: mentorDepartment })
+      .eq('id', team.id);
+
+    if (error) {
+      showToast('error', error.message);
+    } else {
+      showToast('success', 'Mentor details updated successfully!');
+      fetchTeamData();
+    }
+    setSavingMentor(false);
   };
 
   // Save pitch URLs and Problem Statement
@@ -814,6 +836,57 @@ export default function MyTeamPage() {
             fontSize: '0.9rem'
           }}>
              No theme chosen yet. {isLeader ? 'Please select one from the dropdown above to satisfy SIH compliance.' : 'Ask your Team Leader to assign a theme.'}
+          </div>
+        )}
+      </div>
+
+      {/* Mentor Details */}
+      <div className="card" style={{ marginBottom: '24px' }}>
+        <div className="flex-between" style={{ marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
+          <h3 style={{ margin: 0 }}> Mentor Details</h3>
+          {isLeader && team.is_locked && (
+            <button
+              className="btn btn-sm btn-outline"
+              onClick={handleUnlockTeam}
+              style={{ borderColor: 'var(--orange)', color: 'var(--orange)', fontWeight: 600, fontSize: '0.75rem' }}
+            >
+               Unlock to Edit Mentor
+            </button>
+          )}
+        </div>
+        
+        <div className="form-group">
+          <label className="form-label">Mentor Name</label>
+          <input
+            type="text"
+            className="form-input"
+            placeholder="e.g., Dr. Smith"
+            value={mentorName}
+            onChange={(e) => setMentorName(e.target.value)}
+            disabled={!isLeader || team.is_locked}
+          />
+        </div>
+        <div className="form-group">
+          <label className="form-label">Mentor Department</label>
+          <input
+            type="text"
+            className="form-input"
+            placeholder="e.g., Computer Science"
+            value={mentorDepartment}
+            onChange={(e) => setMentorDepartment(e.target.value)}
+            disabled={!isLeader || team.is_locked}
+          />
+        </div>
+        
+        {isLeader && !team.is_locked && (
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '12px' }}>
+            <button
+              className="btn btn-primary"
+              onClick={handleSaveMentor}
+              disabled={savingMentor}
+            >
+              {savingMentor ? 'Saving...' : 'Save Mentor Details'}
+            </button>
           </div>
         )}
       </div>

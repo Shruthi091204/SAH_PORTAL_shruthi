@@ -9,6 +9,8 @@ export default function CreateTeamPage() {
   const { profile } = useAuth();
   const navigate = useNavigate();
   const [teamName, setTeamName] = useState('');
+  const [mentorName, setMentorName] = useState('');
+  const [mentorDepartment, setMentorDepartment] = useState('');
   const [psId, setPsId] = useState('');
   const [neededSkills, setNeededSkills] = useState([]);
   const [problemStatements, setProblemStatements] = useState([]);
@@ -57,7 +59,9 @@ export default function CreateTeamPage() {
           team_name: teamName.trim(),
           leader_id: profile.id,
           ps_id: psId || null,
-          needed_skills: neededSkills
+          needed_skills: neededSkills,
+          mentor_name: mentorName.trim() || null,
+          mentor_department: mentorDepartment.trim() || null
         })
         .select()
         .single();
@@ -113,6 +117,30 @@ export default function CreateTeamPage() {
               maxLength={50}
             />
             <div className="form-hint">Choose a unique, creative team name (3-50 characters)</div>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Mentor Name (Optional)</label>
+            <input
+              type="text"
+              className="form-input"
+              placeholder="e.g., Dr. Smith"
+              value={mentorName}
+              onChange={(e) => setMentorName(e.target.value)}
+              maxLength={100}
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Mentor Department (Optional)</label>
+            <input
+              type="text"
+              className="form-input"
+              placeholder="e.g., Computer Science"
+              value={mentorDepartment}
+              onChange={(e) => setMentorDepartment(e.target.value)}
+              maxLength={100}
+            />
           </div>
 
           <div className="form-group">
