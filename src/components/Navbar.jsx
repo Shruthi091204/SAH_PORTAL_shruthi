@@ -66,13 +66,7 @@ export default function Navbar() {
   return (
     <nav className="main-navbar">
       <div className="navbar-container">
-        <NavLink
-          to="/hub"
-          className="nav-tab nav-tab-hub"
-          style={{ marginRight: 'auto', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px' }}
-        >
-          <span>←</span> Events Hub
-        </NavLink>
+
         
         {tabs.map(tab => (
           <NavLink
