@@ -111,12 +111,9 @@ export default function ProjectExpoRegister() {
       
       // Trigger confirmation email
       try {
-        await fetch('/api/send-expo-mail', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
+        const { error: invokeErr } = await supabase.functions.invoke('send-email', {
+          body: {
+            type: 'expo',
             leaderName: leaderName.trim(),
             leaderEmail: leaderEmail.trim(),
             projectTitle: projectTitle.trim(),
@@ -125,8 +122,11 @@ export default function ProjectExpoRegister() {
             member2Name: member2Name.trim(),
             member3Name: teamSize === 3 ? member3Name.trim() : null,
             mentorName: facultyMentorName.trim()
-          })
+          }
         });
+        if (invokeErr) {
+          console.warn("Edge function mail warning:", invokeErr);
+        }
       } catch (mailErr) {
         console.error("Failed to send confirmation mail:", mailErr);
         // We don't throw here because registration was still successful

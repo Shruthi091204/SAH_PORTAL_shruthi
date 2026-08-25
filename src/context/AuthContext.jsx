@@ -337,25 +337,13 @@ export function AuthProvider({ children }) {
         console.warn('DB OTP Log warning:', dbErr);
       }
 
-      // 4. Send OTP code via Nodemailer endpoint to target email
-      const response = await fetch('/api/send-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: targetEmail, otpCode, type: 'password_reset' })
+      // 4. Send OTP code via Supabase Edge Function to target email
+      const { data: resData, error: invokeErr } = await supabase.functions.invoke('send-email', {
+        body: { email: targetEmail, otpCode, type: 'password_reset' }
       });
 
-      const contentType = response.headers.get('content-type') || '';
-      let resData = {};
-
-      if (contentType.includes('application/json')) {
-        resData = await response.json();
-      } else {
-        const text = await response.text();
-        throw new Error(`OTP service error (${response.status}): ${text.slice(0, 120)}`);
-      }
-
-      if (!response.ok || resData.error) {
-        throw new Error(resData.error || 'Failed to dispatch 6-digit OTP email.');
+      if (invokeErr || (resData && resData.error)) {
+        throw new Error(invokeErr?.message || resData?.error || 'Failed to dispatch 6-digit OTP email.');
       }
 
       return {
@@ -507,25 +495,13 @@ export function AuthProvider({ children }) {
         console.warn('registration_otps table note:', dbErr);
       }
 
-      // Send 6-digit OTP code to College Mail ID via Nodemailer endpoint
-      const response = await fetch('/api/send-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: cleanCollegeEmail, otpCode, type: 'registration' })
+      // Send 6-digit OTP code to College Mail ID via Supabase Edge Function
+      const { data: resData, error: invokeErr } = await supabase.functions.invoke('send-email', {
+        body: { email: cleanCollegeEmail, otpCode, type: 'registration' }
       });
 
-      const contentType = response.headers.get('content-type') || '';
-      let resData = {};
-
-      if (contentType.includes('application/json')) {
-        resData = await response.json();
-      } else {
-        const text = await response.text();
-        throw new Error(`OTP service error (${response.status}): ${text.slice(0, 120)}`);
-      }
-
-      if (!response.ok || resData.error) {
-        throw new Error(resData.error || 'Failed to dispatch OTP verification email to College Mail ID.');
+      if (invokeErr || (resData && resData.error)) {
+        throw new Error(invokeErr?.message || resData?.error || 'Failed to dispatch OTP verification email to College Mail ID.');
       }
 
       return {
