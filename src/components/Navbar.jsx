@@ -15,9 +15,9 @@ export default function Navbar() {
     setActiveHash(location.hash);
   }, [location.hash]);
 
-  // Intersection observer for sections on /sah
+  // Intersection observer for sections on /sah and /events/project-expo
   useEffect(() => {
-    if (location.pathname !== '/sah' && location.pathname !== '/') return;
+    if (location.pathname !== '/sah' && location.pathname !== '/' && location.pathname !== '/events/project-expo') return;
 
     let timeout;
     const observer = new IntersectionObserver((entries) => {
@@ -159,7 +159,21 @@ export default function Navbar() {
   else if (profile?.role === 'judge') tabs = judgeTabs;
   else if (profile?.role === 'spoc') tabs = spocTabs;
 
-  if (!isAuthenticated) {
+  const isExpoPage = location.pathname === '/events/project-expo';
+
+  if (isExpoPage) {
+    tabs = [
+      { path: '/events/project-expo', label: 'Expo Home' },
+      { path: '/events/project-expo#objectives', label: 'Objectives' },
+      { path: '/events/project-expo#eligibility', label: 'Eligibility' },
+      { path: '/events/project-expo#scope', label: 'Project Scope' },
+      { path: '/events/project-expo#key-dates', label: 'Key Dates' },
+      { path: '/events/project-expo#rubric', label: 'Rubric' },
+      { path: '/events/project-expo#awards', label: 'Awards' },
+      { path: '/events/project-expo#requirements', label: 'Requirements' },
+      { path: '/events/project-expo#contact', label: 'Contact' }
+    ];
+  } else if (!isAuthenticated) {
     tabs = [
       { path: '/sah', label: 'Home' },
       { path: '/themes', label: 'Themes' },
@@ -195,7 +209,7 @@ export default function Navbar() {
             }
           }
 
-          return (
+          const navItem = (
             <NavLink
               key={tab.path}
               to={tab.path}
@@ -205,10 +219,54 @@ export default function Navbar() {
               {tab.label}
             </NavLink>
           );
+
+          if (isExpoPage && tab.path === '/events/project-expo') {
+            return (
+              <>
+                {navItem}
+                <div 
+                  className="nav-tab" 
+                  ref={dropdownRef} 
+                  style={{ position: 'relative', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }} 
+                  onClick={toggleDropdown}
+                >
+                  Other Events
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                  
+                  {showOtherEvents && (
+                    <div style={dropdownStyle} onClick={(e) => e.stopPropagation()}>
+                      <NavLink 
+                        to="/events/project-expo" 
+                        style={{ padding: '12px 16px', color: 'var(--navy)', textDecoration: 'none', fontSize: '0.82rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #F1F5F9' }}
+                        onClick={() => setShowOtherEvents(false)}
+                        onMouseEnter={(e) => e.target.style.backgroundColor = '#F8FAFC'}
+                        onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                      >
+                        Project Expo <span>→</span>
+                      </NavLink>
+                      <a 
+                        href="#" 
+                        style={{ padding: '12px 16px', color: 'var(--navy)', textDecoration: 'none', fontSize: '0.82rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', display: 'flex', justifyContent: 'space-between' }}
+                        onClick={(e) => { e.preventDefault(); window.open('https://poster-presentation.amrita.edu', '_blank'); setShowOtherEvents(false); }}
+                        onMouseEnter={(e) => e.target.style.backgroundColor = '#F8FAFC'}
+                        onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                      >
+                        Poster Presentation <span>↗</span>
+                      </a>
+                    </div>
+                  )}
+                </div>
+              </>
+            );
+          }
+
+          return navItem;
         })}
 
-        {/* Other Events Dropdown for Students */}
-        {isAuthenticated && tabs === studentTabs && (
+        {/* Other Events Dropdown for Students when not on Expo page */}
+        {!isExpoPage && isAuthenticated && tabs === studentTabs && (
           <div 
             className="nav-tab" 
             ref={dropdownRef} 

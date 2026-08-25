@@ -79,7 +79,26 @@ const expoData = {
       "System architecture diagram", "Performance metrics", "QR code to demo video/repo"
     ],
     backup: "Backup demonstration required: video, screenshots, sample datasets, or recorded results — contingency only, not a substitute for live demo."
-  }
+  },
+  objectives: [
+    "Showcase outstanding student projects, prototypes and technological solutions across departments.",
+    "Encourage engineering innovation, problem-solving and interdisciplinary collaboration.",
+    "Enable structured evaluation by faculty, researchers and external industry experts.",
+    "Identify projects with potential for patenting, commercialisation, industry deployment or startup development."
+  ],
+  oc: [
+    { name: "Dr. S. Parthasarathy", role: "Project Expo – Campus SPoC" },
+    { name: "Dr. Rishikumar", role: "MECH & RAI Programme Faculty Coordinator" },
+    { name: "Dr. S. Veluchamy", role: "ECE & CCE Programme Faculty Coordinator" },
+    { name: "Dr. K. Ashwini", role: "CSE Program Faculty Coordinator" },
+    { name: "Dr. IR Oviya", role: "AI & CYS Programme Faculty Coordinator" }
+  ],
+  studentOC: [
+    { name: "Kutralingam A", contact: "To be shared shortly" },
+    { name: "K L Vishnu Kamesh", contact: "To be shared shortly" },
+    { name: "Shruthika Rajan", contact: "To be shared shortly" },
+    { name: "Vishal P", contact: "To be shared shortly" }
+  ]
 };
 
 export default function ProjectExpo() {
@@ -144,6 +163,13 @@ export default function ProjectExpo() {
           <p style={{ maxWidth: '800px', margin: '0 auto', fontSize: '1.25rem', opacity: 0.85, lineHeight: 1.6, fontWeight: 300 }}>
             The premier demonstration-based exhibition. Showcase your existing prototypes and ongoing engineering marvels to an expert jury. No new build required.
           </p>
+          <button 
+            className="btn btn-orange btn-lg" 
+            onClick={() => navigate('/events/project-expo/register')}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '12px', fontSize: '1.1rem', padding: '16px 40px', borderRadius: '50px', boxShadow: '0 10px 25px -5px rgba(234, 88, 12, 0.4)', marginTop: '32px' }}
+          >
+            Register Now <ChevronRight size={20} strokeWidth={3} />
+          </button>
         </motion.div>
       </div>
 
@@ -151,62 +177,23 @@ export default function ProjectExpo() {
         
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '32px', marginBottom: '60px' }}>
           
-          {/* Creative Timeline (Left Column) */}
-          <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} style={{ background: '#fff', borderRadius: '24px', padding: '40px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.05)', border: '1px solid rgba(255,255,255,0.5)' }}>
-            <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '32px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <Calendar color="var(--orange)" /> Key Dates
+          {/* Objectives (Left Column) */}
+          <motion.section id="objectives" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} style={{ background: '#fff', borderRadius: '24px', padding: '40px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.05)', height: '100%', scrollMarginTop: '100px' }}>
+            <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <Target color="var(--orange)" /> Objectives
             </h2>
-            <div style={{ position: 'relative', paddingLeft: '32px' }}>
-              {/* Vertical Line */}
-              <div style={{ position: 'absolute', left: '11px', top: '10px', bottom: '10px', width: '2px', background: 'linear-gradient(to bottom, var(--orange) 0%, #e2e8f0 100%)' }} />
-              
-              {expoData.keyDates.map((item, index) => {
-                const isUpcoming = index === upcomingIndex;
-                const isPast = index < upcomingIndex;
-                
-                return (
-                  <motion.div key={index} variants={childVariants} style={{ position: 'relative', marginBottom: index === expoData.keyDates.length - 1 ? 0 : '32px' }}>
-                    {/* Timeline Dot */}
-                    <div style={{ 
-                      position: 'absolute', 
-                      left: '-32px', 
-                      top: '2px',
-                      width: '24px', 
-                      height: '24px', 
-                      borderRadius: '50%', 
-                      background: isUpcoming ? 'var(--orange)' : isPast ? '#94a3b8' : '#fff',
-                      border: `3px solid ${isUpcoming ? '#fff' : isPast ? '#fff' : '#cbd5e1'}`,
-                      boxShadow: isUpcoming ? '0 0 0 4px rgba(234,88,12,0.2)' : 'none',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: isUpcoming ? '#fff' : 'transparent',
-                      zIndex: 2
-                    }}>
-                      {isUpcoming && <div style={{ width: '8px', height: '8px', background: '#fff', borderRadius: '50%' }} />}
-                    </div>
-                    
-                    <div style={{ 
-                      background: isUpcoming ? 'linear-gradient(to right, #fff7ed, #ffffff)' : 'transparent',
-                      padding: '16px 20px',
-                      borderRadius: '12px',
-                      border: isUpcoming ? '1px solid #fed7aa' : '1px solid transparent',
-                      transform: isUpcoming ? 'translateX(10px)' : 'none',
-                      transition: 'all 0.3s ease'
-                    }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: isUpcoming ? 'var(--orange)' : 'var(--navy)', fontWeight: 700, fontSize: '1.1rem', marginBottom: '4px' }}>
-                        {item.icon} {item.title}
-                      </div>
-                      <div style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>{item.displayDate}</div>
-                    </div>
-                  </motion.div>
-                )
-              })}
-            </div>
-          </motion.div>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {expoData.objectives.map((obj, idx) => (
+                <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', color: 'var(--navy)', fontWeight: 500, lineHeight: 1.6 }}>
+                  <div style={{ width: '8px', height: '8px', background: 'var(--orange)', borderRadius: '50%', marginTop: '8px', flexShrink: 0 }} />
+                  {obj}
+                </li>
+              ))}
+            </ul>
+          </motion.section>
 
           {/* Bento Grid Eligibility (Right Column) */}
-          <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+          <motion.section id="eligibility" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} style={{ display: 'flex', flexDirection: 'column', gap: '32px', scrollMarginTop: '100px' }}>
             <div style={{ background: '#fff', borderRadius: '24px', padding: '40px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.05)', height: '100%' }}>
               <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '32px', display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <CheckCircle2 color="var(--orange)" /> Eligibility Criteria
@@ -231,12 +218,12 @@ export default function ProjectExpo() {
                 ))}
               </div>
             </div>
-          </motion.div>
+          </motion.section>
 
         </div>
 
         {/* Dynamic Project Scope */}
-        <motion.section variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} style={{ marginBottom: '60px' }}>
+        <motion.section id="scope" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} style={{ marginBottom: '60px', scrollMarginTop: '100px' }}>
           <div style={{ background: 'var(--navy)', borderRadius: '32px', padding: '48px', color: 'white', position: 'relative', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)' }}>
             <div style={{ position: 'absolute', top: 0, right: 0, width: '400px', height: '400px', background: 'radial-gradient(circle, rgba(234,88,12,0.2) 0%, transparent 70%)', borderRadius: '50%', transform: 'translate(30%, -30%)' }} />
             
@@ -275,8 +262,63 @@ export default function ProjectExpo() {
           </div>
         </motion.section>
 
+        {/* Key Dates (Horizontal) */}
+        <motion.section id="key-dates" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} style={{ background: '#fff', borderRadius: '24px', padding: '40px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.05)', marginBottom: '60px', width: '100%', scrollMarginTop: '100px' }}>
+          <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '40px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <Calendar color="var(--orange)" /> Key Dates
+          </h2>
+          <div style={{ position: 'relative', display: 'flex', justifyContent: 'space-between', paddingTop: '16px', overflowX: 'auto', paddingBottom: '24px', minWidth: 'min-content', gap: '16px' }}>
+            {/* Horizontal Line */}
+            <div style={{ position: 'absolute', top: '27px', left: '20px', right: '20px', height: '2px', background: 'linear-gradient(to right, var(--orange) 0%, #e2e8f0 100%)', zIndex: 1 }} />
+            
+            {expoData.keyDates.map((item, index) => {
+              const isUpcoming = index === upcomingIndex;
+              const isPast = index < upcomingIndex;
+              
+              return (
+                <motion.div key={index} variants={childVariants} style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, minWidth: '140px' }}>
+                  {/* Timeline Dot */}
+                  <div style={{ 
+                    width: '24px', height: '24px', borderRadius: '50%', 
+                    background: isUpcoming ? 'var(--orange)' : isPast ? '#94a3b8' : '#fff',
+                    border: `3px solid ${isUpcoming ? '#fff' : isPast ? '#fff' : '#cbd5e1'}`,
+                    boxShadow: isUpcoming ? '0 0 0 4px rgba(234,88,12,0.2)' : 'none',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2,
+                    marginBottom: '20px'
+                  }}>
+                    {isUpcoming && <div style={{ width: '8px', height: '8px', background: '#fff', borderRadius: '50%' }} />}
+                  </div>
+                  
+                  <div style={{ 
+                    background: isUpcoming ? 'linear-gradient(to bottom, #fff7ed, #ffffff)' : 'transparent',
+                    padding: '16px 12px', borderRadius: '12px',
+                    border: isUpcoming ? '1px solid #fed7aa' : '1px solid transparent',
+                    transform: isUpcoming ? 'translateY(-10px)' : 'none',
+                    transition: 'all 0.3s ease',
+                    textAlign: 'center',
+                    width: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center'
+                  }}>
+                    <div style={{ color: isUpcoming ? 'var(--orange)' : 'var(--navy)', marginBottom: '8px' }}>
+                      {item.icon}
+                    </div>
+                    <div style={{ color: isUpcoming ? 'var(--orange)' : 'var(--navy)', fontWeight: 700, fontSize: '1rem', marginBottom: '8px', lineHeight: 1.3 }}>
+                      {item.title}
+                    </div>
+                    <div style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', fontWeight: 600 }}>
+                      {item.displayDate}
+                    </div>
+                  </div>
+                </motion.div>
+              )
+            })}
+          </div>
+        </motion.section>
+
         {/* Visual Evaluation Rubric */}
-        <motion.section variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} style={{ marginBottom: '60px' }}>
+        <motion.section id="rubric" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} style={{ marginTop: '60px', marginBottom: '60px', scrollMarginTop: '100px' }}>
           <h2 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '12px', textAlign: 'center' }}>Evaluation Rubric</h2>
           <p style={{ textAlign: 'center', color: 'var(--text-secondary)', marginBottom: '40px', fontSize: '1.1rem' }}>How your project will be scored by the jury (Total: 50 Marks)</p>
           
@@ -307,7 +349,7 @@ export default function ProjectExpo() {
         </motion.section>
 
         {/* Trophy Awards Grid */}
-        <motion.section variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} style={{ marginBottom: '80px' }}>
+        <motion.section id="awards" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} style={{ marginTop: '60px', marginBottom: '80px', scrollMarginTop: '100px' }}>
           <h2 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '12px', textAlign: 'center' }}>Award Categories</h2>
           <p style={{ textAlign: 'center', color: 'var(--text-secondary)', marginBottom: '40px', fontSize: '1.1rem' }}>Compete for excellence across 10 prestigious categories.</p>
           
@@ -336,7 +378,7 @@ export default function ProjectExpo() {
         </motion.section>
 
         {/* Requirements & Safety Container */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '32px', marginBottom: '80px' }}>
+        <div id="requirements" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '32px', marginBottom: '80px', scrollMarginTop: '100px' }}>
           
           {/* Exhibition Requirements */}
           <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} style={{ background: '#fff', borderRadius: '24px', padding: '40px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.05)' }}>
@@ -401,6 +443,42 @@ export default function ProjectExpo() {
           </motion.div>
 
         </div>
+
+        {/* Contact & OC */}
+        <motion.section id="contact" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} style={{ background: '#fff', borderRadius: '32px', padding: '48px', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.05)', marginBottom: '60px', scrollMarginTop: '100px' }}>
+          <h2 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '40px', textAlign: 'center' }}>Contact & Organising Committee</h2>
+          
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '32px', flexWrap: 'wrap', marginBottom: '48px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+              <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '50%', color: 'var(--orange)' }}>
+                <Users size={32} />
+              </div>
+              <div style={{ textAlign: 'center' }}>
+                <h4 style={{ margin: '0 0 4px 0', fontSize: '1rem', color: 'var(--text-secondary)' }}>Official Contact</h4>
+                <a href="mailto:sah@ch.amrita.edu" style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--navy)', textDecoration: 'none' }}>sah@ch.amrita.edu</a>
+              </div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '20px' }}>
+            {expoData.oc.map((person, idx) => (
+              <div key={idx} style={{ background: 'linear-gradient(145deg, #ffffff, #f8fafc)', padding: '24px', borderRadius: '16px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.02)', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', minWidth: '220px', maxWidth: '300px', flex: '1 1 250px' }}>
+                <div style={{ fontSize: '1.1rem', color: 'var(--navy)', fontWeight: 800, marginBottom: '8px' }}>{person.name}</div>
+                <div style={{ color: 'var(--orange)', fontSize: '0.9rem', fontWeight: 600 }}>{person.role}</div>
+              </div>
+            ))}
+          </div>
+
+          <h3 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--navy)', marginTop: '60px', marginBottom: '32px', textAlign: 'center' }}>Student Core Team</h3>
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '20px' }}>
+            {expoData.studentOC.map((student, idx) => (
+              <div key={idx} style={{ background: '#f8fafc', padding: '24px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.02)', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', minWidth: '200px', maxWidth: '250px', flex: '1 1 200px' }}>
+                <div style={{ fontSize: '1.1rem', color: 'var(--navy)', fontWeight: 800, marginBottom: '8px' }}>{student.name}</div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Contact: {student.contact}</div>
+              </div>
+            ))}
+          </div>
+        </motion.section>
 
         {/* Premium Floating CTA */}
         <motion.div 
