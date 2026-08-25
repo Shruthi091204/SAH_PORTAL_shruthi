@@ -404,7 +404,7 @@ export default function ProjectExpo() {
         </div>
 
         {/* Organizing Committee & Contact */}
-        <motion.section variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} style={{ marginBottom: '80px' }}>
+        <motion.section id="contact" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} style={{ marginBottom: '80px', scrollMarginTop: '100px' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px' }}>
             
             {/* Organizing Committee */}

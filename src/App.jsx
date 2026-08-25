@@ -24,6 +24,7 @@ import MyTeamPage from './pages/MyTeamPage';
 import CreateTeamPage from './pages/CreateTeamPage';
 import ProfilePage from './pages/ProfilePage';
 import ProjectExpo from './pages/student/ProjectExpo';
+import PosterPresentation from './pages/student/PosterPresentation';
 import ProjectExpoRegister from './pages/student/ProjectExpoRegister';
 import ThemesPage from './pages/ThemesPage';
 import EventLandingPage from './pages/EventLandingPage';
@@ -44,6 +45,7 @@ import EvaluationHistory from './pages/judge/EvaluationHistory';
 
 // SPOC Pages
 import VerificationQueue from './pages/spoc/VerificationQueue';
+
 
 function SahHomePage() {
   const { isAuthenticated } = useAuth();
@@ -269,6 +271,7 @@ function SahHomePage() {
     </div>
   );
 }
+>>>>>>> upstream/main
 
 function CombinedLandingHub() {
   const { isAuthenticated } = useAuth();
@@ -380,22 +383,29 @@ export default function App() {
         <Route path="/" element={<CombinedLandingHub />} />
         <Route path="/hub" element={<Navigate to="/" replace />} />
 
-        {/* Project Expo Dedicated Layout */}
-        <Route path="/events/project-expo/*" element={
+        {/* Events Dedicated Layout (Project Expo & Poster Presentation) */}
+        <Route path="/events/*" element={
           <>
             <ExpoAnnouncementBanner />
             <ExpoHeader />
             <ExpoNavbar />
             <Routes>
-              <Route path="/" element={<ProjectExpo />} />
-              <Route path="/register" element={<ProjectExpoRegister />} />
-              <Route path="/login" element={<LoginPage />} />
+              {/* Project Expo */}
+              <Route path="project-expo" element={<ProjectExpo />} />
+              <Route path="project-expo/register" element={<ProjectExpoRegister />} />
+              <Route path="login" element={<LoginPage />} />
+              
+              {/* Poster Presentation */}
+              <Route path="poster-presentation" element={<ProtectedRoute><PosterPresentation /></ProtectedRoute>} />
+              <Route path="poster-presentation/register" element={
+                <div className="page-container"><div className="empty-state"><h3>Registration form coming soon</h3></div></div>
+              } />
               <Route path="*" element={
                 <div className="page-container">
                   <div className="empty-state">
                     <div className="empty-icon"></div>
                     <h3>Page Not Found</h3>
-                    <p>The page you're looking for doesn't exist in Project Expo.</p>
+                    <p>The events page you're looking for doesn't exist.</p>
                   </div>
                 </div>
               } />
