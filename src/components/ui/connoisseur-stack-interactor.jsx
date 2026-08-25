@@ -128,6 +128,17 @@ export const ConnoisseurStackInteractor = ({
               <li
                 key={item.num}
                 onMouseEnter={() => handleItemHover(index)}
+                onClick={() => {
+                  if (item.name === "Internal Hackathon") {
+                    window.scrollTo(0, 0);
+                    navigate('/sah');
+                  } else if (item.name === "Project Expo") {
+                    window.scrollTo(0, 0);
+                    navigate('/events/project-expo');
+                  } else {
+                    alert(`The ${item.name} portal is coming soon.`);
+                  }
+                }}
                 className="group cursor-pointer"
               >
                 <div className="flex items-start gap-5">
