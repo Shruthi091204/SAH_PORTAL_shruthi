@@ -191,3 +191,29 @@ Amrita Vishwa Vidyapeetham — Chennai Campus`;
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
 }
+
+export function downloadExpoGuidelines() {
+  const content = `PROJECT EXPO 2026 - GUIDELINES\n\n1. Overview\nShowcase your engineering projects, prototypes, and research.\n\n2. Eligibility\nAll B.Tech and M.Tech students.\n\n3. Format\nPhysical demonstration required with a standard A0 poster.`;
+  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'Project_Expo_2026_Guidelines.txt';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
+export function downloadPosterGuidelines() {
+  const content = `POSTER PRESENTATION 2026 - GUIDELINES\n\n1. Overview\nPresent your research methodologies and findings.\n\n2. Dimensions\nStandard A0 size (Portrait). \n\n3. Evaluation\nJudged on scientific rigor, visual clarity, and presentation skills.`;
+  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'Poster_Presentation_2026_Guidelines.txt';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}

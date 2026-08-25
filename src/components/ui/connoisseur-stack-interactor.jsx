@@ -6,21 +6,21 @@ import gsap from "gsap";
 const defaultItems = [
   {
     num: "01",
-    name: "Project Expo",
-    tag: "Annual Engineering Showcase",
-    desc: "Exhibition of capstone engineering projects, hardware prototypes & live software modules judged by industry experts.",
-    buttonText: "EXPLORE EXPO ARENA ⚡",
-    clipId: "clip-pixels",
-    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-  },
-  {
-    num: "02",
     name: "Internal Hackathon",
     tag: "Smart Amrita Hackathon (SAH 2026)",
     desc: "Official campus qualifying hackathon for Smart India Hackathon (SIH 2026). Pitch solutions under the official 50-mark rubric.",
     buttonText: "LAUNCH SAH 2026 PORTAL 🚀",
     clipId: "clip-pixels",
     image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    num: "02",
+    name: "Project Expo",
+    tag: "Annual Engineering Showcase",
+    desc: "Exhibition of capstone engineering projects, hardware prototypes & live software modules judged by industry experts.",
+    buttonText: "EXPLORE EXPO ARENA ⚡",
+    clipId: "clip-pixels",
+    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
   },
   {
     num: "03",

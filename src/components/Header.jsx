@@ -16,7 +16,7 @@ export default function Header() {
     if (isAuthenticated) {
       navigate('/dashboard');
     } else {
-      navigate('/login');
+      navigate('/login', { state: { from: '/sah' } });
     }
   };
 

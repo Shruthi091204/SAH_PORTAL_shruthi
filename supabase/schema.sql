@@ -48,13 +48,19 @@ CREATE TABLE IF NOT EXISTS teams (
     campus TEXT DEFAULT 'Amrita Chennai' NOT NULL,
     leader_id UUID REFERENCES profiles(id) ON DELETE RESTRICT NOT NULL,
     ps_id UUID REFERENCES problem_statements(id),
+    ps_id_2 UUID REFERENCES problem_statements(id),
     needed_skills TEXT[] DEFAULT '{}',
     is_open_for_recruitment BOOLEAN DEFAULT TRUE,
     is_locked BOOLEAN DEFAULT FALSE,
     is_spoc_verified BOOLEAN DEFAULT FALSE,
     ppt_url TEXT,
+    ppt_url_2 TEXT,
     github_url TEXT,
+    github_url_2 TEXT,
     video_url TEXT,
+    video_url_2 TEXT,
+    mentor_name TEXT,
+    mentor_department TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 

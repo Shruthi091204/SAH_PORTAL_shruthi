@@ -33,11 +33,16 @@ export default function Footer() {
 
         <div className="footer-section">
           <h4>Contact & Helpdesk</h4>
-          <p>Amrita School of Engineering & Computing</p>
+          <p>Amrita School of Engineering</p>
           <p>Amrita Vishwa Vidyapeetham, Chennai Campus</p>
           <p>Vengal, Thiruvallur District, Tamil Nadu</p>
           <p style={{ marginTop: '8px' }}>
-             sah2026@ch.amrita.edu
+             sah@ch.amrita.edu
+          </p>
+          <p style={{ marginTop: '12px' }}>
+            <strong>Student Contact:</strong><br />
+            Vishal P (Core Team)<br />
+            Email: Details to be updated shortly
           </p>
         </div>
       </div>

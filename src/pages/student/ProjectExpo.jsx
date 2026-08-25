@@ -31,6 +31,7 @@ const expoData = {
   eligibility: [
     { label: "Who may apply", value: "B.Tech / M.Tech / PhD, any year", span: 1 },
     { label: "Team size", value: "2–3 students, interdisciplinary encouraged", span: 1 },
+    { label: "Application Process", value: "Only the Team Leader needs to apply for the event on behalf of the entire team.", span: 2 },
     { label: "Faculty mentor", value: "Mandatory, must endorse project", span: 1 },
     { label: "Entries per student", value: "Max 2 teams", span: 1 },
     { label: "Project stage", value: "Ongoing or completed, demo-ready", span: 2 },
@@ -402,6 +403,47 @@ export default function ProjectExpo() {
 
         </div>
 
+        {/* Organizing Committee & Contact */}
+        <motion.section variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} style={{ marginBottom: '80px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px' }}>
+            
+            {/* Organizing Committee */}
+            <div style={{ background: '#fff', borderRadius: '24px', padding: '40px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.05)' }}>
+              <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '32px' }}>Organizing Committee</h2>
+              
+              <div style={{ marginBottom: '24px' }}>
+                <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--orange)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '8px' }}>Patron</div>
+                <div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--navy)' }}>Dr. V Jeyakumar</div>
+                <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Principal, Amrita Chennai</div>
+              </div>
+
+              <div>
+                <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--orange)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '8px' }}>Project Expo Coordinators</div>
+                <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--navy)', marginBottom: '4px' }}>Dr. Parthasarathy</div>
+                <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--navy)' }}>Dr. Ravishankar Simhadri</div>
+              </div>
+            </div>
+
+            {/* Contact & Support */}
+            <div style={{ background: 'linear-gradient(135deg, var(--navy) 0%, #0f172a 100%)', borderRadius: '24px', padding: '40px', color: 'white', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.1)' }}>
+              <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'white', marginBottom: '32px' }}>Need Help?</h2>
+              
+              <div style={{ marginBottom: '24px' }}>
+                <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--orange)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '8px' }}>Student Core Team</div>
+                <div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'white' }}>Vishal P</div>
+                <div style={{ fontSize: '0.9rem', color: '#94a3b8' }}>Contact details to be updated shortly</div>
+              </div>
+
+              <div>
+                <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--orange)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '8px' }}>Official Support</div>
+                <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'white', marginBottom: '4px' }}>Research Cell</div>
+                <div style={{ fontSize: '0.9rem', color: '#94a3b8' }}>Contact details to be updated shortly</div>
+              </div>
+            </div>
+
+          </div>
+        </motion.section>
+
         {/* Premium Floating CTA */}
         <motion.div 
           initial={{ opacity: 0, y: 50 }} 
@@ -426,7 +468,10 @@ export default function ProjectExpo() {
         >
           <div>
             <h3 style={{ margin: '0 0 8px 0', color: 'var(--navy)', fontSize: '1.5rem', fontWeight: 800 }}>Ready to showcase your project?</h3>
-            <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '1rem', fontWeight: 500 }}>Secure your spot at the SAH 2026 Project Expo today.</p>
+            <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '1rem', fontWeight: 500 }}>
+              Secure your spot at the SAH 2026 Project Expo today.<br/>
+              <strong style={{color: 'var(--orange)'}}>Note: Only the Team Leader needs to register on behalf of the entire team.</strong>
+            </p>
           </div>
           <button 
             className="btn btn-orange btn-lg" 

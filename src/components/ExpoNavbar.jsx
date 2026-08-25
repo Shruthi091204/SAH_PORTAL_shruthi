@@ -42,8 +42,7 @@ export default function ExpoNavbar() {
     setShowOtherEvents(!showOtherEvents);
   };
 
-  // Hide navbar on login/register pages (though unlikely to hit this inside Expo layout)
-  if (['/login', '/register'].includes(location.pathname)) return null;
+  // Navbar is now visible on auth pages because they are integrated into the layout
 
   let tabs = [
     { path: '/events/project-expo', label: 'Expo Home', exact: true }

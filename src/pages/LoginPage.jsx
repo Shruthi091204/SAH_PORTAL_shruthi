@@ -7,7 +7,7 @@ export default function LoginPage() {
   const { signIn, signUp, signOut, user, profile, isAuthenticated, error: authError } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  const isExpo = location.state?.from?.includes('project-expo');
+  const isExpo = location.state?.from?.includes('project-expo') || location.pathname.includes('project-expo');
 
   const [userType, setUserType] = useState('student');
   const [email, setEmail] = useState('');

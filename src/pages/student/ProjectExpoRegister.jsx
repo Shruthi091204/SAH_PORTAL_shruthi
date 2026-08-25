@@ -164,7 +164,7 @@ export default function ProjectExpoRegister() {
     <div className="page-container" style={{ maxWidth: '640px', margin: '0 auto', padding: '30px' }}>
       <div className="page-header">
         <h1 className="page-title">Project Expo Registration</h1>
-        <p className="page-subtitle">Register your team and project details. You will automatically be set as the Team Leader.</p>
+        <p className="page-subtitle">Register your team and project details. <strong>Note: Only the Team Leader needs to apply for the event on behalf of the entire team.</strong> You will automatically be set as the Team Leader.</p>
       </div>
 
       <div className="card">
