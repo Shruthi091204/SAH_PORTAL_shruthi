@@ -111,61 +111,25 @@ export default function ProjectExpoRegister() {
       
       // Trigger confirmation email
       try {
-        if (window.Email) {
-          const smtpUser = import.meta.env.VITE_SMTP_USER || '27.kutralingam.xi.b@gmail.com';
-          const smtpPass = import.meta.env.VITE_SMTP_PASS || 'ccmdrfqcdibluewc';
-          
-          const membersHtml = `
-            <ul style="color: #444; font-size: 0.95rem;">
-              <li><strong>Leader:</strong> ${leaderName.trim()}</li>
-              <li><strong>Member 2:</strong> ${member2Name.trim()}</li>
-              ${teamSize === 3 && member3Name ? `<li><strong>Member 3:</strong> ${member3Name.trim()}</li>` : ''}
-            </ul>
-          `;
-
-          const emailHtml = `
-            <div style="font-family: Arial, sans-serif; max-width: 550px; margin: 0 auto; padding: 24px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: #ffffff;">
-              <div style="text-align: center; margin-bottom: 20px; border-bottom: 2px solid #E3F2FD; padding-bottom: 16px;">
-                <h2 style="color: #1E3A8A; margin: 0; font-size: 22px;">Smart Amrita Hackathon 2026</h2>
-                <p style="color: #666666; font-size: 0.95rem; margin-top: 6px; font-weight: 600;">Project Expo Registration Confirmed</p>
-              </div>
-              
-              <p style="font-size: 1rem; color: #333333; line-height: 1.5;">Dear <strong>${leaderName.trim()}</strong>,</p>
-              <p style="font-size: 0.95rem; color: #333333; line-height: 1.5;">
-                Congratulations! Your team's project has been successfully registered for the SAH 2026 Project Expo. Below are your registration details:
-              </p>
-
-              <div style="background-color: #F8FAFC; padding: 16px; border-radius: 8px; border-left: 4px solid #1E3A8A; margin: 20px 0;">
-                <p style="margin: 0 0 8px 0; font-size: 0.95rem;"><strong>Project Title:</strong> <span style="color: #1E3A8A;">${projectTitle.trim()}</span></p>
-                <p style="margin: 0 0 8px 0; font-size: 0.95rem;"><strong>Domain:</strong> ${domain}</p>
-                <p style="margin: 0 0 8px 0; font-size: 0.95rem;"><strong>Faculty Mentor:</strong> ${facultyMentorName.trim()}</p>
-                
-                <p style="margin: 12px 0 4px 0; font-size: 0.95rem; font-weight: bold;">Team Members (${teamSize}):</p>
-                ${membersHtml}
-              </div>
-
-              <p style="font-size: 0.95rem; color: #333333; line-height: 1.5;">
-                Please ensure you have all materials ready before the expo day. If you need any assistance, reach out to your faculty mentor or the SAH organizing committee.
-              </p>
-
-              <div style="margin-top: 30px; text-align: center;">
-                <p style="font-size: 0.85rem; color: #777777; line-height: 1.4;">Thank you for innovating with us!<br/>- SAH 2026 Organizing Committee</p>
-              </div>
-            </div>
-          `;
-
-          await window.Email.send({
-            Host: "smtp.gmail.com",
-            Username: smtpUser,
-            Password: smtpPass,
-            To: leaderEmail.trim(),
-            From: smtpUser,
-            Subject: 'SAH 2026 Project Expo - Registration Confirmed!',
-            Body: emailHtml
-          });
-        }
+        await fetch('/api/send-expo-mail', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            leaderName: leaderName.trim(),
+            leaderEmail: leaderEmail.trim(),
+            projectTitle: projectTitle.trim(),
+            domain: domain,
+            teamSize: teamSize,
+            member2Name: member2Name.trim(),
+            member3Name: teamSize === 3 ? member3Name.trim() : null,
+            mentorName: facultyMentorName.trim()
+          })
+        });
       } catch (mailErr) {
         console.error("Failed to send confirmation mail:", mailErr);
+        // We don't throw here because registration was still successful
       }
       
       setSuccess(true);

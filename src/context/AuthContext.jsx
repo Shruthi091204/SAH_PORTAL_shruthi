@@ -1,24 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 
-const sendClientEmail = async ({ to, subject, html }) => {
-  if (!window.Email) {
-    throw new Error('SMTP service not loaded yet. Please try again in a moment.');
-  }
-  const smtpUser = import.meta.env.VITE_SMTP_USER || '27.kutralingam.xi.b@gmail.com';
-  const smtpPass = import.meta.env.VITE_SMTP_PASS || 'ccmdrfqcdibluewc';
-
-  return window.Email.send({
-    Host: "smtp.gmail.com",
-    Username: smtpUser,
-    Password: smtpPass,
-    To: to,
-    From: smtpUser,
-    Subject: subject,
-    Body: html
-  });
-};
-
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
@@ -355,29 +337,25 @@ export function AuthProvider({ children }) {
         console.warn('DB OTP Log warning:', dbErr);
       }
 
-      // 4. Send OTP code via client-side SMTPJS to target email
-      const emailHtml = `
-        <div style="font-family: Arial, sans-serif; max-width: 520px; margin: 0 auto; padding: 24px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: #ffffff;">
-          <div style="text-align: center; margin-bottom: 20px; border-bottom: 2px solid #FFF3E0; padding-bottom: 16px;">
-            <h2 style="color: #E65100; margin: 0; font-size: 22px;">Smart Amrita Hackathon 2026</h2>
-            <p style="color: #666666; font-size: 0.95rem; margin-top: 6px; font-weight: 600;">Password Reset Request</p>
-          </div>
-          <p style="font-size: 0.95rem; color: #333333; line-height: 1.5;">We received a request to reset your password. Your 6-digit OTP security code is:</p>
-          <div style="text-align: center; margin: 24px 0; padding: 18px; background-color: #FFF3E0; border-radius: 8px; border: 1px dashed #FF9800;">
-            <span style="font-size: 38px; font-weight: bold; letter-spacing: 10px; color: #E65100; font-family: monospace;">${otpCode}</span>
-          </div>
-          <p style="font-size: 0.85rem; color: #777777; line-height: 1.4;">This code is valid for 10 minutes. If you did not request a password reset, please ignore this email.</p>
-        </div>
-      `;
-
-      const emailResult = await sendClientEmail({
-        to: targetEmail,
-        subject: 'SAH 2026 Portal - Password Reset Security OTP',
-        html: emailHtml
+      // 4. Send OTP code via Nodemailer endpoint to target email
+      const response = await fetch('/api/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: targetEmail, otpCode, type: 'password_reset' })
       });
 
-      if (emailResult !== 'OK') {
-        throw new Error(`SMTP error: ${emailResult}`);
+      const contentType = response.headers.get('content-type') || '';
+      let resData = {};
+
+      if (contentType.includes('application/json')) {
+        resData = await response.json();
+      } else {
+        const text = await response.text();
+        throw new Error(`OTP service error (${response.status}): ${text.slice(0, 120)}`);
+      }
+
+      if (!response.ok || resData.error) {
+        throw new Error(resData.error || 'Failed to dispatch 6-digit OTP email.');
       }
 
       return {
@@ -529,29 +507,25 @@ export function AuthProvider({ children }) {
         console.warn('registration_otps table note:', dbErr);
       }
 
-      // Send 6-digit OTP code to College Mail ID via client-side SMTPJS
-      const emailHtml = `
-        <div style="font-family: Arial, sans-serif; max-width: 520px; margin: 0 auto; padding: 24px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: #ffffff;">
-          <div style="text-align: center; margin-bottom: 20px; border-bottom: 2px solid #FFF3E0; padding-bottom: 16px;">
-            <h2 style="color: #E65100; margin: 0; font-size: 22px;">Smart Amrita Hackathon 2026</h2>
-            <p style="color: #666666; font-size: 0.95rem; margin-top: 6px; font-weight: 600;">Student Registration Verification</p>
-          </div>
-          <p style="font-size: 0.95rem; color: #333333; line-height: 1.5;">Thank you for registering for SAH 2026! Please use the following 6-digit OTP code to verify your College Mail ID and complete your student registration:</p>
-          <div style="text-align: center; margin: 24px 0; padding: 18px; background-color: #FFF3E0; border-radius: 8px; border: 1px dashed #FF9800;">
-            <span style="font-size: 38px; font-weight: bold; letter-spacing: 10px; color: #E65100; font-family: monospace;">${otpCode}</span>
-          </div>
-          <p style="font-size: 0.85rem; color: #777777; line-height: 1.4;">This code is valid for 10 minutes. If you did not initiate registration on the SAH Portal, please ignore this email.</p>
-        </div>
-      `;
-
-      const emailResult = await sendClientEmail({
-        to: cleanCollegeEmail,
-        subject: 'SAH 2026 Portal - Student Registration Verification Code',
-        html: emailHtml
+      // Send 6-digit OTP code to College Mail ID via Nodemailer endpoint
+      const response = await fetch('/api/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: cleanCollegeEmail, otpCode, type: 'registration' })
       });
 
-      if (emailResult !== 'OK') {
-        throw new Error(`SMTP error: ${emailResult}`);
+      const contentType = response.headers.get('content-type') || '';
+      let resData = {};
+
+      if (contentType.includes('application/json')) {
+        resData = await response.json();
+      } else {
+        const text = await response.text();
+        throw new Error(`OTP service error (${response.status}): ${text.slice(0, 120)}`);
+      }
+
+      if (!response.ok || resData.error) {
+        throw new Error(resData.error || 'Failed to dispatch OTP verification email to College Mail ID.');
       }
 
       return {
