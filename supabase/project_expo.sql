@@ -29,18 +29,21 @@ CREATE TABLE IF NOT EXISTS project_expo_registrations (
 ALTER TABLE project_expo_registrations ENABLE ROW LEVEL SECURITY;
 
 -- Only the authenticated leader can insert their own registration
+DROP POLICY IF EXISTS "Public insert for expo registrations" ON project_expo_registrations;
 CREATE POLICY "Public insert for expo registrations" 
 ON project_expo_registrations 
 FOR INSERT 
 WITH CHECK (auth.uid() = leader_id);
 
 -- Students can read their own registrations (if they are logged in)
+DROP POLICY IF EXISTS "Students can read own expo registrations" ON project_expo_registrations;
 CREATE POLICY "Students can read own expo registrations" 
 ON project_expo_registrations 
 FOR SELECT 
 USING (leader_id = auth.uid());
 
 -- Admins and SPOCs can read all registrations
+DROP POLICY IF EXISTS "Admins and SPOCs can view all expo registrations" ON project_expo_registrations;
 CREATE POLICY "Admins and SPOCs can view all expo registrations" 
 ON project_expo_registrations 
 FOR SELECT 
