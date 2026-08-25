@@ -246,15 +246,15 @@ export default function Navbar() {
                       >
                         Project Expo <span>→</span>
                       </NavLink>
-                      <a 
-                        href="#" 
+                      <NavLink 
+                        to="/events/poster-presentation" 
                         style={{ padding: '12px 16px', color: 'var(--navy)', textDecoration: 'none', fontSize: '0.82rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', display: 'flex', justifyContent: 'space-between' }}
-                        onClick={(e) => { e.preventDefault(); window.open('https://poster-presentation.amrita.edu', '_blank'); setShowOtherEvents(false); }}
+                        onClick={() => setShowOtherEvents(false)}
                         onMouseEnter={(e) => e.target.style.backgroundColor = '#F8FAFC'}
                         onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                       >
-                        Poster Presentation <span>↗</span>
-                      </a>
+                        Poster Presentation <span>→</span>
+                      </NavLink>
                     </div>
                   )}
                 </div>
@@ -289,15 +289,15 @@ export default function Navbar() {
                 >
                   Project Expo <span>→</span>
                 </NavLink>
-                <a 
-                  href="#" 
+                <NavLink 
+                  to="/events/poster-presentation" 
                   style={{ padding: '12px 16px', color: 'var(--navy)', textDecoration: 'none', fontSize: '0.82rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', display: 'flex', justifyContent: 'space-between' }}
-                  onClick={(e) => { e.preventDefault(); window.open('https://poster-presentation.amrita.edu', '_blank'); setShowOtherEvents(false); }}
+                  onClick={() => setShowOtherEvents(false)}
                   onMouseEnter={(e) => e.target.style.backgroundColor = '#F8FAFC'}
                   onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                 >
-                  Poster Presentation <span>↗</span>
-                </a>
+                  Poster Presentation <span>→</span>
+                </NavLink>
               </div>
             )}
           </div>

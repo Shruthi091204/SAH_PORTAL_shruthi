@@ -22,6 +22,7 @@ import MyTeamPage from './pages/MyTeamPage';
 import CreateTeamPage from './pages/CreateTeamPage';
 import ProfilePage from './pages/ProfilePage';
 import ProjectExpo from './pages/student/ProjectExpo';
+import PosterPresentation from './pages/student/PosterPresentation';
 import ProjectExpoRegister from './pages/student/ProjectExpoRegister';
 import ThemesPage from './pages/ThemesPage';
 import EventLandingPage from './pages/EventLandingPage';
@@ -89,21 +90,29 @@ export default function App() {
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
 
-        {/* Project Expo Dedicated Layout */}
-        <Route path="/events/project-expo/*" element={
+        {/* Events Dedicated Layout (Project Expo & Poster Presentation) */}
+        <Route path="/events/*" element={
           <>
             <ExpoAnnouncementBanner />
             <ExpoHeader />
             <ExpoNavbar />
             <Routes>
-              <Route path="/" element={<ProtectedRoute><ProjectExpo /></ProtectedRoute>} />
-              <Route path="/register" element={<ProtectedRoute><ProjectExpoRegister /></ProtectedRoute>} />
+              {/* Project Expo */}
+              <Route path="project-expo" element={<ProtectedRoute><ProjectExpo /></ProtectedRoute>} />
+              <Route path="project-expo/register" element={<ProtectedRoute><ProjectExpoRegister /></ProtectedRoute>} />
+              
+              {/* Poster Presentation */}
+              <Route path="poster-presentation" element={<ProtectedRoute><PosterPresentation /></ProtectedRoute>} />
+              <Route path="poster-presentation/register" element={
+                <div className="page-container"><div className="empty-state"><h3>Registration form coming soon</h3></div></div>
+              } />
+
               <Route path="*" element={
                 <div className="page-container">
                   <div className="empty-state">
                     <div className="empty-icon"></div>
                     <h3>Page Not Found</h3>
-                    <p>The page you're looking for doesn't exist in Project Expo.</p>
+                    <p>The events page you're looking for doesn't exist.</p>
                   </div>
                 </div>
               } />

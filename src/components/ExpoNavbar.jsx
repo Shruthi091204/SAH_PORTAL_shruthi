@@ -16,9 +16,9 @@ export default function ExpoNavbar() {
     setActiveHash(location.hash);
   }, [location.hash]);
 
-  // Intersection observer for sections on /events/project-expo
+  // Intersection observer for sections on /events/* pages
   useEffect(() => {
-    if (!location.pathname.startsWith('/events/project-expo')) return;
+    if (!location.pathname.startsWith('/events/')) return;
 
     let timeout;
     const observer = new IntersectionObserver((entries) => {
@@ -110,7 +110,20 @@ export default function ExpoNavbar() {
 
   if (['/login', '/register'].includes(location.pathname)) return null;
 
-  let tabs = [
+  const isPosterMode = location.pathname.startsWith('/events/poster-presentation');
+
+  const tabs = isPosterMode ? [
+    { path: '/events/poster-presentation', label: 'Poster Home' },
+    { path: '/events/poster-presentation#objectives', label: 'Objectives' },
+    { path: '/events/poster-presentation#eligibility', label: 'Eligibility' },
+    { path: '/events/poster-presentation#scope', label: 'Poster Scope' },
+    { path: '/events/poster-presentation#key-dates', label: 'Key Dates' },
+    { path: '/events/poster-presentation#specifications', label: 'Specifications' },
+    { path: '/events/poster-presentation#rubric', label: 'Rubric' },
+    { path: '/events/poster-presentation#awards', label: 'Awards' },
+    { path: '/events/poster-presentation#general', label: 'General Info' },
+    { path: '/events/poster-presentation#contact', label: 'Contact' }
+  ] : [
     { path: '/events/project-expo', label: 'Expo Home' },
     { path: '/events/project-expo#objectives', label: 'Objectives' },
     { path: '/events/project-expo#eligibility', label: 'Eligibility' },
@@ -156,7 +169,7 @@ export default function ExpoNavbar() {
               <React.Fragment key={tab.path + "_frag"}>
                 {navItem}
                 
-                {/* Other Events Dropdown injected after Expo Home */}
+                {/* Other Events Dropdown */}
                 {isAuthenticated && (
                   <div 
                     className="nav-tab" 
@@ -180,15 +193,27 @@ export default function ExpoNavbar() {
                         >
                           Internal Hackathon <span>→</span>
                         </NavLink>
-                        <a 
-                          href="#" 
-                          style={{ padding: '12px 16px', color: 'var(--navy)', textDecoration: 'none', fontSize: '0.82rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', display: 'flex', justifyContent: 'space-between' }}
-                          onClick={(e) => { e.preventDefault(); window.open('https://poster-presentation.amrita.edu', '_blank'); setShowOtherEvents(false); }}
-                          onMouseEnter={(e) => e.target.style.backgroundColor = '#F8FAFC'}
-                          onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                        >
-                          Poster Presentation <span>↗</span>
-                        </a>
+                        {isPosterMode ? (
+                          <NavLink 
+                            to="/events/project-expo" 
+                            style={{ padding: '12px 16px', color: 'var(--navy)', textDecoration: 'none', fontSize: '0.82rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', display: 'flex', justifyContent: 'space-between' }}
+                            onClick={() => setShowOtherEvents(false)}
+                            onMouseEnter={(e) => e.target.style.backgroundColor = '#F8FAFC'}
+                            onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                          >
+                            Project Expo <span>→</span>
+                          </NavLink>
+                        ) : (
+                          <NavLink 
+                            to="/events/poster-presentation" 
+                            style={{ padding: '12px 16px', color: 'var(--navy)', textDecoration: 'none', fontSize: '0.82rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', display: 'flex', justifyContent: 'space-between' }}
+                            onClick={() => setShowOtherEvents(false)}
+                            onMouseEnter={(e) => e.target.style.backgroundColor = '#F8FAFC'}
+                            onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                          >
+                            Poster Presentation <span>→</span>
+                          </NavLink>
+                        )}
                       </div>
                     )}
                   </div>
