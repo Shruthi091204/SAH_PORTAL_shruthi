@@ -1,9 +1,7 @@
 -- ============================================================
 -- 1. PROJECT EXPO REGISTRATIONS TABLE
 -- ============================================================
-DROP TABLE IF EXISTS project_expo_registrations;
-
-CREATE TABLE project_expo_registrations (
+CREATE TABLE IF NOT EXISTS project_expo_registrations (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     leader_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
     leader_name TEXT NOT NULL,
