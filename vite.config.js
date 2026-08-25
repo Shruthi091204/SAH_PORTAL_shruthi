@@ -180,7 +180,7 @@ function otpEmailPlugin() {
 }
 
 export default defineConfig({
-  base: '/SAH_PORTAL/',
+  base: '/',
   plugins: [react(), otpEmailPlugin()],
   resolve: {
     alias: {
