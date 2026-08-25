@@ -44,9 +44,13 @@ export default function MyTeamPage() {
   const [invitingId, setInvitingId] = useState(null);
 
   // Pitch URLs
+  const [activePitchTab, setActivePitchTab] = useState('PS1');
   const [pptUrl, setPptUrl] = useState('');
+  const [pptUrl2, setPptUrl2] = useState('');
   const [githubUrl, setGithubUrl] = useState('');
+  const [githubUrl2, setGithubUrl2] = useState('');
   const [videoUrl, setVideoUrl] = useState('');
+  const [videoUrl2, setVideoUrl2] = useState('');
   const [mentorName, setMentorName] = useState('');
   const [mentorDepartment, setMentorDepartment] = useState('');
   const [savingMentor, setSavingMentor] = useState(false);
@@ -91,8 +95,11 @@ export default function MyTeamPage() {
     setSelectedPsId(teamData?.ps_id || '');
     setSelectedPsId2(teamData?.ps_id_2 || '');
     setPptUrl(teamData?.ppt_url || '');
+    setPptUrl2(teamData?.ppt_url_2 || '');
     setGithubUrl(teamData?.github_url || '');
+    setGithubUrl2(teamData?.github_url_2 || '');
     setVideoUrl(teamData?.video_url || '');
+    setVideoUrl2(teamData?.video_url_2 || '');
     setMentorName(teamData?.mentor_name || '');
     setMentorDepartment(teamData?.mentor_department || '');
 
@@ -180,6 +187,11 @@ export default function MyTeamPage() {
       member_role: 'Member'
     });
 
+    // If team becomes full (6 members now), close recruitment
+    if (members.length + 1 >= 6) {
+      await supabase.from('teams').update({ is_open_for_recruitment: false }).eq('id', team.id);
+    }
+
     // Notify student
     await sendNotification({
       userId: request.student_id,
@@ -217,6 +229,9 @@ export default function MyTeamPage() {
   const handleRemoveMember = async (memberId, studentId) => {
     await supabase.from('team_members').delete().eq('id', memberId);
 
+    // Ensure recruitment is open if a member is removed
+    await supabase.from('teams').update({ is_open_for_recruitment: true }).eq('id', team.id);
+
     await sendNotification({
       userId: studentId,
       type: 'request_declined',
@@ -227,6 +242,35 @@ export default function MyTeamPage() {
 
     showToast('info', 'Member removed.');
     fetchTeamData();
+  };
+
+  // Disband Team (Leader Only)
+  const handleDisbandTeam = async () => {
+    const confirmDisband = window.confirm(
+      "Are you sure you want to completely disband and delete this team? This action is permanent and will remove all members."
+    );
+    if (!confirmDisband) return;
+
+    try {
+      // 1. Cancel all pending requests
+      await supabase.from('join_requests').delete().eq('team_id', team.id);
+      
+      // 2. Cancel all pending invitations
+      await supabase.from('team_invitations').delete().eq('team_id', team.id);
+      
+      // 3. Remove all team members
+      await supabase.from('team_members').delete().eq('team_id', team.id);
+      
+      // 4. Delete the team itself
+      await supabase.from('teams').delete().eq('id', team.id);
+      
+      showToast('success', 'Team disbanded successfully.');
+      setTeam(null);
+      setMembers([]);
+      fetchTeamData();
+    } catch (err) {
+      showToast('error', err.message);
+    }
   };
 
   // Fetch candidate students, existing team memberships, and pending invitations
@@ -397,21 +441,40 @@ export default function MyTeamPage() {
     setSavingMentor(false);
   };
 
-  // Save pitch URLs and Problem Statement
-  const handleSaveUrls = async () => {
-    const updates = { ppt_url: pptUrl, github_url: githubUrl, video_url: videoUrl };
+  // Save Primary Pitch URLs
+  const handleSavePrimaryUrls = async () => {
+    const updates = { 
+      ppt_url: pptUrl, 
+      github_url: githubUrl, 
+      video_url: videoUrl
+    };
     if (selectedPsId) {
       updates.ps_id = selectedPsId;
       updates.ps_id_2 = selectedPsId2 || null;
     }
-    const { error } = await supabase
-      .from('teams')
-      .update(updates)
-      .eq('id', team.id);
-
+    const { error } = await supabase.from('teams').update(updates).eq('id', team.id);
     if (error) showToast('error', error.message);
     else {
-      showToast('success', 'Pitch details saved!');
+      showToast('success', 'Primary PS Pitch details saved!');
+      fetchTeamData();
+    }
+  };
+
+  // Save Secondary Pitch URLs
+  const handleSaveSecondaryUrls = async () => {
+    const updates = { 
+      ppt_url_2: pptUrl2, 
+      github_url_2: githubUrl2,
+      video_url_2: videoUrl2
+    };
+    if (selectedPsId) {
+      updates.ps_id = selectedPsId;
+      updates.ps_id_2 = selectedPsId2 || null;
+    }
+    const { error } = await supabase.from('teams').update(updates).eq('id', team.id);
+    if (error) showToast('error', error.message);
+    else {
+      showToast('success', 'Secondary PS Pitch details saved!');
       fetchTeamData();
     }
   };
@@ -627,7 +690,7 @@ export default function MyTeamPage() {
               member={member}
               profile={memberProfiles[member.student_id]}
               isLeader={member.member_role === 'Leader'}
-              canRemove={isLeader && !team.is_locked}
+              canRemove={isLeader && !team.is_locked && member.member_role !== 'Leader'}
               onRemove={handleRemoveMember}
               onClickProfile={(prof, role) => {
                 setViewingProfile(prof);
@@ -643,6 +706,14 @@ export default function MyTeamPage() {
             />
           ))}
         </div>
+
+        {isLeader && !team.is_locked && (
+          <div style={{ marginTop: '24px', paddingTop: '16px', borderTop: '1px solid var(--border-light)', display: 'flex', justifyContent: 'flex-end' }}>
+            <button className="btn btn-outline" style={{ borderColor: 'var(--red)', color: 'var(--red)', fontWeight: 600, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }} onClick={handleDisbandTeam}>
+              <span>⚠️</span> Disband Team
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Sent Team Invitations (Leader only) */}
@@ -976,71 +1047,150 @@ export default function MyTeamPage() {
               </button>
             )}
           </div>
-          <div className="form-group">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
-              <label className="form-label" style={{ margin: 0, fontWeight: 600 }}>PPT / Presentation URL</label>
-              <button
-                type="button"
-                className="btn btn-sm"
-                onClick={downloadPPTTemplate}
-                style={{
-                  fontSize: '0.78rem',
-                  padding: '5px 12px',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  border: '1px solid rgba(255, 107, 0, 0.4)',
-                  color: '#FF6B00',
-                  background: 'rgba(255, 107, 0, 0.08)',
-                  borderRadius: '8px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
-                }}
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="7 10 12 15 17 10" />
-                  <line x1="12" y1="15" x2="12" y2="3" />
-                </svg>
-                Download PPT Template
-              </button>
-            </div>
-            <input
-              type="url"
-              className="form-input"
-              placeholder="https://docs.google.com/presentation/..."
-              value={pptUrl}
-              onChange={(e) => setPptUrl(e.target.value)}
-              disabled={team.is_locked}
-            />
-          </div>
-          <div className="form-group">
-            <label className="form-label">GitHub Repository URL</label>
-            <input
-              type="url"
-              className="form-input"
-              placeholder="https://github.com/team/repo"
-              value={githubUrl}
-              onChange={(e) => setGithubUrl(e.target.value)}
-              disabled={team.is_locked}
-            />
-          </div>
-          <div className="form-group">
-            <label className="form-label">Video / Demo URL</label>
-            <input
-              type="url"
-              className="form-input"
-              placeholder="https://youtube.com/watch?v=..."
-              value={videoUrl}
-              onChange={(e) => setVideoUrl(e.target.value)}
-              disabled={team.is_locked}
-            />
-          </div>
-          {!team.is_locked && (
-            <button className="btn btn-primary"onClick={handleSaveUrls}>
-               Save Pitch & URLs
+          {/* Tabs for Primary/Secondary */}
+          <div style={{ display: 'flex', gap: '10px', marginBottom: '16px', borderBottom: '1px solid var(--border-light)', paddingBottom: '10px' }}>
+            <button
+              className={`btn btn-sm ${activePitchTab === 'PS1' ? 'btn-primary' : 'btn-outline'}`}
+              onClick={() => setActivePitchTab('PS1')}
+            >
+              Primary PS
             </button>
+            <button
+              className={`btn btn-sm ${activePitchTab === 'PS2' ? 'btn-primary' : 'btn-outline'}`}
+              onClick={() => setActivePitchTab('PS2')}
+            >
+              Secondary PS
+            </button>
+          </div>
+
+          {/* Primary PS Links */}
+          {activePitchTab === 'PS1' && (
+            <div style={{ padding: '16px', background: 'var(--off-white)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-light)', marginBottom: '16px' }}>
+              <h4 style={{ margin: '0 0 16px 0', color: 'var(--navy)' }}>Primary Problem Statement Submissions</h4>
+              
+              <div className="form-group">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
+                  <label className="form-label" style={{ margin: 0, fontWeight: 600 }}>PPT / Presentation URL</label>
+                  <button
+                    type="button"
+                    className="btn btn-sm"
+                    onClick={downloadPPTTemplate}
+                    style={{
+                      fontSize: '0.78rem',
+                      padding: '5px 12px',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      border: '1px solid rgba(255, 107, 0, 0.4)',
+                      color: '#FF6B00',
+                      background: 'rgba(255, 107, 0, 0.08)',
+                      borderRadius: '8px',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease'
+                    }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="7 10 12 15 17 10" />
+                      <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    Download PPT Template
+                  </button>
+                </div>
+                <input
+                  type="url"
+                  className="form-input"
+                  placeholder="https://docs.google.com/presentation/..."
+                  value={pptUrl}
+                  onChange={(e) => setPptUrl(e.target.value)}
+                  disabled={team.is_locked}
+                />
+              </div>
+              
+              <div className="form-group">
+                <label className="form-label" style={{ fontWeight: 600 }}>GitHub Repository URL</label>
+                <input
+                  type="url"
+                  className="form-input"
+                  placeholder="https://github.com/team/repo"
+                  value={githubUrl}
+                  onChange={(e) => setGithubUrl(e.target.value)}
+                  disabled={team.is_locked}
+                />
+              </div>
+              
+              <div className="form-group" style={{ marginBottom: 0 }}>
+                <label className="form-label" style={{ fontWeight: 600 }}>Video / Demo URL</label>
+                <input
+                  type="url"
+                  className="form-input"
+                  placeholder="https://youtube.com/watch?v=..."
+                  value={videoUrl}
+                  onChange={(e) => setVideoUrl(e.target.value)}
+                  disabled={team.is_locked}
+                />
+              </div>
+
+              {!team.is_locked && (
+                <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'flex-end' }}>
+                  <button className="btn btn-primary" onClick={handleSavePrimaryUrls}>
+                    Save Primary PS Links
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Secondary PS Links */}
+          {activePitchTab === 'PS2' && (
+            <div style={{ padding: '16px', background: 'var(--off-white)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-light)', marginBottom: '16px' }}>
+              <h4 style={{ margin: '0 0 16px 0', color: 'var(--navy)' }}>Secondary Problem Statement Submissions</h4>
+              
+              <div className="form-group">
+                <label className="form-label" style={{ fontWeight: 600 }}>PPT / Presentation URL</label>
+                <input
+                  type="url"
+                  className="form-input"
+                  placeholder="https://docs.google.com/presentation/..."
+                  value={pptUrl2}
+                  onChange={(e) => setPptUrl2(e.target.value)}
+                  disabled={team.is_locked}
+                />
+              </div>
+              
+              <div className="form-group">
+                <label className="form-label" style={{ fontWeight: 600 }}>GitHub Repository URL</label>
+                <input
+                  type="url"
+                  className="form-input"
+                  placeholder="https://github.com/team/repo"
+                  value={githubUrl2}
+                  onChange={(e) => setGithubUrl2(e.target.value)}
+                  disabled={team.is_locked}
+                />
+              </div>
+              
+              <div className="form-group" style={{ marginBottom: 0 }}>
+                <label className="form-label" style={{ fontWeight: 600 }}>Video / Demo URL</label>
+                <input
+                  type="url"
+                  className="form-input"
+                  placeholder="https://youtube.com/watch?v=..."
+                  value={videoUrl2}
+                  onChange={(e) => setVideoUrl2(e.target.value)}
+                  disabled={team.is_locked}
+                />
+              </div>
+
+              {!team.is_locked && (
+                <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'flex-end' }}>
+                  <button className="btn btn-primary" onClick={handleSaveSecondaryUrls}>
+                    Save Secondary PS Links
+                  </button>
+                </div>
+              )}
+            </div>
           )}
         </div>
       )}

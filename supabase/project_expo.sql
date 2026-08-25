@@ -3,7 +3,10 @@
 -- ============================================================
 CREATE TABLE IF NOT EXISTS project_expo_registrations (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    leader_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
+    leader_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+    leader_name TEXT NOT NULL,
+    leader_roll TEXT NOT NULL,
+    leader_email TEXT NOT NULL,
     project_title TEXT NOT NULL,
     domain TEXT NOT NULL,
     output_type TEXT NOT NULL,
@@ -25,19 +28,22 @@ CREATE TABLE IF NOT EXISTS project_expo_registrations (
 -- ============================================================
 ALTER TABLE project_expo_registrations ENABLE ROW LEVEL SECURITY;
 
--- Students can read their own registrations
+-- Only the authenticated leader can insert their own registration
+DROP POLICY IF EXISTS "Public insert for expo registrations" ON project_expo_registrations;
+CREATE POLICY "Public insert for expo registrations" 
+ON project_expo_registrations 
+FOR INSERT 
+WITH CHECK (auth.uid() = leader_id);
+
+-- Students can read their own registrations (if they are logged in)
+DROP POLICY IF EXISTS "Students can read own expo registrations" ON project_expo_registrations;
 CREATE POLICY "Students can read own expo registrations" 
 ON project_expo_registrations 
 FOR SELECT 
 USING (leader_id = auth.uid());
 
--- Students can insert their own registrations
-CREATE POLICY "Students can insert own expo registrations" 
-ON project_expo_registrations 
-FOR INSERT 
-WITH CHECK (leader_id = auth.uid());
-
 -- Admins and SPOCs can read all registrations
+DROP POLICY IF EXISTS "Admins and SPOCs can view all expo registrations" ON project_expo_registrations;
 CREATE POLICY "Admins and SPOCs can view all expo registrations" 
 ON project_expo_registrations 
 FOR SELECT 

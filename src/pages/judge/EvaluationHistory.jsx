@@ -15,7 +15,7 @@ export default function EvaluationHistory() {
   async function fetchData() {
     const { data } = await supabase
       .from('evaluations')
-      .select('*, teams(team_name, problem_statements(ps_code, title))')
+      .select('*, teams(team_name, problem_statements!ps_id(ps_code, title))')
       .eq('judge_id', profile.id)
       .order('created_at', { ascending: false });
 

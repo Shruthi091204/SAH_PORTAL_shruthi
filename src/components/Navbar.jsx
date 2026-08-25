@@ -111,7 +111,7 @@ export default function Navbar() {
     }
   };
 
-  if (['/login', '/register'].includes(location.pathname)) return null;
+  // Navbar is now visible on auth pages because they are integrated into the layout
 
   const studentTabs = [
     { path: '/dashboard', label: 'Dashboard' },

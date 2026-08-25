@@ -48,13 +48,19 @@ CREATE TABLE IF NOT EXISTS teams (
     campus TEXT DEFAULT 'Amrita Chennai' NOT NULL,
     leader_id UUID REFERENCES profiles(id) ON DELETE RESTRICT NOT NULL,
     ps_id UUID REFERENCES problem_statements(id),
+    ps_id_2 UUID REFERENCES problem_statements(id),
     needed_skills TEXT[] DEFAULT '{}',
     is_open_for_recruitment BOOLEAN DEFAULT TRUE,
     is_locked BOOLEAN DEFAULT FALSE,
     is_spoc_verified BOOLEAN DEFAULT FALSE,
     ppt_url TEXT,
+    ppt_url_2 TEXT,
     github_url TEXT,
+    github_url_2 TEXT,
     video_url TEXT,
+    video_url_2 TEXT,
+    mentor_name TEXT,
+    mentor_department TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -165,7 +171,28 @@ ALTER TABLE notifications ENABLE ROW LEVEL SECURITY;
 ALTER TABLE registration_otps ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "Public Registration OTP Policy" ON registration_otps;
-CREATE POLICY "Public Registration OTP Policy" ON registration_otps FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Insert Registration OTP Policy" ON registration_otps FOR INSERT WITH CHECK (true);
+CREATE POLICY "Read Registration OTP Policy" ON registration_otps FOR SELECT USING (true);
+CREATE POLICY "Delete Registration OTP Policy" ON registration_otps FOR DELETE USING (true);
+
+-- ============================================================
+-- PREVENT ROLE ESCALATION TRIGGER
+-- ============================================================
+CREATE OR REPLACE FUNCTION prevent_role_escalation()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- If updated by a client (auth.uid() is not null), force role to remain unchanged
+  IF auth.uid() IS NOT NULL THEN
+    NEW.role = OLD.role;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+DROP TRIGGER IF EXISTS block_role_updates ON profiles;
+CREATE TRIGGER block_role_updates
+  BEFORE UPDATE ON profiles
+  FOR EACH ROW EXECUTE FUNCTION prevent_role_escalation();
 
 -- ============================================================
 -- RLS POLICIES (Idempotent with DROP POLICY IF EXISTS)
@@ -176,8 +203,8 @@ DROP POLICY IF EXISTS "Public Read Profiles" ON profiles;
 DROP POLICY IF EXISTS "Users can update own profile" ON profiles;
 DROP POLICY IF EXISTS "Users can insert own profile" ON profiles;
 CREATE POLICY "Public Read Profiles" ON profiles FOR SELECT USING (true);
-CREATE POLICY "Users can update own profile" ON profiles FOR UPDATE USING (true) WITH CHECK (true);
-CREATE POLICY "Users can insert own profile" ON profiles FOR INSERT WITH CHECK (true);
+CREATE POLICY "Users can update own profile" ON profiles FOR UPDATE USING (auth.uid() = id) WITH CHECK (auth.uid() = id);
+CREATE POLICY "Users can insert own profile" ON profiles FOR INSERT WITH CHECK (auth.uid() = id);
 
 -- Problem Statements
 DROP POLICY IF EXISTS "Public Read PS" ON problem_statements;
@@ -452,9 +479,15 @@ DROP POLICY IF EXISTS "Admin update judge_panels" ON judge_panels;
 DROP POLICY IF EXISTS "Admin delete judge_panels" ON judge_panels;
 
 CREATE POLICY "Read judge_panels" ON judge_panels FOR SELECT USING (true);
-CREATE POLICY "Admin insert judge_panels" ON judge_panels FOR INSERT WITH CHECK (true);
-CREATE POLICY "Admin update judge_panels" ON judge_panels FOR UPDATE USING (true);
-CREATE POLICY "Admin delete judge_panels" ON judge_panels FOR DELETE USING (true);
+CREATE POLICY "Admin insert judge_panels" ON judge_panels FOR INSERT WITH CHECK (
+    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+);
+CREATE POLICY "Admin update judge_panels" ON judge_panels FOR UPDATE USING (
+    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+);
+CREATE POLICY "Admin delete judge_panels" ON judge_panels FOR DELETE USING (
+    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+);
 
 -- POLICIES FOR panel_judges
 DROP POLICY IF EXISTS "Read panel_judges" ON panel_judges;
@@ -463,9 +496,15 @@ DROP POLICY IF EXISTS "Admin update panel_judges" ON panel_judges;
 DROP POLICY IF EXISTS "Admin delete panel_judges" ON panel_judges;
 
 CREATE POLICY "Read panel_judges" ON panel_judges FOR SELECT USING (true);
-CREATE POLICY "Admin insert panel_judges" ON panel_judges FOR INSERT WITH CHECK (true);
-CREATE POLICY "Admin update panel_judges" ON panel_judges FOR UPDATE USING (true);
-CREATE POLICY "Admin delete panel_judges" ON panel_judges FOR DELETE USING (true);
+CREATE POLICY "Admin insert panel_judges" ON panel_judges FOR INSERT WITH CHECK (
+    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+);
+CREATE POLICY "Admin update panel_judges" ON panel_judges FOR UPDATE USING (
+    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+);
+CREATE POLICY "Admin delete panel_judges" ON panel_judges FOR DELETE USING (
+    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+);
 
 -- POLICIES FOR panel_problem_statements
 DROP POLICY IF EXISTS "Read panel_problem_statements" ON panel_problem_statements;
@@ -474,7 +513,13 @@ DROP POLICY IF EXISTS "Admin update panel_problem_statements" ON panel_problem_s
 DROP POLICY IF EXISTS "Admin delete panel_problem_statements" ON panel_problem_statements;
 
 CREATE POLICY "Read panel_problem_statements" ON panel_problem_statements FOR SELECT USING (true);
-CREATE POLICY "Admin insert panel_problem_statements" ON panel_problem_statements FOR INSERT WITH CHECK (true);
-CREATE POLICY "Admin update panel_problem_statements" ON panel_problem_statements FOR UPDATE USING (true);
-CREATE POLICY "Admin delete panel_problem_statements" ON panel_problem_statements FOR DELETE USING (true);
+CREATE POLICY "Admin insert panel_problem_statements" ON panel_problem_statements FOR INSERT WITH CHECK (
+    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+);
+CREATE POLICY "Admin update panel_problem_statements" ON panel_problem_statements FOR UPDATE USING (
+    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+);
+CREATE POLICY "Admin delete panel_problem_statements" ON panel_problem_statements FOR DELETE USING (
+    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+);
 

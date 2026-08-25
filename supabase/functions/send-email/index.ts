@@ -1,0 +1,124 @@
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import nodemailer from "npm:nodemailer"
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+}
+
+serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders })
+  }
+
+  try {
+    const body = await req.json()
+    const { 
+      type, email, otpCode, 
+      leaderName, leaderEmail, projectTitle, domain, teamSize, member2Name, member3Name, mentorName 
+    } = body
+
+    // We hardcode the credentials here to make it simple for the deployment without needing to configure Secrets via CLI.
+    const smtpUser = '27.kutralingam.xi.b@gmail.com';
+    const smtpPass = 'ccmdrfqcdibluewc';
+
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: smtpUser,
+        pass: smtpPass
+      }
+    });
+
+    let subject = '';
+    let htmlContent = '';
+    const targetEmail = type === 'expo' ? leaderEmail : email;
+
+    if (type === 'registration' || type === 'password_reset') {
+      const isRegistration = type === 'registration';
+      subject = isRegistration
+        ? 'SAH 2026 Portal - Student Registration Verification Code'
+        : 'SAH 2026 Portal - Password Reset Security OTP';
+      const title = isRegistration ? 'Student Registration Verification' : 'Password Reset Request';
+      const introText = isRegistration
+        ? 'Thank you for registering for SAH 2026! Please use the following 6-digit OTP code to verify your College Mail ID and complete your student registration:'
+        : 'We received a request to reset your password. Your 6-digit OTP security code is:';
+      const footerText = isRegistration
+        ? 'This code is valid for 10 minutes. If you did not initiate registration on the SAH Portal, please ignore this email.'
+        : 'This code is valid for 10 minutes. If you did not request a password reset, please ignore this email.';
+
+      htmlContent = `
+        <div style="font-family: Arial, sans-serif; max-width: 520px; margin: 0 auto; padding: 24px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: #ffffff;">
+          <div style="text-align: center; margin-bottom: 20px; border-bottom: 2px solid #FFF3E0; padding-bottom: 16px;">
+            <h2 style="color: #E65100; margin: 0; font-size: 22px;">Smart Amrita Hackathon 2026</h2>
+            <p style="color: #666666; font-size: 0.95rem; margin-top: 6px; font-weight: 600;">${title}</p>
+          </div>
+          <p style="font-size: 0.95rem; color: #333333; line-height: 1.5;">${introText}</p>
+          <div style="text-align: center; margin: 24px 0; padding: 18px; background-color: #FFF3E0; border-radius: 8px; border: 1px dashed #FF9800;">
+            <span style="font-size: 38px; font-weight: bold; letter-spacing: 10px; color: #E65100; font-family: monospace;">${otpCode}</span>
+          </div>
+          <p style="font-size: 0.85rem; color: #777777; line-height: 1.4;">${footerText}</p>
+        </div>
+      `;
+    } else if (type === 'expo') {
+      subject = 'SAH 2026 Project Expo - Registration Confirmed!';
+      const membersHtml = `
+        <ul style="color: #444; font-size: 0.95rem;">
+          <li><strong>Leader:</strong> ${leaderName}</li>
+          <li><strong>Member 2:</strong> ${member2Name}</li>
+          ${teamSize === 3 && member3Name ? `<li><strong>Member 3:</strong> ${member3Name}</li>` : ''}
+        </ul>
+      `;
+
+      htmlContent = `
+        <div style="font-family: Arial, sans-serif; max-width: 550px; margin: 0 auto; padding: 24px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: #ffffff;">
+          <div style="text-align: center; margin-bottom: 20px; border-bottom: 2px solid #E3F2FD; padding-bottom: 16px;">
+            <h2 style="color: #1E3A8A; margin: 0; font-size: 22px;">Smart Amrita Hackathon 2026</h2>
+            <p style="color: #666666; font-size: 0.95rem; margin-top: 6px; font-weight: 600;">Project Expo Registration Confirmed</p>
+          </div>
+          
+          <p style="font-size: 1rem; color: #333333; line-height: 1.5;">Dear <strong>${leaderName}</strong>,</p>
+          <p style="font-size: 0.95rem; color: #333333; line-height: 1.5;">
+            Congratulations! Your team's project has been successfully registered for the SAH 2026 Project Expo. Below are your registration details:
+          </p>
+
+          <div style="background-color: #F8FAFC; padding: 16px; border-radius: 8px; border-left: 4px solid #1E3A8A; margin: 20px 0;">
+            <p style="margin: 0 0 8px 0; font-size: 0.95rem;"><strong>Project Title:</strong> <span style="color: #1E3A8A;">${projectTitle}</span></p>
+            <p style="margin: 0 0 8px 0; font-size: 0.95rem;"><strong>Domain:</strong> ${domain}</p>
+            <p style="margin: 0 0 8px 0; font-size: 0.95rem;"><strong>Faculty Mentor:</strong> ${mentorName}</p>
+            
+            <p style="margin: 12px 0 4px 0; font-size: 0.95rem; font-weight: bold;">Team Members (${teamSize}):</p>
+            ${membersHtml}
+          </div>
+
+          <p style="font-size: 0.95rem; color: #333333; line-height: 1.5;">
+            Please ensure you have all materials ready before the expo day. If you need any assistance, reach out to your faculty mentor or the SAH organizing committee.
+          </p>
+
+          <div style="margin-top: 30px; text-align: center;">
+            <p style="font-size: 0.85rem; color: #777777; line-height: 1.4;">Thank you for innovating with us!<br/>- SAH 2026 Organizing Committee</p>
+          </div>
+        </div>
+      `;
+    }
+
+    await transporter.sendMail({
+      from: `"SAH Admin" <${smtpUser}>`,
+      to: targetEmail,
+      subject,
+      html: htmlContent
+    });
+
+    return new Response(
+      JSON.stringify({ success: true, message: 'Email sent successfully' }),
+      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 },
+    )
+  } catch (error) {
+    return new Response(
+      JSON.stringify({ error: error.message }),
+      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 500 },
+    )
+  }
+})

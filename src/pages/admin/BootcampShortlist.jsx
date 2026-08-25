@@ -23,7 +23,7 @@ export default function BootcampShortlist() {
         panelJudgesRes
       ] = await Promise.all([
         supabase.from('evaluations').select('team_id, judge_id, total_raw, remarks, understanding_score, execution_score, impact_score, pitch_score'),
-        supabase.from('teams').select('id, team_name, is_locked, ps_id, problem_statements(id, ps_code, title)'),
+        supabase.from('teams').select('id, team_name, is_locked, ps_id, problem_statements!ps_id(id, ps_code, title)'),
         supabase.from('panel_problem_statements').select('panel_id, ps_id'),
         supabase.from('panel_judges').select('panel_id, judge_id')
       ]);

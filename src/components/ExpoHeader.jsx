@@ -16,7 +16,7 @@ export default function ExpoHeader() {
     if (isAuthenticated) {
       navigate('/dashboard');
     } else {
-      navigate('/login');
+      navigate('/events/project-expo/login', { state: { from: '/events/project-expo' } });
     }
   };
 

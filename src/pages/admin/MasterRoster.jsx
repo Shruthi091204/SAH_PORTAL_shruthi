@@ -34,7 +34,7 @@ export default function MasterRoster() {
         ppsRes,
         evalsRes
       ] = await Promise.all([
-        supabase.from('teams').select('*, problem_statements(id, ps_code, title, category, domain)').order('team_name'),
+        supabase.from('teams').select('*, problem_statements!ps_id(id, ps_code, title, category, domain)').order('team_name'),
         supabase.from('team_members').select('*, profiles(id, full_name, roll_no, gender, department, skills)'),
         supabase.from('problem_statements').select('*').order('ps_code'),
         supabase.from('judge_panels').select('*').order('name'),

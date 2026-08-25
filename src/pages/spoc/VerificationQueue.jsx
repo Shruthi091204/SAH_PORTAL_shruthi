@@ -17,7 +17,7 @@ export default function VerificationQueue() {
     // Fetch locked but not yet verified teams
     const { data: teamsData } = await supabase
       .from('teams')
-      .select('*, problem_statements(ps_code, title, category)')
+      .select('*, problem_statements!ps_id(ps_code, title, category)')
       .eq('is_locked', true)
       .order('created_at');
 
