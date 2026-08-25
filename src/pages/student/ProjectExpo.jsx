@@ -417,10 +417,27 @@ export default function ProjectExpo() {
                 <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Principal, Amrita Chennai</div>
               </div>
 
-              <div>
-                <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--orange)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '8px' }}>Project Expo Coordinators</div>
-                <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--navy)', marginBottom: '4px' }}>Dr. Parthasarathy</div>
-                <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--navy)' }}>Dr. Ravishankar Simhadri</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--orange)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>Campus SPoC</div>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--navy)' }}>Dr. S. Parthasarathy</div>
+                </div>
+                <div>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--orange)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>MECH & RAI Programme Faculty Coordinator</div>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--navy)' }}>Dr. Rishikumar</div>
+                </div>
+                <div>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--orange)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>ECE & CCE Programme Faculty Coordinator</div>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--navy)' }}>Dr. S. Veluchamy</div>
+                </div>
+                <div>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--orange)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>CSE Program Faculty Coordinator</div>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--navy)' }}>Dr. K. Ashwini</div>
+                </div>
+                <div>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--orange)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>AI & CYS Programme Faculty Coordinator</div>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--navy)' }}>Dr. IR Oviya</div>
+                </div>
               </div>
             </div>
 
