@@ -1,7 +1,30 @@
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { CheckCircle2, Target, Users, Zap, ShieldAlert, ShieldCheck, Mail, Calendar, ChevronRight, AlertTriangle, FileText, Award, Layers } from 'lucide-react';
+import { 
+  downloadPosterGuidelines, 
+  downloadPosterTemplate, 
+  downloadPosterHardwareSample, 
+  downloadPosterSoftwareSample 
+} from '../../utils/downloadResources';
+import { 
+  CheckCircle2, 
+  AlertTriangle, 
+  ShieldAlert, 
+  Award, 
+  Calendar, 
+  ExternalLink,
+  ChevronRight,
+  Target,
+  Zap,
+  Users,
+  Cpu,
+  Trophy,
+  ShieldCheck,
+  CheckSquare,
+  Download,
+  FileText
+} from 'lucide-react';
 
 const posterData = {
   objectives: [
@@ -10,43 +33,43 @@ const posterData = {
     "Recognise original student contribution, including work not suited to live demonstration.",
     "Identify work with potential for publication, patenting or further research support."
   ],
+  keyDates: [
+    { title: "Call for Posters & Registration Opens", dateStr: "2026-08-24", displayDate: "Mon, 24 Aug 2026", icon: <Users size={18} /> },
+    { title: "Registration Closes", dateStr: "2026-08-31", displayDate: "Mon, 31 Aug 2026 (5:00 PM)", icon: <AlertTriangle size={18} /> },
+    { title: "Poster Submission", dateStr: "2026-09-05", displayDate: "Sat, 5 Sep 2026", icon: <CheckSquare size={18} /> },
+    { title: "Screening & Shortlisting", dateStr: "2026-09-06", displayDate: "Sun–Mon, 6–7 Sep 2026", icon: <Target size={18} /> },
+    { title: "Announcement of Shortlist", dateStr: "2026-09-07", displayDate: "Mon, 7 Sep 2026", icon: <Zap size={18} /> },
+    { title: "Poster Presentation & Jury Evaluation", dateStr: "2026-09-10", displayDate: "Thu, 10 Sep 2026", icon: <Cpu size={18} /> },
+    { title: "Awards & Opportunity Mapping", dateStr: "2026-09-10", displayDate: "Thu, 10 Sep 2026", icon: <Trophy size={18} /> }
+  ],
   eligibility: [
     { label: "Who may apply", value: "Students of any B.Tech, M.Tech or PhD programme, in any year of study.", span: 1 },
     { label: "Mode of entry", value: "Individual. Each poster carries a single author; there are no teams in this category.", span: 1 },
-    { label: "Faculty mentor / guide", value: "Mandatory. A faculty mentor or research guide must endorse the entry, certifying authorship and originality.", span: 1 },
+    { label: "Faculty mentor / guide", value: "Mandatory. A faculty mentor or research guide must endorse the entry, certifying authorship and originality.", span: 2 },
     { label: "Entries per student", value: "One poster per student.", span: 1 },
     { label: "Stage of work", value: "Completed, or sufficiently advanced to present a defensible result.", span: 1 },
-    { label: "Registration", value: "Free. No registration fee is charged for any SAH 2026 category.", span: 1 }
+    { label: "Registration", value: "Free. No registration fee is charged for any SAH 2026 category.", span: 2 }
   ],
-  tracks: [
-    { code: "T1", name: "Smart Manufacturing and Industry 5.0", scope: "Machining and process optimisation, additive manufacturing, metrology and inspection, digital twins, condition monitoring, materials characterisation, industrial IoT on the shop floor." },
-    { code: "T2", name: "Robotics, Drones and Autonomous Systems", scope: "Manipulators, mobile robots, UAV design and control, SLAM and navigation, perception for autonomy, human–robot interaction, actuation and mechanism design." },
-    { code: "T3", name: "Artificial Intelligence and Applied Machine Learning", scope: "Model architectures, computer vision, natural language processing, generative and foundation models, edge and efficient AI, explainability and responsible AI." },
-    { code: "T4", name: "Data Science, Analytics and Decision Intelligence", scope: "Statistical modelling, forecasting, optimisation and operations research, data engineering, visual analytics, decision-support systems." },
-    { code: "T5", name: "Cyber Security, Privacy and Trusted Computing", scope: "Threat detection, cryptography and applied security, secure software and hardware, digital forensics, privacy-preserving computation, blockchain and trust infrastructure." },
-    { code: "T6", name: "Next-Generation Communication, IoT and Embedded Systems", scope: "5G/6G and wireless systems, antennas and RF, signal processing, VLSI and embedded design, sensor networks, edge computing infrastructure." },
-    { code: "T7", name: "Energy, Sustainability and Climate Action", scope: "Renewable energy systems, energy storage and efficiency, thermal and fluid systems, emissions and waste, circular-economy engineering, environmental monitoring." },
-    { code: "T8", name: "Healthcare, Biomedical and Assistive Technology", scope: "Medical devices and instrumentation, biosignal and medical image analysis, rehabilitation and assistive engineering, health informatics, biomechanics." },
-    { code: "T9", name: "Smart Infrastructure, Mobility and Transportation", scope: "Intelligent transport systems, electric and connected vehicles, structural and infrastructure health, smart-city systems, logistics and supply chain." },
-    { code: "T10", name: "Social Innovation, Inclusive and Educational Technology", scope: "Rural and community technology, accessibility, agri-tech, educational technology, low-cost engineering for underserved users, human-centred design." }
+  outputs: [
+    "A mini, capstone or design project",
+    "Laboratory or experimental work extended beyond the prescribed exercise",
+    "Work carried out under a funded or institutional research project",
+    "A research paper published, accepted or under review",
+    "An M.Tech or PhD research outcome",
+    "Internship or industry project work with written permission",
+    "Independent design, analysis or replication study with original results"
   ],
-  keyDates: [
-    { title: "Call for Posters & Registration Opens", dateStr: "2026-08-24T00:00:00", displayDate: "Mon, 24 Aug 2026", icon: <FileText size={20} /> },
-    { title: "Registration Closes", dateStr: "2026-08-31T17:00:00", displayDate: "Mon, 31 Aug 2026", icon: <Target size={20} /> },
-    { title: "Poster Submission", dateStr: "2026-09-05T17:00:00", displayDate: "Sat, 5 Sep 2026", icon: <Layers size={20} /> },
-    { title: "Screening & Shortlisting", dateStr: "2026-09-07T17:00:00", displayDate: "Sun–Mon, 6–7 Sep 2026", icon: <CheckCircle2 size={20} /> },
-    { title: "Announcement of Shortlist", dateStr: "2026-09-07T18:00:00", displayDate: "Mon, 7 Sep 2026", icon: <Zap size={20} /> },
-    { title: "Poster Presentation & Jury Evaluation", dateStr: "2026-09-10T08:00:00", displayDate: "Thu, 10 Sep 2026", icon: <Users size={20} /> },
-    { title: "Awards & Opportunity Mapping", dateStr: "2026-09-10T17:00:00", displayDate: "Thu, 10 Sep 2026", icon: <Award size={20} /> }
-  ],
-  specifications: [
-    { label: "Fonts", value: "Cambria for headings, Calibri for body text. Both are used throughout the template. Do not substitute other fonts." },
-    { label: "Type Scale", value: "Four sizes only. Title 36 pt Cambria bold · Section headings 24 pt Cambria bold · Author name, track badge 20 pt Calibri · All body text, bullets, captions, references and chart labels 16 pt Calibri." },
-    { label: "Text and visuals", value: "Body text not exceeding 600 words in total across the whole poster. Figures, charts and diagrams to occupy at least half the sheet." },
-    { label: "Originality of figures", value: "At least two figures must be authored by the student. Any figure reproduced from another source must be cited directly beneath it." },
-    { label: "Images", value: "Minimum 300 dpi at printed size." },
-    { label: "Printing", value: "A2 portrait on 170 gsm matte art paper. Lamination is discouraged as it causes glare. Authors arrange their own printing; clips are provided at the venue." },
-    { label: "File naming", value: "SAH2026_POSTER_[TrackCode]_[PosterID]_[Surname].pdf — single flattened PDF, fonts embedded. The editable source file is to be retained and produced on request." }
+  domains: [
+    "T1: Smart Manufacturing and Industry 5.0", 
+    "T2: Robotics, Drones and Autonomous Systems",
+    "T3: AI and Applied Machine Learning", 
+    "T4: Data Science, Analytics and Decision Intelligence", 
+    "T5: Cyber Security, Privacy and Trusted Computing", 
+    "T6: Next-Generation Communication, IoT and Embedded Systems", 
+    "T7: Energy, Sustainability and Climate Action", 
+    "T8: Healthcare, Biomedical and Assistive Technology", 
+    "T9: Smart Infrastructure, Mobility and Transportation", 
+    "T10: Social Innovation, Inclusive and Educational Technology"
   ],
   rubric: [
     { criterion: "Problem Definition & Objectives", marks: 5, color: "#3B82F6" },
@@ -57,26 +80,19 @@ const posterData = {
     { criterion: "Presentation & Response to Jury", marks: 10, color: "#6366F1" }
   ],
   awards: [
-    { name: "Best Poster — Smart Manufacturing and Industry 5.0", badge: "Track T1", gradient: "linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%)" },
-    { name: "Best Poster — Robotics, Drones and Autonomous Systems", badge: "Track T2", gradient: "linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)" },
-    { name: "Best Poster — AI and Applied Machine Learning", badge: "Track T3", gradient: "linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)" },
-    { name: "Best Poster — Data Science, Analytics and Decision Intelligence", badge: "Track T4", gradient: "linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)" },
-    { name: "Best Poster — Cyber Security, Privacy and Trusted Computing", badge: "Track T5", gradient: "linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%)" },
-    { name: "Best Poster — Next-Gen Communication, IoT and Embedded", badge: "Track T6", gradient: "linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%)" },
-    { name: "Best Poster — Energy, Sustainability and Climate Action", badge: "Track T7", gradient: "linear-gradient(135deg, #fdcbf1 0%, #e6dee9 100%)" },
-    { name: "Best Poster — Healthcare, Biomedical and Assistive Tech", badge: "Track T8", gradient: "linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)" },
-    { name: "Best Poster — Smart Infrastructure, Mobility and Transport", badge: "Track T9", gradient: "linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%)" },
-    { name: "Best Poster — Social Innovation, Inclusive and EdTech", badge: "Track T10", gradient: "linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)" },
-    { name: "Postgraduate Poster Research Excellence Award", badge: "M.Tech Cohort", gradient: "linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%)" },
-    { name: "Doctoral Poster Research Excellence Award", badge: "PhD Cohort", gradient: "linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%)" },
-    { name: "Emerging Researcher Poster Award", badge: "1st Year B.Tech", gradient: "linear-gradient(135deg, #f6d365 0%, #fda085 100%)" }
-  ],
-  oc: [
-    { name: "Dr. S. Parthasarathy", role: "Poster Presentation — Campus SPoC" },
-    { name: "Dr. Rishikumar", role: "MECH & RAI Programme Faculty Coordinator" },
-    { name: "Dr. S. Veluchamy", role: "ECE & CCE Programme Faculty Coordinator" },
-    { name: "Dr. K. Ashwini", role: "CSE Programme Faculty Coordinator" },
-    { name: "Dr. IR Oviya", role: "AI & CYS Programme Faculty Coordinator" }
+    { name: "Smart Manufacturing and Industry 5.0", badge: "Track T1", gradient: "linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%)" },
+    { name: "Robotics, Drones and Autonomous Systems", badge: "Track T2", gradient: "linear-gradient(135deg, #34D399 0%, #10B981 100%)" },
+    { name: "AI and Applied Machine Learning", badge: "Track T3", gradient: "linear-gradient(135deg, #A78BFA 0%, #8B5CF6 100%)" },
+    { name: "Data Science, Analytics and Decision Intelligence", badge: "Track T4", gradient: "linear-gradient(135deg, #F472B6 0%, #EC4899 100%)" },
+    { name: "Cyber Security, Privacy and Trusted Computing", badge: "Track T5", gradient: "linear-gradient(135deg, #94A3B8 0%, #64748B 100%)" },
+    { name: "Next-Gen Communication, IoT & Embedded", badge: "Track T6", gradient: "linear-gradient(135deg, #FB923C 0%, #F97316 100%)" },
+    { name: "Energy, Sustainability and Climate Action", badge: "Track T7", gradient: "linear-gradient(135deg, #2DD4BF 0%, #14B8A6 100%)" },
+    { name: "Healthcare, Biomedical & Assistive Tech", badge: "Track T8", gradient: "linear-gradient(135deg, #84CC16 0%, #65A30D 100%)" },
+    { name: "Smart Infrastructure, Mobility & Transport", badge: "Track T9", gradient: "linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)" },
+    { name: "Social Innovation & Educational Tech", badge: "Track T10", gradient: "linear-gradient(135deg, #EC4899 0%, #BE185D 100%)" },
+    { name: "Postgraduate Research Excellence", badge: "M.Tech Cohort", gradient: "linear-gradient(135deg, #FFD700 0%, #F59E0B 100%)" },
+    { name: "Doctoral Research Excellence", badge: "PhD Cohort", gradient: "linear-gradient(135deg, #C084FC 0%, #9333EA 100%)" },
+    { name: "Emerging Researcher Award", badge: "1st Year Cohort", gradient: "linear-gradient(135deg, #60A5FA 0%, #2563EB 100%)" }
   ]
 };
 
@@ -109,218 +125,200 @@ export default function PosterPresentation() {
   };
 
   return (
-    <div style={{ background: '#f4f7f9', minHeight: '100vh', paddingBottom: '100px' }}>
+    <div style={{ background: '#f4f7f9', minHeight: '100vh', overflowX: 'hidden' }}>
       
       {/* Dynamic Glassy Hero */}
       <div style={{ 
         position: 'relative',
         background: 'linear-gradient(135deg, var(--navy) 0%, #0f172a 100%)', 
-        padding: '140px 24px 100px', 
+        padding: '100px 20px', 
+        color: 'white', 
         textAlign: 'center',
-        color: 'white',
         overflow: 'hidden'
       }}>
-        {/* Abstract shapes */}
         <motion.div 
           animate={{ rotate: 360 }} 
           transition={{ duration: 100, repeat: Infinity, ease: "linear" }}
-          style={{ position: 'absolute', top: '-10%', left: '-5%', width: '400px', height: '400px', background: 'radial-gradient(circle, rgba(234,88,12,0.15) 0%, transparent 70%)', borderRadius: '50%' }}
+          style={{ position: 'absolute', top: '-20%', left: '-10%', width: '600px', height: '600px', background: 'radial-gradient(circle, rgba(16,185,129,0.15) 0%, transparent 70%)', borderRadius: '50%' }}
         />
         <motion.div 
           animate={{ rotate: -360 }} 
           transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
-          style={{ position: 'absolute', bottom: '-20%', right: '-10%', width: '500px', height: '500px', background: 'radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%)', borderRadius: '50%' }}
+          style={{ position: 'absolute', bottom: '-20%', right: '-10%', width: '500px', height: '500px', background: 'radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 70%)', borderRadius: '50%' }}
         />
 
+        <div style={{ position: 'absolute', top: '40px', right: '40px', zIndex: 30 }}>
+          <button 
+            className="btn btn-orange btn-lg" 
+            onClick={() => navigate('/events/poster-presentation/register')}
+            style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1rem', padding: '12px 24px', borderRadius: '50px', boxShadow: '0 10px 25px -5px rgba(234, 88, 12, 0.4)' }}
+          >
+            Register Now <ChevronRight size={18} strokeWidth={3} />
+          </button>
+        </div>
+
         <motion.div relative zIndex={10} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }}>
-          <div style={{ display: 'inline-block', padding: '6px 16px', background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)', borderRadius: '30px', fontSize: '0.9rem', fontWeight: 600, letterSpacing: '0.1em', marginBottom: '24px', color: 'var(--orange)', textTransform: 'uppercase' }}>
+          <div style={{ display: 'inline-block', padding: '6px 16px', background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)', borderRadius: '30px', fontSize: '0.9rem', fontWeight: 600, letterSpacing: '0.1em', marginBottom: '24px', color: '#34d399', textTransform: 'uppercase' }}>
             SAH 2026 Special Track
           </div>
           <h1 style={{ fontSize: '4.5rem', fontWeight: 900, marginBottom: '24px', letterSpacing: '-0.03em', lineHeight: 1.1, background: 'linear-gradient(to right, #ffffff, #cbd5e1)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
             Poster Presentation
           </h1>
           <p style={{ maxWidth: '800px', margin: '0 auto', fontSize: '1.25rem', opacity: 0.85, lineHeight: 1.6, fontWeight: 300 }}>
-            The research-communication component of SAH 2026. Present your own project, experimental or research outcome on a single A2 poster before an expert jury.
+            The research-communication component of Smart Amrita Hackathon 2026. Present your own project, experimental or research outcome on a single A2 poster before an expert jury.
           </p>
-          <button 
-            className="btn btn-orange btn-lg" 
-            onClick={() => navigate('/events/poster-presentation/register')}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '12px', fontSize: '1.1rem', padding: '16px 40px', borderRadius: '50px', boxShadow: '0 10px 25px -5px rgba(234, 88, 12, 0.4)', marginTop: '32px' }}
-          >
-            Register Now <ChevronRight size={20} strokeWidth={3} />
-          </button>
         </motion.div>
       </div>
 
-      <div style={{ maxWidth: '1200px', margin: '-60px auto 0', padding: '0 24px', position: 'relative', zIndex: 20 }}>
+      <div style={{ maxWidth: '1200px', margin: '40px auto', padding: '0 24px', position: 'relative', zIndex: 20 }}>
         
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '32px', marginBottom: '60px' }}>
-          
-          {/* Objectives (Left Column) */}
-          <motion.section id="objectives" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} style={{ background: '#fff', borderRadius: '24px', padding: '40px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.05)', height: '100%', scrollMarginTop: '100px' }}>
-            <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+        {/* 1. Objectives */}
+        <motion.section id="objectives" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "0px" }} style={{ marginBottom: '60px', scrollMarginTop: '100px' }}>
+          <div style={{ background: '#fff', borderRadius: '24px', padding: '40px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.05)' }}>
+            <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '32px', display: 'flex', alignItems: 'center', gap: '12px' }}>
               <Target color="var(--orange)" /> Objectives
             </h2>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '16px' }}>
               {posterData.objectives.map((obj, idx) => (
-                <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', color: 'var(--navy)', fontWeight: 500, lineHeight: 1.6 }}>
-                  <div style={{ width: '8px', height: '8px', background: 'var(--orange)', borderRadius: '50%', marginTop: '8px', flexShrink: 0 }} />
+                <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', color: 'var(--navy)', fontWeight: 500, fontSize: '1.1rem', lineHeight: 1.5 }}>
+                  <div style={{ width: '8px', height: '8px', background: 'var(--orange)', borderRadius: '50%', marginTop: '10px', flexShrink: 0 }} />
                   {obj}
                 </li>
               ))}
             </ul>
-          </motion.section>
-
-          {/* Bento Grid Eligibility (Right Column) */}
-          <motion.section id="eligibility" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} style={{ display: 'flex', flexDirection: 'column', gap: '32px', scrollMarginTop: '100px' }}>
-            <div style={{ background: '#fff', borderRadius: '24px', padding: '40px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.05)', height: '100%' }}>
-              <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '32px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <CheckCircle2 color="var(--orange)" /> Eligibility Criteria
-              </h2>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
-                {posterData.eligibility.map((item, idx) => (
-                  <motion.div whileHover={{ scale: 1.02 }} key={idx} style={{ 
-                    gridColumn: `span ${item.span}`,
-                    background: 'linear-gradient(145deg, #ffffff, #f8fafc)', 
-                    padding: '20px', 
-                    borderRadius: '16px', 
-                    border: '1px solid #e2e8f0',
-                    boxShadow: '0 4px 6px -1px rgba(0,0,0,0.02)'
-                  }}>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--orange)', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.1em', marginBottom: '8px' }}>
-                      {item.label}
-                    </div>
-                    <div style={{ color: 'var(--navy)', fontWeight: 600, lineHeight: 1.4, fontSize: '0.9rem' }}>
-                      {item.value}
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </motion.section>
-
-        </div>
-
-        {/* Dynamic Poster Scope & Tracks */}
-        <motion.section id="scope" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} style={{ marginBottom: '60px', scrollMarginTop: '100px' }}>
-          <div style={{ background: 'var(--navy)', borderRadius: '32px', padding: '48px', color: 'white', position: 'relative', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)' }}>
-            <div style={{ position: 'absolute', top: 0, right: 0, width: '400px', height: '400px', background: 'radial-gradient(circle, rgba(234,88,12,0.2) 0%, transparent 70%)', borderRadius: '50%', transform: 'translate(30%, -30%)' }} />
-            
-            <h2 style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '24px', position: 'relative', zIndex: 10 }}>Poster Scope & Tracks</h2>
-            
-            <motion.div variants={childVariants} style={{ background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)', padding: '24px', borderRadius: '16px', marginBottom: '40px', backdropFilter: 'blur(10px)', position: 'relative', zIndex: 10 }}>
-              <h3 style={{ fontSize: '1.2rem', color: '#cbd5e1', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '16px' }}>Qualifying Work</h3>
-              <p style={{ margin: 0, color: '#f8fafc', fontSize: '1.05rem', lineHeight: 1.6, fontWeight: 300 }}>
-                An entry qualifies if it presents at least one of the following, authored by the student: a mini, capstone or design project; laboratory or experimental work extended beyond the prescribed exercise; work carried out under a funded or institutional research project; a research paper published, accepted or under review; an M.Tech or PhD research outcome; internship or industry project work with written permission from the host organisation; or an independent design, analysis or replication study with original results.
-              </p>
-            </motion.div>
-            
-            <motion.div variants={childVariants} style={{ background: 'rgba(220, 38, 38, 0.1)', border: '1px solid rgba(220, 38, 38, 0.3)', padding: '20px 24px', borderRadius: '16px', display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '40px', backdropFilter: 'blur(10px)' }}>
-              <AlertTriangle color="#F87171" size={32} style={{ flexShrink: 0 }} />
-              <p style={{ margin: 0, color: '#FECACA', fontSize: '1rem', fontWeight: 500, lineHeight: 1.5 }}>
-                <strong style={{ color: '#fff' }}>Essential Condition:</strong> The poster must carry a contribution that belongs to the author. Posters assembled from downloaded material, review-only or survey-only posters with no analysis, experiment, design or data of the author's own, product brochures, and work previously awarded at any Chennai Campus event will not be accepted.
-              </p>
-            </motion.div>
-
-            <h3 style={{ fontSize: '1.5rem', color: '#fff', marginBottom: '24px', position: 'relative', zIndex: 10 }}>10 Thematic Tracks</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px', position: 'relative', zIndex: 10 }}>
-              {posterData.tracks.map((track, idx) => (
-                <div key={idx} style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '20px', borderRadius: '16px' }}>
-                  <div style={{ display: 'inline-block', padding: '4px 10px', background: 'var(--orange)', color: '#fff', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 800, marginBottom: '12px' }}>
-                    {track.code}
-                  </div>
-                  <h4 style={{ fontSize: '1.1rem', color: '#fff', fontWeight: 700, margin: '0 0 12px 0', lineHeight: 1.3 }}>{track.name}</h4>
-                  <p style={{ color: '#94a3b8', fontSize: '0.9rem', lineHeight: 1.5, margin: 0 }}>{track.scope}</p>
-                </div>
-              ))}
-            </div>
           </div>
         </motion.section>
 
-        {/* Key Dates (Horizontal) */}
-        <motion.section id="key-dates" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} style={{ background: '#fff', borderRadius: '24px', padding: '40px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.05)', marginBottom: '60px', width: '100%', scrollMarginTop: '100px' }}>
-          <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '40px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <Calendar color="var(--orange)" /> Key Dates
-          </h2>
-          <div style={{ position: 'relative', display: 'flex', justifyContent: 'space-between', paddingTop: '16px', overflowX: 'auto', paddingBottom: '24px', minWidth: 'min-content', gap: '16px' }}>
-            {/* Horizontal Line */}
-            <div style={{ position: 'absolute', top: '27px', left: '20px', right: '20px', height: '2px', background: 'linear-gradient(to right, var(--orange) 0%, #e2e8f0 100%)', zIndex: 1 }} />
-            
-            {posterData.keyDates.map((item, index) => {
-              const isUpcoming = index === upcomingIndex;
-              const isPast = index < upcomingIndex;
-              
-              return (
-                <motion.div key={index} variants={childVariants} style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, minWidth: '140px' }}>
-                  {/* Timeline Dot */}
-                  <div style={{ 
-                    width: '24px', height: '24px', borderRadius: '50%', 
-                    background: isUpcoming ? 'var(--orange)' : isPast ? '#94a3b8' : '#fff',
-                    border: `3px solid ${isUpcoming ? '#fff' : isPast ? '#fff' : '#cbd5e1'}`,
-                    boxShadow: isUpcoming ? '0 0 0 4px rgba(234,88,12,0.2)' : 'none',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2,
-                    marginBottom: '20px'
-                  }}>
-                    {isUpcoming && <div style={{ width: '8px', height: '8px', background: '#fff', borderRadius: '50%' }} />}
-                  </div>
-                  
-                  <div style={{ 
-                    background: isUpcoming ? 'linear-gradient(to bottom, #fff7ed, #ffffff)' : 'transparent',
-                    padding: '16px 12px', borderRadius: '12px',
-                    border: isUpcoming ? '1px solid #fed7aa' : '1px solid transparent',
-                    transform: isUpcoming ? 'translateY(-10px)' : 'none',
-                    transition: 'all 0.3s ease',
-                    textAlign: 'center',
-                    width: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center'
-                  }}>
-                    <div style={{ color: isUpcoming ? 'var(--orange)' : 'var(--navy)', marginBottom: '8px' }}>
-                      {item.icon}
-                    </div>
-                    <div style={{ color: isUpcoming ? 'var(--orange)' : 'var(--navy)', fontWeight: 700, fontSize: '0.95rem', marginBottom: '8px', lineHeight: 1.3 }}>
-                      {item.title}
-                    </div>
-                    <div style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', fontWeight: 600 }}>
-                      {item.displayDate}
-                    </div>
-                  </div>
-                </motion.div>
-              )
-            })}
-          </div>
-        </motion.section>
-        
-        {/* Poster Specifications */}
-        <motion.section id="specifications" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} style={{ display: 'flex', flexDirection: 'column', gap: '32px', scrollMarginTop: '100px', marginBottom: '60px' }}>
-          <div style={{ background: '#fff', borderRadius: '24px', padding: '40px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.05)', height: '100%' }}>
-            <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <Layers color="var(--orange)" /> Poster Specifications
+        {/* 2. Eligibility */}
+        <motion.section id="eligibility" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "0px" }} style={{ marginBottom: '60px', scrollMarginTop: '100px' }}>
+          <div style={{ background: '#fff', borderRadius: '24px', padding: '40px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.05)' }}>
+            <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '32px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <CheckCircle2 color="var(--orange)" /> Eligibility — Who Can Apply?
             </h2>
-            <p style={{ color: 'var(--text-secondary)', marginBottom: '32px', fontSize: '1.05rem', lineHeight: 1.6 }}>
-              A2 portrait (420 × 594 mm), two-column, only. There is no alternative size or layout. Posters must be prepared on the official SAH 2026 A2 template issued with these guidelines. The template carries eight sections, all of which are mandatory: (1) Problem Statement · (2) Objectives · (3) Methodology · (4) Experimental Setup · (5) Results & Discussion · (6) Novelty & Own Contribution · (7) Conclusion & Impact · (8) References.
-            </p>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px' }}>
-              {posterData.specifications.map((item, idx) => (
-                <div key={idx} style={{ background: '#f8fafc', padding: '20px', borderRadius: '16px', border: '1px solid #e2e8f0' }}>
-                  <div style={{ fontSize: '0.85rem', color: 'var(--orange)', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.05em', marginBottom: '8px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
+              {posterData.eligibility.map((item, idx) => (
+                <motion.div whileHover={{ scale: 1.01 }} key={idx} style={{ 
+                  gridColumn: `span ${item.span}`,
+                  background: 'linear-gradient(145deg, #ffffff, #f8fafc)', 
+                  padding: '24px', 
+                  borderRadius: '16px', 
+                  border: '1px solid #e2e8f0',
+                  boxShadow: '0 4px 6px -1px rgba(0,0,0,0.02)'
+                }}>
+                  <div style={{ fontSize: '0.85rem', color: 'var(--orange)', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.1em', marginBottom: '12px' }}>
                     {item.label}
                   </div>
-                  <div style={{ color: 'var(--navy)', fontWeight: 500, lineHeight: 1.5, fontSize: '0.95rem' }}>
+                  <div style={{ color: 'var(--navy)', fontWeight: 600, lineHeight: 1.5, fontSize: '1.1rem' }}>
                     {item.value}
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
         </motion.section>
 
-        {/* Visual Evaluation Rubric */}
-        <motion.section id="rubric" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} style={{ marginTop: '60px', marginBottom: '60px', scrollMarginTop: '100px' }}>
+        {/* 3. Poster Scope */}
+        <motion.section id="scope" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "0px" }} style={{ marginBottom: '60px', scrollMarginTop: '100px' }}>
+          <div style={{ background: 'var(--navy)', borderRadius: '32px', padding: '48px', color: 'white', position: 'relative', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)' }}>
+            <div style={{ position: 'absolute', top: 0, right: 0, width: '400px', height: '400px', background: 'radial-gradient(circle, rgba(16,185,129,0.2) 0%, transparent 70%)', borderRadius: '50%', transform: 'translate(30%, -30%)' }} />
+            
+            <h2 style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '32px', position: 'relative', zIndex: 10 }}>Poster Scope</h2>
+            
+            <motion.div variants={childVariants} style={{ background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.3)', padding: '20px 24px', borderRadius: '16px', display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '40px', backdropFilter: 'blur(10px)' }}>
+              <ExternalLink color="#60A5FA" size={32} style={{ flexShrink: 0 }} />
+              <p style={{ margin: 0, color: '#DBEAFE', fontSize: '1.05rem', fontWeight: 500, lineHeight: 1.5 }}>
+                <strong style={{ color: '#fff' }}>Track Allotment:</strong> Every entry is placed in one of ten thematic tracks. Tracks are thematic, not departmental — a student of any programme may enter any track, and placement follows the subject of the work.
+              </p>
+            </motion.div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '40px', position: 'relative', zIndex: 10 }}>
+              <div>
+                <h3 style={{ fontSize: '1.2rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '20px' }}>Qualifying Work</h3>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
+                  {posterData.outputs.map((out, idx) => (
+                    <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.05)', padding: '10px 16px', borderRadius: '30px', fontSize: '0.9rem', fontWeight: 500 }}>
+                      <CheckCircle2 size={14} color="#34d399" /> {out}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              <div>
+                <h3 style={{ fontSize: '1.2rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '20px' }}>10 Thematic Tracks</h3>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                  {posterData.domains.map((domain, idx) => (
+                    <span key={idx} style={{ background: 'rgba(0,0,0,0.2)', padding: '8px 14px', borderRadius: '8px', fontSize: '0.85rem', color: '#cbd5e1', border: '1px solid rgba(255,255,255,0.1)' }}>
+                      {domain}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.section>
+
+        {/* 4. Selection Process & Key Dates */}
+        <motion.section id="key-dates" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "0px" }} style={{ marginBottom: '60px', scrollMarginTop: '100px' }}>
+          <div style={{ background: '#fff', borderRadius: '24px', padding: '40px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.05)' }}>
+            <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '32px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <Calendar color="var(--orange)" /> Selection Process and Key Dates
+            </h2>
+            <p style={{ color: 'var(--text-secondary)', marginBottom: '32px', fontSize: '1.1rem' }}>
+              The Poster Presentation will be held on <strong>Thursday, 10 September 2026</strong>. All deadlines close at 5.00 p.m. on the date indicated. No extensions will be granted.
+            </p>
+            
+            <div style={{ position: 'relative', paddingLeft: '32px', maxWidth: '800px' }}>
+              <div style={{ position: 'absolute', left: '11px', top: '10px', bottom: '10px', width: '2px', background: 'linear-gradient(to bottom, var(--orange) 0%, #e2e8f0 100%)' }} />
+              
+              {posterData.keyDates.map((item, index) => {
+                const isUpcoming = index === upcomingIndex;
+                const isPast = index < upcomingIndex;
+                
+                return (
+                  <motion.div key={index} variants={childVariants} style={{ position: 'relative', marginBottom: index === posterData.keyDates.length - 1 ? 0 : '32px' }}>
+                    <div style={{ 
+                      position: 'absolute', 
+                      left: '-32px', 
+                      top: '2px',
+                      width: '24px', 
+                      height: '24px', 
+                      borderRadius: '50%', 
+                      background: isUpcoming ? 'var(--orange)' : isPast ? '#94a3b8' : '#fff',
+                      border: `3px solid ${isUpcoming ? '#fff' : isPast ? '#fff' : '#cbd5e1'}`,
+                      boxShadow: isUpcoming ? '0 0 0 4px rgba(234,88,12,0.2)' : 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: isUpcoming ? '#fff' : 'transparent',
+                      zIndex: 2
+                    }}>
+                      {isUpcoming && <div style={{ width: '8px', height: '8px', background: '#fff', borderRadius: '50%' }} />}
+                    </div>
+                    
+                    <div style={{ 
+                      background: isUpcoming ? 'linear-gradient(to right, #fff7ed, #ffffff)' : 'transparent',
+                      padding: '16px 20px',
+                      borderRadius: '12px',
+                      border: isUpcoming ? '1px solid #fed7aa' : '1px solid transparent',
+                      transform: isUpcoming ? 'translateX(10px)' : 'none',
+                      transition: 'all 0.3s ease'
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: isUpcoming ? 'var(--orange)' : 'var(--navy)', fontWeight: 700, fontSize: '1.1rem', marginBottom: '4px' }}>
+                        {item.icon} {item.title}
+                      </div>
+                      <div style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>{item.displayDate}</div>
+                    </div>
+                  </motion.div>
+                )
+              })}
+            </div>
+          </div>
+        </motion.section>
+
+        {/* 5. Visual Evaluation Rubric */}
+        <motion.section id="rubric" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "0px" }} style={{ marginBottom: '60px', scrollMarginTop: '100px' }}>
           <h2 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '12px', textAlign: 'center' }}>Evaluation Rubric</h2>
-          <p style={{ textAlign: 'center', color: 'var(--text-secondary)', marginBottom: '40px', fontSize: '1.1rem' }}>How your poster will be scored by the jury (Total: 50 Marks)</p>
+          <p style={{ textAlign: 'center', color: 'var(--text-secondary)', marginBottom: '40px', fontSize: '1.1rem' }}>Each poster is evaluated out of 50 marks during the display and technical interaction. (40 marks technical substance, 10 marks defense).</p>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
             {posterData.rubric.map((item, idx) => (
@@ -347,16 +345,16 @@ export default function PosterPresentation() {
           </div>
         </motion.section>
 
-        {/* Trophy Awards Grid */}
-        <motion.section id="awards" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} style={{ marginTop: '60px', marginBottom: '80px', scrollMarginTop: '100px' }}>
-          <h2 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '12px', textAlign: 'center' }}>Award Categories</h2>
-          <p style={{ textAlign: 'center', color: 'var(--text-secondary)', marginBottom: '40px', fontSize: '1.1rem' }}>13 Awards conferred across 10 tracks and 3 cohorts.</p>
+        {/* 6. Trophy Awards Grid */}
+        <motion.section id="awards" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "0px" }} style={{ marginBottom: '80px', scrollMarginTop: '100px' }}>
+          <h2 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '12px', textAlign: 'center' }}>Awards and Recognition</h2>
+          <p style={{ textAlign: 'center', color: 'var(--text-secondary)', marginBottom: '40px', fontSize: '1.1rem' }}>Thirteen awards are conferred — one Best Poster in each of the ten tracks, and three named cohort awards.</p>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
             {posterData.awards.map((award, idx) => (
               <motion.div variants={childVariants} whileHover={{ scale: 1.03, rotate: 1 }} key={idx} style={{ 
                 background: award.gradient, 
-                padding: '2px', 
+                padding: '2px',
                 borderRadius: '20px', 
                 boxShadow: '0 15px 35px -10px rgba(0,0,0,0.1)' 
               }}>
@@ -364,7 +362,7 @@ export default function PosterPresentation() {
                   <div style={{ padding: '6px 12px', background: '#f1f5f9', color: '#64748b', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', borderRadius: '20px', alignSelf: 'flex-start', marginBottom: '20px' }}>
                     {award.badge}
                   </div>
-                  <h4 style={{ fontSize: '1.15rem', color: 'var(--navy)', fontWeight: 800, margin: 0, lineHeight: 1.4 }}>
+                  <h4 style={{ fontSize: '1.25rem', color: 'var(--navy)', fontWeight: 800, margin: 0, lineHeight: 1.3 }}>
                     {award.name}
                   </h4>
                 </div>
@@ -372,64 +370,165 @@ export default function PosterPresentation() {
             ))}
           </div>
           <p style={{ textAlign: 'center', color: '#64748b', fontStyle: 'italic', marginTop: '32px', fontSize: '0.95rem' }}>
-            * A poster may receive one award only. If a poster tops both a track and a cohort, the cohort award passes to the next-ranked poster.
+            * A poster may receive one award only. Each award winner receives a medal and a Certificate of Merit.
           </p>
         </motion.section>
 
-        {/* General Info & Contact */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '32px', marginBottom: '80px' }}>
-          
-          {/* General Information */}
-          <motion.section id="general" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} style={{ background: '#fff', borderRadius: '24px', padding: '40px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.05)', scrollMarginTop: '100px' }}>
+        {/* 7. General Information */}
+        <motion.section id="requirements" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "0px" }} style={{ marginBottom: '80px', scrollMarginTop: '100px' }}>
+          <div style={{ background: '#fff', borderRadius: '24px', padding: '40px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.05)' }}>
             <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '32px' }}>General Information</h2>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
               <div>
-                <h4 style={{ color: 'var(--navy)', fontSize: '1.1rem', fontWeight: 700, marginBottom: '8px' }}>Display & Presentation</h4>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6, margin: 0 }}>
-                  Board numbers follow the Poster ID and are displayed at the venue from 08.00 hrs on the event day. The author must be present throughout every scheduled jury round. Presentation may be in English or Tamil; the poster itself must be in English.
+                <h4 style={{ color: 'var(--navy)', fontSize: '1.1rem', fontWeight: 700, marginBottom: '8px' }}>Poster Specification</h4>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', lineHeight: 1.6, margin: 0 }}>
+                  A2 portrait (420 × 594 mm), two-column, only. Posters must be prepared on the official SAH 2026 A2 template. Mandatory sections: Problem Statement, Objectives, Methodology, Experimental Setup, Results & Discussion, Novelty & Own Contribution, Conclusion & Impact, References.
                 </p>
               </div>
+
               <div>
-                <h4 style={{ color: 'var(--navy)', fontSize: '1.1rem', fontWeight: 700, marginBottom: '8px' }}>Handouts</h4>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6, margin: 0 }}>
-                  Authors are advised to carry ten A4 reductions of their A2 poster for the jury and for visitors.
+                <h4 style={{ color: 'var(--navy)', fontSize: '1.1rem', fontWeight: 700, marginBottom: '8px' }}>Presentation & Handouts</h4>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', lineHeight: 1.6, margin: 0 }}>
+                  The author must be present at the poster throughout every scheduled jury round. Presentation may be in English or Tamil; the poster itself must be in English. Authors are advised to carry ten A4 reductions of their A2 poster for the jury and visitors.
                 </p>
               </div>
-              <div style={{ background: '#FEF2F2', padding: '16px', borderRadius: '12px', borderLeft: '4px solid #EF4444' }}>
-                <h4 style={{ color: '#991B1B', fontSize: '1.05rem', fontWeight: 700, marginBottom: '8px' }}>Academic Integrity</h4>
-                <p style={{ color: '#B91C1C', fontSize: '0.9rem', lineHeight: 1.6, margin: 0 }}>
-                  Posters must be original student work. Fabricated results, plagiarised content and undisclosed use of generative AI to produce results or the claimed contribution will lead to disqualification.
+
+              <div>
+                <h4 style={{ color: '#15803D', fontSize: '1.1rem', fontWeight: 700, marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <ShieldCheck size={18} /> Academic Integrity & Cross-Entry
+                </h4>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', lineHeight: 1.6, margin: 0 }}>
+                  Posters must be original student work. A student may enter the same work in only one SAH 2026 category. Identical work submitted to both the Project Expo and the Poster Presentation will be withdrawn from one.
                 </p>
               </div>
             </div>
-          </motion.section>
+          </div>
+        </motion.section>
 
-          {/* Contact & OC */}
-          <motion.section id="contact" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} style={{ background: '#fff', borderRadius: '32px', padding: '40px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.05)', scrollMarginTop: '100px' }}>
-            <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '32px' }}>Contact & Organising Committee</h2>
+        {/* 8. Organizing Committee & Contact */}
+        <motion.section id="contact" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "0px" }} style={{ marginBottom: '80px', scrollMarginTop: '100px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px' }}>
             
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '32px', background: '#f8fafc', padding: '20px', borderRadius: '16px' }}>
-              <div style={{ background: '#fff', padding: '12px', borderRadius: '50%', color: 'var(--orange)', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
-                <Mail size={24} />
+            <div style={{ background: '#fff', borderRadius: '24px', padding: '40px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.05)' }}>
+              <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '32px' }}>Organizing Committee</h2>
+              
+              <div style={{ marginBottom: '24px' }}>
+                <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--orange)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '8px' }}>Patron</div>
+                <div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--navy)' }}>Dr. V Jayakumar</div>
+                <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Principal, Amrita Chennai</div>
               </div>
-              <div>
-                <h4 style={{ margin: '0 0 4px 0', fontSize: '0.9rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Official Contact</h4>
-                <a href="mailto:sah@ch.amrita.edu" style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--navy)', textDecoration: 'none' }}>sah@ch.amrita.edu</a>
-              </div>
-            </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {posterData.oc.map((person, idx) => (
-                <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #f1f5f9', paddingBottom: '12px' }}>
-                  <div style={{ fontSize: '1rem', color: 'var(--navy)', fontWeight: 700 }}>{person.name}</div>
-                  <div style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', textAlign: 'right', maxWidth: '60%' }}>{person.role}</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--orange)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>Poster Presentation – Campus SPoC</div>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--navy)' }}>Dr. S. Parthasarathy</div>
                 </div>
-              ))}
+                <div>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--orange)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>MECH & RAI Programme Faculty Coordinator</div>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--navy)' }}>Dr. Rishikumar</div>
+                </div>
+                <div>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--orange)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>ECE & CCE Programme Faculty Coordinator</div>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--navy)' }}>Dr. S. Veluchamy</div>
+                </div>
+                <div>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--orange)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>CSE Program Faculty Coordinator</div>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--navy)' }}>Dr. K. Ashwini</div>
+                </div>
+                <div>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--orange)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>AI & CYS Programme Faculty Coordinator</div>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--navy)' }}>Dr. IR Oviya</div>
+                </div>
+              </div>
             </div>
-          </motion.section>
 
-        </div>
+            <div style={{ background: 'linear-gradient(135deg, var(--navy) 0%, #0f172a 100%)', borderRadius: '24px', padding: '40px', color: 'white', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.1)' }}>
+              <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'white', marginBottom: '32px' }}>Enquiries</h2>
+              <p style={{ color: '#94a3b8', fontSize: '1rem', lineHeight: 1.6, marginBottom: '24px' }}>
+                Students may approach the Programme Faculty Coordinator for their own programme in the first instance. Queries of a general nature may be sent to the Organising Committee by email.
+              </p>
+
+              <div>
+                <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--orange)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '8px' }}>Official Email</div>
+                <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'white', marginBottom: '4px' }}>sah@ch.amrita.edu</div>
+              </div>
+            </div>
+          </div>
+        </motion.section>
+
+        {/* 9. Guidelines and Templates */}
+        <motion.section id="templates" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "0px" }} style={{ marginBottom: '80px', scrollMarginTop: '100px' }}>
+          <div style={{ background: '#fff', borderRadius: '24px', padding: '40px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.05)' }}>
+            <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '32px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <Download color="var(--orange)" /> Guidelines and Templates
+            </h2>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px' }}>
+              
+              <button 
+                onClick={downloadPosterGuidelines}
+                style={{ background: 'var(--navy)', color: 'white', border: 'none', padding: '24px', borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '16px', cursor: 'pointer', textAlign: 'left', transition: 'all 0.3s ease', boxShadow: '0 10px 20px -10px rgba(0,0,0,0.2)' }}
+                onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+                onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+              >
+                <div style={{ background: 'rgba(255,255,255,0.1)', padding: '12px', borderRadius: '12px' }}>
+                  <FileText color="var(--orange)" size={24} />
+                </div>
+                <div>
+                  <div style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '6px' }}>Poster Guidelines</div>
+                  <div style={{ fontSize: '0.9rem', color: '#94a3b8' }}>PDF Document (Available)</div>
+                </div>
+              </button>
+
+              <button 
+                onClick={downloadPosterTemplate}
+                style={{ background: 'var(--navy)', color: 'white', border: 'none', padding: '24px', borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '16px', cursor: 'pointer', textAlign: 'left', transition: 'all 0.3s ease', boxShadow: '0 10px 20px -10px rgba(0,0,0,0.2)' }}
+                onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+                onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+              >
+                <div style={{ background: 'rgba(255,255,255,0.1)', padding: '12px', borderRadius: '12px' }}>
+                  <FileText color="var(--orange)" size={24} />
+                </div>
+                <div>
+                  <div style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '6px' }}>Template A2 (Blank)</div>
+                  <div style={{ fontSize: '0.9rem', color: '#94a3b8' }}>PPTX Document</div>
+                </div>
+              </button>
+
+              <button 
+                onClick={downloadPosterHardwareSample}
+                style={{ background: 'var(--navy)', color: 'white', border: 'none', padding: '24px', borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '16px', cursor: 'pointer', textAlign: 'left', transition: 'all 0.3s ease', boxShadow: '0 10px 20px -10px rgba(0,0,0,0.2)' }}
+                onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+                onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+              >
+                <div style={{ background: 'rgba(255,255,255,0.1)', padding: '12px', borderRadius: '12px' }}>
+                  <Cpu color="var(--orange)" size={24} />
+                </div>
+                <div>
+                  <div style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '6px' }}>Hardware Sample</div>
+                  <div style={{ fontSize: '0.9rem', color: '#94a3b8' }}>PDF Document</div>
+                </div>
+              </button>
+
+              <button 
+                onClick={downloadPosterSoftwareSample}
+                style={{ background: 'var(--navy)', color: 'white', border: 'none', padding: '24px', borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '16px', cursor: 'pointer', textAlign: 'left', transition: 'all 0.3s ease', boxShadow: '0 10px 20px -10px rgba(0,0,0,0.2)' }}
+                onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+                onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+              >
+                <div style={{ background: 'rgba(255,255,255,0.1)', padding: '12px', borderRadius: '12px' }}>
+                  <Cpu color="var(--orange)" size={24} />
+                </div>
+                <div>
+                  <div style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '6px' }}>Software Sample</div>
+                  <div style={{ fontSize: '0.9rem', color: '#94a3b8' }}>PDF Document</div>
+                </div>
+              </button>
+
+            </div>
+          </div>
+        </motion.section>
 
         {/* Premium Floating CTA */}
         <motion.div 
@@ -455,7 +554,10 @@ export default function PosterPresentation() {
         >
           <div>
             <h3 style={{ margin: '0 0 8px 0', color: 'var(--navy)', fontSize: '1.5rem', fontWeight: 800 }}>Ready to present your research?</h3>
-            <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '1rem', fontWeight: 500 }}>Secure your spot at the SAH 2026 Poster Presentation today.</p>
+            <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '1rem', fontWeight: 500 }}>
+              Secure your spot at the SAH 2026 Poster Presentation today.<br/>
+              <strong style={{color: 'var(--orange)'}}>Note: Posters carry a single author. There are no teams in this category.</strong>
+            </p>
           </div>
           <button 
             className="btn btn-orange btn-lg" 

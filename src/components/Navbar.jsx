@@ -180,13 +180,10 @@ export default function Navbar() {
       { path: '/problem-statements', label: 'Problem Statements' },
       { path: '/sah#objectives', label: 'Objectives' },
       { path: '/sah#eligibility', label: 'Eligibility' },
-      { path: '/sah#themes-categories', label: 'Themes & Categories' },
       { path: '/sah#key-dates', label: 'Key Dates' },
-      { path: '/sah#evaluation-rubric', label: 'Evaluation Rubric' },
-      { path: '/sah#submission-requirements', label: 'Submission Requirements' },
+      { path: '/sah#rubric', label: 'Evaluation Rubric' },
       { path: '/sah#awards', label: 'Awards' },
-      { path: '/sah#nomination-support', label: 'Nomination Support' },
-      { path: '/sah#general-guidelines', label: 'General Guidelines' },
+      { path: '/sah#requirements', label: 'General Guidelines' },
       { path: '/sah#contact', label: 'Contact' },
     ];
   }

@@ -109,11 +109,11 @@ export default function ProjectExpoRegister() {
 
       if (insertError) throw insertError;
       
-      // Trigger confirmation email
       try {
-        const { error: invokeErr } = await supabase.functions.invoke('send-email', {
+        const { data: resData, error: invokeErr } = await supabase.functions.invoke('send-email', {
           body: {
             type: 'expo',
+            email: leaderEmail.trim(), // explicitly pass 'email' for the edge function
             leaderName: leaderName.trim(),
             leaderEmail: leaderEmail.trim(),
             projectTitle: projectTitle.trim(),
@@ -124,14 +124,23 @@ export default function ProjectExpoRegister() {
             mentorName: facultyMentorName.trim()
           }
         });
-        if (invokeErr) {
-          console.warn("Edge function mail warning:", invokeErr);
+        if (invokeErr || (resData && resData.error)) {
+          console.warn("Edge function mail warning:", invokeErr || resData?.error);
         }
       } catch (mailErr) {
         console.error("Failed to send confirmation mail:", mailErr);
         // We don't throw here because registration was still successful
       }
       
+      // Save details locally to prefill SAH Hackathon registration if they decide to register later
+      if (!user) {
+        localStorage.setItem('sah_prefill', JSON.stringify({
+          fullName: leaderName.trim(),
+          rollNo: leaderRoll.trim(),
+          collegeEmail: leaderEmail.trim()
+        }));
+      }
+
       setSuccess(true);
       setTimeout(() => {
         if (user) {

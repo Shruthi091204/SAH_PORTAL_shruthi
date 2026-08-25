@@ -15,7 +15,8 @@ serve(async (req) => {
     const body = await req.json()
     const { 
       type, email, otpCode, 
-      leaderName, leaderEmail, projectTitle, domain, teamSize, member2Name, member3Name, mentorName 
+      leaderName, leaderEmail, projectTitle, domain, teamSize, member2Name, member3Name, mentorName,
+      authorName, authorEmail, posterTitle, track
     } = body
 
     // We hardcode the credentials here to make it simple for the deployment without needing to configure Secrets via CLI.
@@ -34,7 +35,7 @@ serve(async (req) => {
 
     let subject = '';
     let htmlContent = '';
-    const targetEmail = type === 'expo' ? leaderEmail : email;
+    const targetEmail = type === 'expo' ? leaderEmail : (type === 'poster' ? authorEmail : email);
 
     if (type === 'registration' || type === 'password_reset') {
       const isRegistration = type === 'registration';
@@ -99,6 +100,36 @@ serve(async (req) => {
 
           <div style="margin-top: 30px; text-align: center;">
             <p style="font-size: 0.85rem; color: #777777; line-height: 1.4;">Thank you for innovating with us!<br/>- SAH 2026 Organizing Committee</p>
+          </div>
+        </div>
+      `;
+    } else if (type === 'poster') {
+      subject = 'SAH 2026 Poster Presentation - Registration Confirmed!';
+
+      htmlContent = `
+        <div style="font-family: Arial, sans-serif; max-width: 550px; margin: 0 auto; padding: 24px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: #ffffff;">
+          <div style="text-align: center; margin-bottom: 20px; border-bottom: 2px solid #E3F2FD; padding-bottom: 16px;">
+            <h2 style="color: #1E3A8A; margin: 0; font-size: 22px;">Smart Amrita Hackathon 2026</h2>
+            <p style="color: #666666; font-size: 0.95rem; margin-top: 6px; font-weight: 600;">Poster Presentation Registration Confirmed</p>
+          </div>
+          
+          <p style="font-size: 1rem; color: #333333; line-height: 1.5;">Dear <strong>${authorName}</strong>,</p>
+          <p style="font-size: 0.95rem; color: #333333; line-height: 1.5;">
+            Congratulations! Your poster has been successfully registered for the SAH 2026 Poster Presentation event. Below are your registration details:
+          </p>
+
+          <div style="background-color: #F8FAFC; padding: 16px; border-radius: 8px; border-left: 4px solid #1E3A8A; margin: 20px 0;">
+            <p style="margin: 0 0 8px 0; font-size: 0.95rem;"><strong>Poster Title:</strong> <span style="color: #1E3A8A;">${posterTitle}</span></p>
+            <p style="margin: 0 0 8px 0; font-size: 0.95rem;"><strong>Thematic Track:</strong> ${track}</p>
+            <p style="margin: 0 0 0 0; font-size: 0.95rem;"><strong>Faculty Mentor:</strong> ${mentorName}</p>
+          </div>
+
+          <p style="font-size: 0.95rem; color: #333333; line-height: 1.5;">
+            Please ensure your poster meets the A0 specification guidelines and is ready before the presentation day. If you need any assistance, reach out to your faculty mentor or the SAH organizing committee.
+          </p>
+
+          <div style="margin-top: 30px; text-align: center;">
+            <p style="font-size: 0.85rem; color: #777777; line-height: 1.4;">Thank you for contributing to research and innovation!<br/>- SAH 2026 Organizing Committee</p>
           </div>
         </div>
       `;

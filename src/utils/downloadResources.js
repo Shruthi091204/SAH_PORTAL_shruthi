@@ -34,14 +34,41 @@ export function downloadExpoGuidelines() {
 }
 
 export function downloadPosterGuidelines() {
-  const content = `POSTER PRESENTATION 2026 - GUIDELINES\n\n1. Overview\nPresent your research methodologies and findings.\n\n2. Dimensions\nStandard A0 size (Portrait). \n\n3. Evaluation\nJudged on scientific rigor, visual clarity, and presentation skills.`;
-  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
+  const url = `${import.meta.env.BASE_URL}SAH2026_Poster_Presentation_Guidelines_25_08_2026.pdf`;
   const link = document.createElement('a');
   link.href = url;
-  link.download = 'Poster_Presentation_2026_Guidelines.txt';
+  link.download = 'SAH2026_Poster_Presentation_Guidelines.pdf';
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
-  URL.revokeObjectURL(url);
+}
+
+export function downloadPosterTemplate() {
+  const url = `${import.meta.env.BASE_URL}SAH2026_Poster_Template_A2.pptx`;
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'SAH2026_Poster_Template_A2.pptx';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+export function downloadPosterHardwareSample() {
+  const url = `${import.meta.env.BASE_URL}SAH2026_Poster_Sample Poster_A2 Size_Robotics_25.08.2026.pdf`;
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'SAH2026_Poster_Sample_Hardware_Robotics.pdf';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+export function downloadPosterSoftwareSample() {
+  const url = `${import.meta.env.BASE_URL}SAH2026_Poster_Sample Poster_A2_AI-Based Research.pdf`;
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'SAH2026_Poster_Sample_Software_AI.pdf';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }

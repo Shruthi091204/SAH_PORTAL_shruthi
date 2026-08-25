@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { downloadExpoGuidelines } from '../../utils/downloadResources';
 import { 
   CheckCircle2, 
   AlertTriangle, 
@@ -15,10 +16,18 @@ import {
   Cpu,
   Trophy,
   ShieldCheck,
-  CheckSquare
+  CheckSquare,
+  Download,
+  FileText
 } from 'lucide-react';
 
 const expoData = {
+  objectives: [
+    "Showcase outstanding student projects, prototypes and technological solutions across departments.",
+    "Encourage engineering innovation, problem-solving and interdisciplinary collaboration.",
+    "Enable structured evaluation by faculty, researchers and external industry experts.",
+    "Identify projects with potential for patenting, commercialisation, industry deployment or startup development."
+  ],
   keyDates: [
     { title: "Registration Opens", dateStr: "2026-08-24", displayDate: "Mon, 24 Aug 2026", icon: <Users size={18} /> },
     { title: "Registration Closes", dateStr: "2026-08-31", displayDate: "Mon, 31 Aug 2026 (5:00 PM)", icon: <AlertTriangle size={18} /> },
@@ -29,25 +38,24 @@ const expoData = {
     { title: "Awards & Opportunity Mapping", dateStr: "2026-09-10", displayDate: "Thu, 10 Sep 2026", icon: <Trophy size={18} /> }
   ],
   eligibility: [
-    { label: "Who may apply", value: "B.Tech / M.Tech / PhD, any year", span: 1 },
-    { label: "Team size", value: "2–3 students, interdisciplinary encouraged", span: 1 },
-    { label: "Application Process", value: "Only the Team Leader needs to apply for the event on behalf of the entire team.", span: 2 },
-    { label: "Faculty mentor", value: "Mandatory, must endorse project", span: 1 },
-    { label: "Entries per student", value: "Max 2 teams", span: 1 },
-    { label: "Project stage", value: "Ongoing or completed, demo-ready", span: 2 },
-    { label: "Accepted Work", value: "Final-year/capstone/mini-projects, course projects with real engineering depth, interdisciplinary, independent prototypes", span: 2 }
+    { label: "Who may apply", value: "Students of any B.Tech, M.Tech or PhD programme, in any year of study.", span: 1 },
+    { label: "Team size", value: "2–3 students per project. Interdisciplinary teams across departments are strongly encouraged.", span: 1 },
+    { label: "Faculty mentor", value: "Mandatory. A faculty mentor from any department must endorse the project, certifying student authorship and demonstration readiness.", span: 2 },
+    { label: "Project stage", value: "Ongoing or completed, and sufficiently developed for a live demonstration before the jury.", span: 1 },
+    { label: "Entries per student", value: "A student may be part of not more than two Project Expo teams.", span: 1 },
+    { label: "Projects accepted", value: "Final-year, capstone and mini-projects with significant innovation; course-based projects with substantial engineering implementation; interdisciplinary projects; and independently developed student prototypes.", span: 2 }
   ],
   outputs: [
-    "Hardware prototype", "Software app/platform", "Hardware+software system",
-    "Robotics/automation", "AI/ML with demo output", "IoT/cyber-physical system",
-    "Validated experimental setup", "Simulation with verified performance"
+    "Hardware prototype or device", "Software application/platform", "Integrated hardware-software system",
+    "Robotics or automation system", "AI/ML implementation with demo output", "IoT or cyber-physical system",
+    "Validated experimental setup", "Simulation or engineering design with verified performance"
   ],
   domains: [
-    "AI & ML", "Data Science & Computing", "Electronics & Embedded Systems", 
+    "AI & Machine Learning", "Data Science & Computing", "Electronics & Embedded Systems", 
     "IoT & Cyber-Physical Systems", "Communication & Signal Processing", 
-    "VLSI & Semiconductor Tech", "Robotics & Automation", 
-    "Healthcare & Biomedical Tech", "Energy & Sustainable Tech", 
-    "Advanced Materials & Nanotech", "Smart Manufacturing", 
+    "VLSI & Semiconductor Technologies", "Robotics & Automation", 
+    "Healthcare & Biomedical Technology", "Energy & Sustainable Technologies", 
+    "Advanced Materials & Nanotechnology", "Smart Manufacturing", 
     "Smart Campus Solutions", "Environmental & Social Innovation", 
     "Interdisciplinary Technologies", "Open Innovation"
   ],
@@ -61,12 +69,12 @@ const expoData = {
   ],
   awards: [
     { name: "Best Overall Project", badge: "Excellence", gradient: "linear-gradient(135deg, #FFD700 0%, #F59E0B 100%)" },
-    { name: "Best Innovation", badge: "Innovation", gradient: "linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%)" },
-    { name: "Best Working Prototype", badge: "Engineering", gradient: "linear-gradient(135deg, #34D399 0%, #10B981 100%)" },
-    { name: "Best Technical Implementation", badge: "Engineering", gradient: "linear-gradient(135deg, #A78BFA 0%, #8B5CF6 100%)" },
+    { name: "Best Innovation", badge: "Innovation & Engineering", gradient: "linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%)" },
+    { name: "Best Working Prototype", badge: "Innovation & Engineering", gradient: "linear-gradient(135deg, #34D399 0%, #10B981 100%)" },
+    { name: "Best Technical Implementation", badge: "Innovation & Engineering", gradient: "linear-gradient(135deg, #A78BFA 0%, #8B5CF6 100%)" },
     { name: "Best Interdisciplinary Project", badge: "Collaboration", gradient: "linear-gradient(135deg, #F472B6 0%, #EC4899 100%)" },
-    { name: "Best Industry-Relevant Project", badge: "Enterprise", gradient: "linear-gradient(135deg, #94A3B8 0%, #64748B 100%)" },
-    { name: "Best Startup Potential", badge: "Enterprise", gradient: "linear-gradient(135deg, #FB923C 0%, #F97316 100%)" },
+    { name: "Best Industry-Relevant Project", badge: "Industry & Enterprise", gradient: "linear-gradient(135deg, #94A3B8 0%, #64748B 100%)" },
+    { name: "Best Startup Potential", badge: "Industry & Enterprise", gradient: "linear-gradient(135deg, #FB923C 0%, #F97316 100%)" },
     { name: "Best Social Impact Project", badge: "Impact", gradient: "linear-gradient(135deg, #2DD4BF 0%, #14B8A6 100%)" },
     { name: "Best Sustainable Technology", badge: "Impact", gradient: "linear-gradient(135deg, #84CC16 0%, #65A30D 100%)" },
     { name: "Young Innovator Award", badge: "Emerging Talent", gradient: "linear-gradient(135deg, #C084FC 0%, #A855F7 100%)" }
@@ -135,6 +143,17 @@ export default function ProjectExpo() {
           style={{ position: 'absolute', bottom: '-20%', right: '-10%', width: '500px', height: '500px', background: 'radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%)', borderRadius: '50%' }}
         />
 
+        {/* Register Now Button in Hero Right */}
+        <div style={{ position: 'absolute', top: '40px', right: '40px', zIndex: 30 }}>
+          <button 
+            className="btn btn-orange btn-lg" 
+            onClick={() => navigate('/events/project-expo/register')}
+            style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1rem', padding: '12px 24px', borderRadius: '50px', boxShadow: '0 10px 25px -5px rgba(234, 88, 12, 0.4)' }}
+          >
+            Register Now <ChevronRight size={18} strokeWidth={3} />
+          </button>
+        </div>
+
         <motion.div relative zIndex={10} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }}>
           <div style={{ display: 'inline-block', padding: '6px 16px', background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)', borderRadius: '30px', fontSize: '0.9rem', fontWeight: 600, letterSpacing: '0.1em', marginBottom: '24px', color: 'var(--orange)', textTransform: 'uppercase' }}>
             SAH 2026 Special Track
@@ -148,16 +167,104 @@ export default function ProjectExpo() {
         </motion.div>
       </div>
 
-      <div style={{ maxWidth: '1200px', margin: '-60px auto 0', padding: '0 24px', position: 'relative', zIndex: 20 }}>
+      <div style={{ maxWidth: '1200px', margin: '40px auto', padding: '0 24px', position: 'relative', zIndex: 20 }}>
         
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '32px', marginBottom: '60px' }}>
-          
-          {/* Creative Timeline (Left Column) */}
-          <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} style={{ background: '#fff', borderRadius: '24px', padding: '40px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.05)', border: '1px solid rgba(255,255,255,0.5)' }}>
+        {/* 1. Objectives */}
+        <motion.section id="objectives" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "0px" }} style={{ marginBottom: '60px', scrollMarginTop: '100px' }}>
+          <div style={{ background: '#fff', borderRadius: '24px', padding: '40px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.05)' }}>
             <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '32px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <Calendar color="var(--orange)" /> Key Dates
+              <Target color="var(--orange)" /> Objectives
             </h2>
-            <div style={{ position: 'relative', paddingLeft: '32px' }}>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {expoData.objectives.map((obj, idx) => (
+                <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', color: 'var(--navy)', fontWeight: 500, fontSize: '1.1rem', lineHeight: 1.5 }}>
+                  <div style={{ width: '8px', height: '8px', background: 'var(--orange)', borderRadius: '50%', marginTop: '10px', flexShrink: 0 }} />
+                  {obj}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </motion.section>
+
+        {/* 2. Eligibility */}
+        <motion.section id="eligibility" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "0px" }} style={{ marginBottom: '60px', scrollMarginTop: '100px' }}>
+          <div style={{ background: '#fff', borderRadius: '24px', padding: '40px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.05)' }}>
+            <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '32px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <CheckCircle2 color="var(--orange)" /> Eligibility — Who Can Apply?
+            </h2>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
+              {expoData.eligibility.map((item, idx) => (
+                <motion.div whileHover={{ scale: 1.01 }} key={idx} style={{ 
+                  gridColumn: `span ${item.span}`,
+                  background: 'linear-gradient(145deg, #ffffff, #f8fafc)', 
+                  padding: '24px', 
+                  borderRadius: '16px', 
+                  border: '1px solid #e2e8f0',
+                  boxShadow: '0 4px 6px -1px rgba(0,0,0,0.02)'
+                }}>
+                  <div style={{ fontSize: '0.85rem', color: 'var(--orange)', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.1em', marginBottom: '12px' }}>
+                    {item.label}
+                  </div>
+                  <div style={{ color: 'var(--navy)', fontWeight: 600, lineHeight: 1.5, fontSize: '1.1rem' }}>
+                    {item.value}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </motion.section>
+
+        {/* 3. Project Scope */}
+        <motion.section id="scope" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "0px" }} style={{ marginBottom: '60px', scrollMarginTop: '100px' }}>
+          <div style={{ background: 'var(--navy)', borderRadius: '32px', padding: '48px', color: 'white', position: 'relative', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)' }}>
+            <div style={{ position: 'absolute', top: 0, right: 0, width: '400px', height: '400px', background: 'radial-gradient(circle, rgba(234,88,12,0.2) 0%, transparent 70%)', borderRadius: '50%', transform: 'translate(30%, -30%)' }} />
+            
+            <h2 style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '32px', position: 'relative', zIndex: 10 }}>Project Scope</h2>
+            
+            <motion.div variants={childVariants} style={{ background: 'rgba(220, 38, 38, 0.1)', border: '1px solid rgba(220, 38, 38, 0.3)', padding: '20px 24px', borderRadius: '16px', display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '40px', backdropFilter: 'blur(10px)' }}>
+              <AlertTriangle color="#F87171" size={32} style={{ flexShrink: 0 }} />
+              <p style={{ margin: 0, color: '#FECACA', fontSize: '1.05rem', fontWeight: 500, lineHeight: 1.5 }}>
+                <strong style={{ color: '#fff' }}>Essential Condition:</strong> The project must have sufficient technical maturity for a meaningful live demonstration. Concept posters, literature surveys and video-only submissions without a functioning system will NOT be accepted.
+              </p>
+            </motion.div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '40px', position: 'relative', zIndex: 10 }}>
+              <div>
+                <h3 style={{ fontSize: '1.2rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '20px' }}>Qualifying Outputs</h3>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
+                  {expoData.outputs.map((out, idx) => (
+                    <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.05)', padding: '10px 16px', borderRadius: '30px', fontSize: '0.9rem', fontWeight: 500 }}>
+                      <Zap size={14} color="var(--orange)" /> {out}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              <div>
+                <h3 style={{ fontSize: '1.2rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '20px' }}>Domains (Indicative)</h3>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                  {expoData.domains.map((domain, idx) => (
+                    <span key={idx} style={{ background: 'rgba(0,0,0,0.2)', padding: '8px 14px', borderRadius: '8px', fontSize: '0.85rem', color: '#cbd5e1', border: '1px solid rgba(255,255,255,0.1)' }}>
+                      {domain}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.section>
+
+        {/* 4. Selection Process & Key Dates */}
+        <motion.section id="key-dates" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "0px" }} style={{ marginBottom: '60px', scrollMarginTop: '100px' }}>
+          <div style={{ background: '#fff', borderRadius: '24px', padding: '40px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.05)' }}>
+            <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '32px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <Calendar color="var(--orange)" /> Selection Process and Key Dates
+            </h2>
+            <p style={{ color: 'var(--text-secondary)', marginBottom: '32px', fontSize: '1.1rem' }}>
+              The Project Expo will be held on <strong>Thursday, 10 September 2026</strong>. All deadlines close at 5.00 p.m. on the date indicated. No extensions will be granted.
+            </p>
+            
+            <div style={{ position: 'relative', paddingLeft: '32px', maxWidth: '800px' }}>
               {/* Vertical Line */}
               <div style={{ position: 'absolute', left: '11px', top: '10px', bottom: '10px', width: '2px', background: 'linear-gradient(to bottom, var(--orange) 0%, #e2e8f0 100%)' }} />
               
@@ -204,82 +311,13 @@ export default function ProjectExpo() {
                 )
               })}
             </div>
-          </motion.div>
-
-          {/* Bento Grid Eligibility (Right Column) */}
-          <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-            <div style={{ background: '#fff', borderRadius: '24px', padding: '40px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.05)', height: '100%' }}>
-              <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '32px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <CheckCircle2 color="var(--orange)" /> Eligibility Criteria
-              </h2>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
-                {expoData.eligibility.map((item, idx) => (
-                  <motion.div whileHover={{ scale: 1.02 }} key={idx} style={{ 
-                    gridColumn: `span ${item.span}`,
-                    background: 'linear-gradient(145deg, #ffffff, #f8fafc)', 
-                    padding: '20px', 
-                    borderRadius: '16px', 
-                    border: '1px solid #e2e8f0',
-                    boxShadow: '0 4px 6px -1px rgba(0,0,0,0.02)'
-                  }}>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--orange)', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.1em', marginBottom: '8px' }}>
-                      {item.label}
-                    </div>
-                    <div style={{ color: 'var(--navy)', fontWeight: 600, lineHeight: 1.4, fontSize: '1rem' }}>
-                      {item.value}
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-
-        </div>
-
-        {/* Dynamic Project Scope */}
-        <motion.section variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} style={{ marginBottom: '60px' }}>
-          <div style={{ background: 'var(--navy)', borderRadius: '32px', padding: '48px', color: 'white', position: 'relative', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)' }}>
-            <div style={{ position: 'absolute', top: 0, right: 0, width: '400px', height: '400px', background: 'radial-gradient(circle, rgba(234,88,12,0.2) 0%, transparent 70%)', borderRadius: '50%', transform: 'translate(30%, -30%)' }} />
-            
-            <h2 style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '32px', position: 'relative', zIndex: 10 }}>Project Scope & Domains</h2>
-            
-            <motion.div variants={childVariants} style={{ background: 'rgba(220, 38, 38, 0.1)', border: '1px solid rgba(220, 38, 38, 0.3)', padding: '20px 24px', borderRadius: '16px', display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '40px', backdropFilter: 'blur(10px)' }}>
-              <AlertTriangle color="#F87171" size={32} style={{ flexShrink: 0 }} />
-              <p style={{ margin: 0, color: '#FECACA', fontSize: '1.05rem', fontWeight: 500, lineHeight: 1.5 }}>
-                <strong style={{ color: '#fff' }}>Strict Warning:</strong> Concept posters, literature surveys, and video-only submissions without a functioning system will NOT be accepted.
-              </p>
-            </motion.div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '40px', position: 'relative', zIndex: 10 }}>
-              <div>
-                <h3 style={{ fontSize: '1.2rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '20px' }}>Qualifying Outputs</h3>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
-                  {expoData.outputs.map((out, idx) => (
-                    <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.05)', padding: '10px 16px', borderRadius: '30px', fontSize: '0.9rem', fontWeight: 500 }}>
-                      <Zap size={14} color="var(--orange)" /> {out}
-                    </div>
-                  ))}
-                </div>
-              </div>
-              
-              <div>
-                <h3 style={{ fontSize: '1.2rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '20px' }}>Eligible Domains</h3>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                  {expoData.domains.map((domain, idx) => (
-                    <span key={idx} style={{ background: 'rgba(0,0,0,0.2)', padding: '8px 14px', borderRadius: '8px', fontSize: '0.85rem', color: '#cbd5e1', border: '1px solid rgba(255,255,255,0.1)' }}>
-                      {domain}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
           </div>
         </motion.section>
 
-        {/* Visual Evaluation Rubric */}
-        <motion.section variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} style={{ marginBottom: '60px' }}>
+        {/* 5. Visual Evaluation Rubric */}
+        <motion.section id="rubric" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "0px" }} style={{ marginBottom: '60px', scrollMarginTop: '100px' }}>
           <h2 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '12px', textAlign: 'center' }}>Evaluation Rubric</h2>
-          <p style={{ textAlign: 'center', color: 'var(--text-secondary)', marginBottom: '40px', fontSize: '1.1rem' }}>How your project will be scored by the jury (Total: 50 Marks)</p>
+          <p style={{ textAlign: 'center', color: 'var(--text-secondary)', marginBottom: '40px', fontSize: '1.1rem' }}>Each project is evaluated out of 50 marks during the live demonstration and technical interaction.</p>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
             {expoData.rubric.map((item, idx) => (
@@ -307,10 +345,10 @@ export default function ProjectExpo() {
           </div>
         </motion.section>
 
-        {/* Trophy Awards Grid */}
-        <motion.section variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} style={{ marginBottom: '80px' }}>
-          <h2 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '12px', textAlign: 'center' }}>Award Categories</h2>
-          <p style={{ textAlign: 'center', color: 'var(--text-secondary)', marginBottom: '40px', fontSize: '1.1rem' }}>Compete for excellence across 10 prestigious categories.</p>
+        {/* 6. Trophy Awards Grid */}
+        <motion.section id="awards" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "0px" }} style={{ marginBottom: '80px', scrollMarginTop: '100px' }}>
+          <h2 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '12px', textAlign: 'center' }}>Award Categories and Recognition</h2>
+          <p style={{ textAlign: 'center', color: 'var(--text-secondary)', marginBottom: '40px', fontSize: '1.1rem' }}>Compete for excellence across prestigious categories. Each category carries a Winner and a Runner-Up.</p>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
             {expoData.awards.map((award, idx) => (
@@ -332,79 +370,53 @@ export default function ProjectExpo() {
             ))}
           </div>
           <p style={{ textAlign: 'center', color: '#64748b', fontStyle: 'italic', marginTop: '32px', fontSize: '0.95rem' }}>
-            * One category award per project. Best Overall Project winner is ineligible for any other category. Jury decision is final.
+            * One category award per project. Best Overall Project winner is ineligible for any other category. Certificates and medals for winners. E-certificates for all participants.
           </p>
         </motion.section>
 
-        {/* Requirements & Safety Container */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '32px', marginBottom: '80px' }}>
-          
-          {/* Exhibition Requirements */}
-          <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} style={{ background: '#fff', borderRadius: '24px', padding: '40px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.05)' }}>
-            <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '32px' }}>Stall Requirements</h2>
+        {/* 7. General Information */}
+        <motion.section id="requirements" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "0px" }} style={{ marginBottom: '80px', scrollMarginTop: '100px' }}>
+          <div style={{ background: '#fff', borderRadius: '24px', padding: '40px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.05)' }}>
+            <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '32px' }}>General Information</h2>
             
-            <div style={{ marginBottom: '32px' }}>
-              <h4 style={{ color: '#3B82F6', fontSize: '1.1rem', fontWeight: 700, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}><CheckCircle2 size={20} /> Mandatory</h4>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {expoData.exhibitionRequirements.mandatory.map((req, idx) => (
-                  <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', color: 'var(--navy)', fontWeight: 500 }}>
-                    <div style={{ width: '6px', height: '6px', background: '#3B82F6', borderRadius: '50%', marginTop: '8px', flexShrink: 0 }} />
-                    {req}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h4 style={{ color: '#10B981', fontSize: '1.1rem', fontWeight: 700, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}><CheckCircle2 size={20} /> Recommended</h4>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {expoData.exhibitionRequirements.recommended.map((req, idx) => (
-                  <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', color: 'var(--navy)', fontWeight: 500 }}>
-                    <div style={{ width: '6px', height: '6px', background: '#10B981', borderRadius: '50%', marginTop: '8px', flexShrink: 0 }} />
-                    {req}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            
-            <div style={{ marginTop: '32px', background: '#FFF7ED', border: '1px dashed #F97316', padding: '16px', borderRadius: '12px', fontSize: '0.9rem', color: '#9A3412', lineHeight: 1.6 }}>
-              <strong>Backup Plan:</strong> {expoData.exhibitionRequirements.backup}
-            </div>
-          </motion.div>
-
-          {/* Safety & Integrity */}
-          <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} style={{ background: '#fff', borderRadius: '24px', padding: '40px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.05)' }}>
-            <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '32px' }}>Safety & Integrity</h2>
-            
-            <motion.div whileHover={{ scale: 1.02 }} style={{ background: '#FEF2F2', padding: '24px', borderRadius: '16px', borderLeft: '6px solid #EF4444', marginBottom: '24px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
-                <div style={{ background: '#FEE2E2', padding: '8px', borderRadius: '50%' }}>
-                  <ShieldAlert color="#DC2626" size={24} />
-                </div>
-                <h4 style={{ margin: 0, color: '#991B1B', fontSize: '1.2rem', fontWeight: 800 }}>Safety Clearance</h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              <div>
+                <h4 style={{ color: 'var(--navy)', fontSize: '1.1rem', fontWeight: 700, marginBottom: '8px' }}>Exhibition display</h4>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', lineHeight: 1.6, margin: 0 }}>
+                  Mandatory at the stall: project title and Project ID, team members, faculty mentor, department, the working prototype or system, a short description, key innovation, major results and applications. Recommended: system architecture diagram, key performance metrics, and a QR code linking to a demonstration video or repository.
+                </p>
               </div>
-              <p style={{ margin: 0, color: '#B91C1C', fontSize: '0.95rem', lineHeight: 1.6, fontWeight: 500 }}>
-                High voltage/current, batteries, motors, lasers, chemicals, biological materials, pressurised systems, heat-generating equipment, rotating machinery, or sharp components must be declared at registration and cleared by the Organising Committee.
-              </p>
-            </motion.div>
 
-            <motion.div whileHover={{ scale: 1.02 }} style={{ background: '#F0FDF4', padding: '24px', borderRadius: '16px', borderLeft: '6px solid #22C55E', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
-                <div style={{ background: '#DCFCE7', padding: '8px', borderRadius: '50%' }}>
-                  <ShieldCheck color="#16A34A" size={24} />
-                </div>
-                <h4 style={{ margin: 0, color: '#166534', fontSize: '1.2rem', fontWeight: 800 }}>Academic Integrity</h4>
+              <div>
+                <h4 style={{ color: 'var(--navy)', fontSize: '1.1rem', fontWeight: 700, marginBottom: '8px' }}>Backup demonstration</h4>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', lineHeight: 1.6, margin: 0 }}>
+                  Every team must carry a backup — demonstration video, screenshots, sample datasets or recorded results. This is a contingency for technical failure at the venue and does not substitute for a live demonstration.
+                </p>
               </div>
-              <p style={{ margin: 0, color: '#15803D', fontSize: '0.95rem', lineHeight: 1.6, fontWeight: 500 }}>
-                Original student work only. You must cite external software, libraries, and datasets, and declare any AI-assisted development. Fabricated results or misrepresentation will lead to immediate disqualification.
-              </p>
-            </motion.div>
-          </motion.div>
 
-        </div>
+              <div>
+                <h4 style={{ color: '#B91C1C', fontSize: '1.1rem', fontWeight: 700, marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <ShieldAlert size={18} /> Safety
+                </h4>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', lineHeight: 1.6, margin: 0 }}>
+                  Teams must ensure safe operation of all demonstrations. Projects involving high voltage or current, batteries, motors, lasers, chemicals, biological materials, pressurised systems, heat-generating equipment, rotating machinery or sharp components must be declared at registration and cleared by the Organising Committee, which may prohibit any demonstration considered unsafe.
+                </p>
+              </div>
 
-        {/* Organizing Committee & Contact */}
-        <motion.section id="contact" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} style={{ marginBottom: '80px', scrollMarginTop: '100px' }}>
+              <div>
+                <h4 style={{ color: '#15803D', fontSize: '1.1rem', fontWeight: 700, marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <ShieldCheck size={18} /> Academic integrity
+                </h4>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', lineHeight: 1.6, margin: 0 }}>
+                  Projects must be original student work. Teams must acknowledge external resources, cite software, libraries and datasets used, declare AI-assisted development as required by institutional policy, and present no fabricated results. Misrepresentation of third-party work as student-developed will lead to disqualification.
+                </p>
+              </div>
+            </div>
+          </div>
+        </motion.section>
+
+        {/* 8. Organizing Committee & Contact */}
+        <motion.section id="contact" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "0px" }} style={{ marginBottom: '80px', scrollMarginTop: '100px' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px' }}>
             
             {/* Organizing Committee */}
@@ -419,7 +431,7 @@ export default function ProjectExpo() {
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div>
-                  <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--orange)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>Campus SPoC</div>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--orange)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>Project Expo – Campus SPoC</div>
                   <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--navy)' }}>Dr. S. Parthasarathy</div>
                 </div>
                 <div>
@@ -443,21 +455,74 @@ export default function ProjectExpo() {
 
             {/* Contact & Support */}
             <div style={{ background: 'linear-gradient(135deg, var(--navy) 0%, #0f172a 100%)', borderRadius: '24px', padding: '40px', color: 'white', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.1)' }}>
-              <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'white', marginBottom: '32px' }}>Need Help?</h2>
-              
-              <div style={{ marginBottom: '24px' }}>
-                <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--orange)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '8px' }}>Student Core Team</div>
-                <div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'white' }}>Vishal P</div>
-                <div style={{ fontSize: '0.9rem', color: '#94a3b8' }}>Contact details to be updated shortly</div>
-              </div>
+              <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'white', marginBottom: '32px' }}>Enquiries</h2>
+              <p style={{ color: '#94a3b8', fontSize: '1rem', lineHeight: 1.6, marginBottom: '24px' }}>
+                Students may approach the Programme Faculty Coordinator for their own programme in the first instance. Queries of a general nature may be sent to the Organising Committee by email.
+              </p>
 
               <div>
-                <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--orange)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '8px' }}>Official Support</div>
-                <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'white', marginBottom: '4px' }}>Research Cell</div>
-                <div style={{ fontSize: '0.9rem', color: '#94a3b8' }}>Contact details to be updated shortly</div>
+                <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--orange)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '8px' }}>Official Email</div>
+                <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'white', marginBottom: '4px' }}>sah@ch.amrita.edu</div>
               </div>
             </div>
+          </div>
+        </motion.section>
 
+        {/* 9. Guidelines and Templates */}
+        <motion.section id="templates" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "0px" }} style={{ marginBottom: '80px', scrollMarginTop: '100px' }}>
+          <div style={{ background: '#fff', borderRadius: '24px', padding: '40px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.05)' }}>
+            <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '32px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <Download color="var(--orange)" /> Guidelines and Templates
+            </h2>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px' }}>
+              
+              <button 
+                onClick={downloadExpoGuidelines}
+                style={{ background: 'var(--navy)', color: 'white', border: 'none', padding: '24px', borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '16px', cursor: 'pointer', textAlign: 'left', transition: 'all 0.3s ease', boxShadow: '0 10px 20px -10px rgba(0,0,0,0.2)' }}
+                onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+                onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+              >
+                <div style={{ background: 'rgba(255,255,255,0.1)', padding: '12px', borderRadius: '12px' }}>
+                  <FileText color="var(--orange)" size={24} />
+                </div>
+                <div>
+                  <div style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '6px' }}>Expo Guidelines</div>
+                  <div style={{ fontSize: '0.9rem', color: '#94a3b8' }}>PDF Document (Available)</div>
+                </div>
+              </button>
+
+              <div style={{ background: '#f8fafc', border: '2px dashed #cbd5e1', padding: '24px', borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '16px' }}>
+                <div style={{ background: '#e2e8f0', padding: '12px', borderRadius: '12px' }}>
+                  <FileText color="#64748b" size={24} />
+                </div>
+                <div>
+                  <div style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--navy)', marginBottom: '6px' }}>Project Info Sheet</div>
+                  <div style={{ fontSize: '0.85rem', color: '#f59e0b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', background: '#fef3c7', padding: '4px 10px', borderRadius: '20px', display: 'inline-block' }}>Coming Soon</div>
+                </div>
+              </div>
+
+              <div style={{ background: '#f8fafc', border: '2px dashed #cbd5e1', padding: '24px', borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '16px' }}>
+                <div style={{ background: '#e2e8f0', padding: '12px', borderRadius: '12px' }}>
+                  <FileText color="#64748b" size={24} />
+                </div>
+                <div>
+                  <div style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--navy)', marginBottom: '6px' }}>Software Sample</div>
+                  <div style={{ fontSize: '0.85rem', color: '#f59e0b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', background: '#fef3c7', padding: '4px 10px', borderRadius: '20px', display: 'inline-block' }}>Coming Soon</div>
+                </div>
+              </div>
+
+              <div style={{ background: '#f8fafc', border: '2px dashed #cbd5e1', padding: '24px', borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '16px' }}>
+                <div style={{ background: '#e2e8f0', padding: '12px', borderRadius: '12px' }}>
+                  <FileText color="#64748b" size={24} />
+                </div>
+                <div>
+                  <div style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--navy)', marginBottom: '6px' }}>Hardware Sample</div>
+                  <div style={{ fontSize: '0.85rem', color: '#f59e0b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', background: '#fef3c7', padding: '4px 10px', borderRadius: '20px', display: 'inline-block' }}>Coming Soon</div>
+                </div>
+              </div>
+
+            </div>
           </div>
         </motion.section>
 

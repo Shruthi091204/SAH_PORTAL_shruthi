@@ -36,6 +36,30 @@ export default function RegisterPage() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  
+  // Optionally lock these fields if prefilled
+  const [isPrefilled, setIsPrefilled] = useState(false);
+
+  // Auto-fill from Expo or Poster registration if data exists
+  useEffect(() => {
+    const prefillData = localStorage.getItem('sah_prefill');
+    if (prefillData) {
+      try {
+        const data = JSON.parse(prefillData);
+        setForm(prev => ({
+          ...prev,
+          fullName: data.fullName || prev.fullName,
+          rollNo: data.rollNo || prev.rollNo,
+          collegeEmail: data.collegeEmail || prev.collegeEmail,
+        }));
+        // We can optionally clear the local storage after filling, or keep it.
+        // localStorage.removeItem('sah_prefill');
+        setIsPrefilled(true);
+      } catch (err) {
+        console.error("Failed to parse prefill data", err);
+      }
+    }
+  }, []);
 
   const updateField = (field, value) => {
     setForm(prev => ({ ...prev, [field]: value }));
@@ -150,6 +174,17 @@ export default function RegisterPage() {
             ? (isExpo ? 'Project Expo — Amrita Chennai Campus' : 'Amrita Chennai Campus — SAH 2026')
             : `A 6-digit OTP security code has been sent to ${dispatchedCollegeEmail || form.collegeEmail}.`}
         </p>
+
+        {isPrefilled && step === 1 && (
+          <div style={{
+            background: '#F0FDF4', color: '#166534',
+            padding: '10px 14px', borderRadius: 'var(--radius-md)',
+            fontSize: '0.85rem', marginBottom: '16px',
+            borderLeft: '4px solid #16A34A'
+          }}>
+             ✅ We found your previous registration details. Some fields have been auto-filled for you.
+          </div>
+        )}
 
         {errors.submit && (
           <div style={{
