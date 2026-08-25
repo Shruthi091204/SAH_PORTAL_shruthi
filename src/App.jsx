@@ -118,15 +118,7 @@ function SahHomePage() {
           ))}
 
         </div>
-      </section>{/* CTA */}
-      <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-        <a href="/register" className="btn btn-orange btn-lg" style={{ marginRight: '12px' }}>
-          Register Now
-        </a>
-        <a href="/themes" className="btn btn-outline btn-lg">
-          Browse Themes
-        </a>
-      </div>
+      </section>
 
       {/* SAH Logo Showcase */}
       <div className="sah-logo-showcase">
