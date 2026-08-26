@@ -101,7 +101,7 @@ export const ConnoisseurStackInteractor = ({
     <div
       ref={containerRef}
       className={cn(
-        "flex flex-col md:flex-row items-center justify-between min-h-screen w-full p-8 md:p-24 overflow-hidden transition-colors duration-500",
+        "flex flex-col md:flex-row items-center justify-between min-h-screen w-full p-6 md:p-24 overflow-hidden transition-colors duration-500",
         "bg-white dark:bg-[#050505]",
         className
       )}
@@ -158,7 +158,7 @@ export const ConnoisseurStackInteractor = ({
                   {/* Title */}
                   <div className="flex flex-col justify-center flex-1">
                     <h2 className={cn(
-                      "text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[0.9] transition-all duration-500",
+                      "text-4xl md:text-7xl font-black uppercase tracking-tighter leading-[0.9] transition-all duration-500",
                       activeIndex === index
                         ? "text-zinc-950 dark:text-white opacity-100 translate-x-4"
                         : "opacity-40 translate-x-0 " +
