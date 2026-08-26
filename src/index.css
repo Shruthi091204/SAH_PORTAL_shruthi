@@ -2107,9 +2107,6 @@ h4 { font-size: 1.125rem; }
   .footer-container { grid-template-columns: 1fr; }
   .notification-dropdown { width: 300px; right: -40px; }
   .login-card { padding: 28px 24px; }
-  
-  /* Prevent excessive empty space on mobile from inline styles */
-  section[style*="marginBottom"] { margin-bottom: 40px !important; }
 }
 
 @media (max-width: 480px) {
@@ -3683,4 +3680,53 @@ body:has(.modal-overlay) {
 .futuristic-subtitle { opacity:0; color:#fff; margin-top:16px; font-size:clamp(.72rem,1.6vw,1.35rem); letter-spacing:.12em; font-weight:800; transform:translateY(15px); }.futuristic-subtitle.is-visible { animation:futuristic-subtitle-in .65s 1.85s ease both; }
 .futuristic-explore { position:absolute; z-index:3; bottom:clamp(28px,7vh,70px); left:50%; transform:translateX(-50%); border:0; color:#fff; background:transparent; font:700 .8rem var(--font-body); letter-spacing:.08em; cursor:pointer; text-transform:uppercase; opacity:0; animation:futuristic-button-in .6s 2.2s ease forwards; }.futuristic-explore:hover { color:#ff8c1a; }.futuristic-arrow { display:block; margin:5px auto 0; font-size:1.5rem; animation:futuristic-arrow-bob 1.35s ease-in-out infinite; }
 @keyframes futuristic-word-in { to { opacity:1; transform:translateY(0); filter:blur(0); } } @keyframes futuristic-subtitle-in { to { opacity:1; transform:translateY(0); } } @keyframes futuristic-button-in { to { opacity:1; } } @keyframes futuristic-arrow-bob { 50% { transform:translateY(7px); } } @keyframes futuristic-scan { 0%,100% { transform:translateY(-35%); opacity:.1; } 50% { transform:translateY(35%); opacity:1; } } @keyframes futuristic-image-drift { to { transform:scale(1.06) translate3d(-1%, -1%, 0); } }
-@media (max-width:620px) { .futuristic-copy { padding:24px; }.futuristic-copy h1 { display:block; font-size:clamp(2rem,12vw,4rem); }.futuristic-word { display:block; margin:.04em 0; }.futuristic-subtitle { letter-spacing:.08em; } }
+@media (max-width:620px) { .futuristic-copy { padding:24px; }.futuristic-copy h1 { display:block; font-size:clamp(3rem,15vw,5.5rem); }.futuristic-word { display:block; margin:.04em 0; }.futuristic-subtitle { letter-spacing:.08em; } }
+
+ / *   - - - -   E l i g i b i l i t y   S e c t i o n   R e s p o n s i v e   G r i d   - - - -   * / 
+ . e l i g i b i l i t y - g r i d   { 
+     d i s p l a y :   g r i d ; 
+     g r i d - t e m p l a t e - c o l u m n s :   r e p e a t ( 2 ,   1 f r ) ; 
+     g a p :   2 0 p x ; 
+ } 
+ @ m e d i a   ( m a x - w i d t h :   7 6 8 p x )   { 
+     . e l i g i b i l i t y - g r i d   { 
+         g r i d - t e m p l a t e - c o l u m n s :   1 f r   ! i m p o r t a n t ; 
+     } 
+     . e l i g i b i l i t y - g r i d   >   d i v   { 
+         g r i d - c o l u m n :   s p a n   1   ! i m p o r t a n t ; 
+     } 
+ } 
+  
+ 
+ / *   - - - -   G l o b a l   M o b i l e   F i x e s   f o r   I n l i n e   S t y l e s   - - - -   * / 
+ @ m e d i a   ( m a x - w i d t h :   7 6 8 p x )   { 
+     s e c t i o n   >   d i v [ s t y l e * = ' p a d d i n g :   4 0 p x ' ] , 
+     s e c t i o n   >   d i v [ s t y l e * = ' p a d d i n g :   4 8 p x ' ]   { 
+         p a d d i n g :   2 4 p x   ! i m p o r t a n t ; 
+     } 
+     
+     d i v [ s t y l e * = ' m i n m a x ( 3 0 0 p x ' ]   { 
+         g r i d - t e m p l a t e - c o l u m n s :   r e p e a t ( a u t o - f i t ,   m i n m a x ( 2 6 0 p x ,   1 f r ) )   ! i m p o r t a n t ; 
+     } 
+ 
+     h 1 [ s t y l e * = ' 4 . 5 r e m ' ]   { 
+         f o n t - s i z e :   2 . 8 r e m   ! i m p o r t a n t ; 
+     } 
+ 
+     h 2 [ s t y l e * = ' 2 . 5 r e m ' ]   { 
+         f o n t - s i z e :   2 r e m   ! i m p o r t a n t ; 
+     } 
+ 
+     . f l o a t i n g - c t a   { 
+         f l e x - d i r e c t i o n :   c o l u m n ; 
+         t e x t - a l i g n :   c e n t e r ; 
+         p a d d i n g :   2 0 p x   ! i m p o r t a n t ; 
+     } 
+     
+     . f l o a t i n g - c t a   . b t n   { 
+         w i d t h :   1 0 0 % ; 
+         j u s t i f y - c o n t e n t :   c e n t e r ; 
+     } 
+ } 
+  
+ 
