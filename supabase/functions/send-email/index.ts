@@ -1,4 +1,6 @@
+// @ts-ignore
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+// @ts-ignore
 import nodemailer from "npm:nodemailer"
 
 const corsHeaders = {
@@ -19,9 +21,9 @@ serve(async (req) => {
       authorName, authorEmail, posterTitle, track
     } = body
 
-    // We hardcode the credentials here to make it simple for the deployment without needing to configure Secrets via CLI.
-    const smtpUser = '27.kutralingam.xi.b@gmail.com';
-    const smtpPass = 'ccmdrfqcdibluewc';
+    // Use Supabase Secrets for SMTP credentials, with a fallback to hardcoded ones for local dev
+    const smtpUser = Deno.env.get('SMTP_USER') || '27.kutralingam.xi.b@gmail.com';
+    const smtpPass = Deno.env.get('SMTP_PASS') || 'ccmdrfqcdibluewc';
 
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
@@ -130,6 +132,29 @@ serve(async (req) => {
 
           <div style="margin-top: 30px; text-align: center;">
             <p style="font-size: 0.85rem; color: #777777; line-height: 1.4;">Thank you for contributing to research and innovation!<br/>- SAH 2026 Organizing Committee</p>
+          </div>
+        </div>
+      `;
+    } else {
+      subject = 'SAH 2026 Portal - Registration Successful!';
+      htmlContent = `
+        <div style="font-family: Arial, sans-serif; max-width: 550px; margin: 0 auto; padding: 24px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: #ffffff;">
+          <div style="text-align: center; margin-bottom: 20px; border-bottom: 2px solid #E3F2FD; padding-bottom: 16px;">
+            <h2 style="color: #1E3A8A; margin: 0; font-size: 22px;">Smart Amrita Hackathon 2026</h2>
+            <p style="color: #666666; font-size: 0.95rem; margin-top: 6px; font-weight: 600;">Registration Successful</p>
+          </div>
+          
+          <p style="font-size: 1rem; color: #333333; line-height: 1.5;">Hello,</p>
+          <p style="font-size: 0.95rem; color: #333333; line-height: 1.5;">
+            Congratulations! Your registration for the SAH 2026 Portal was successful.
+          </p>
+
+          <p style="font-size: 0.95rem; color: #333333; line-height: 1.5;">
+            You can now log in using your registered email address to access your dashboard, form teams, and register for events.
+          </p>
+
+          <div style="margin-top: 30px; text-align: center;">
+            <p style="font-size: 0.85rem; color: #777777; line-height: 1.4;">Welcome aboard!<br/>- SAH 2026 Organizing Committee</p>
           </div>
         </div>
       `;

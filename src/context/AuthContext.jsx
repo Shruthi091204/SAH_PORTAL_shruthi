@@ -555,6 +555,15 @@ export function AuthProvider({ children }) {
       // 3. Delete OTP record
       await supabase.from('registration_otps').delete().ilike('college_email', cleanCollegeEmail).eq('otp_code', cleanToken);
 
+      // 4. Send Registration Successful email via Edge Function
+      try {
+        await supabase.functions.invoke('send-email', {
+          body: { email: cleanCollegeEmail, type: 'registration_success' }
+        });
+      } catch (mailErr) {
+        console.warn('Failed to send registration success email:', mailErr);
+      }
+
       return { data: signUpResult.data, error: null };
     } catch (err) {
       setError(err.message);

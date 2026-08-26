@@ -48,7 +48,16 @@ export default function PosterPresentationRegister() {
       setAuthorRoll(profile.roll_no || '');
       setAuthorEmail(profile.college_email || profile.email || '');
 
-      // In the future, check if already registered in supabase
+      supabase
+        .from('poster_presentations')
+        .select('id')
+        .eq('author_id', profile.id)
+        .limit(1)
+        .then(({ data }) => {
+          if (data && data.length > 0) {
+            navigate('/dashboard'); // Already registered
+          }
+        });
     }
   }, [profile]);
 

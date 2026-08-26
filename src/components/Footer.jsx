@@ -39,11 +39,17 @@ export default function Footer() {
           <p style={{ marginTop: '8px' }}>
              sah@ch.amrita.edu
           </p>
-          <p style={{ marginTop: '12px' }}>
-            <strong>Student Contact:</strong><br />
-            Vishal P (Core Team)<br />
-            Email: Details to be updated shortly
-          </p>
+          <div style={{ marginTop: '12px', fontSize: '0.9rem', lineHeight: '1.6' }}>
+            <strong>Student Contacts:</strong><br />
+            Kutralingam: 6382725104<br />
+            <a href="mailto:27.kutralingam.xi.b@gmail.com" style={{color: 'var(--orange)'}}>27.kutralingam.xi.b@gmail.com</a><br /><br />
+            Vishnu Kamesh: 736250061<br />
+            <a href="mailto:kothapallilalithavishnukamesh@gmail.com" style={{color: 'var(--orange)'}}>kothapallilalithavishnukamesh@gmail.com</a><br /><br />
+            Shruthika: 9074383050<br />
+            <a href="mailto:shruthika.rajan@gmail.com" style={{color: 'var(--orange)'}}>shruthika.rajan@gmail.com</a><br /><br />
+            Vishal: 8951313335<br />
+            <a href="mailto:vishal.pr2004@gmail.com" style={{color: 'var(--orange)'}}>vishal.pr2004@gmail.com</a>
+          </div>
         </div>
       </div>
 
