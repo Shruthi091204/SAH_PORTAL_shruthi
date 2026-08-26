@@ -488,15 +488,19 @@ export default function SahHomePage() {
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 {[
-                  'Kutralingam A', 
-                  'K L Vishnu Kamesh', 
-                  'Shruthika Rajan', 
-                  'Vishal P'
-                ].map((name, i) => (
+                  { name: 'Kutralingam A', email: '27.kutralingam.xi.b@gmail.com', phone: '6382725104' },
+                  { name: 'K L Vishnu Kamesh', email: 'kothapallilalithavishnukamesh@gmail.com', phone: '736250061' },
+                  { name: 'Shruthika Rajan', email: 'shruthika.rajan@gmail.com', phone: '9074383050' },
+                  { name: 'Vishal P', email: 'vishal.pr2004@gmail.com', phone: '8951313335' }
+                ].map((contact, i) => (
                   <div key={i}>
-                    <div style={{ fontSize: '1.2rem', fontWeight: 700, color: 'white', marginBottom: '4px' }}>{name}</div>
-                    <div style={{ fontSize: '0.85rem', color: '#94a3b8' }}>Email ID: To be updated</div>
-                    <div style={{ fontSize: '0.85rem', color: '#94a3b8' }}>Phone: To be updated</div>
+                    <div style={{ fontSize: '1.2rem', fontWeight: 700, color: 'white', marginBottom: '4px' }}>{contact.name}</div>
+                    <div style={{ fontSize: '0.85rem', color: '#94a3b8' }}>
+                      Email ID: <a href={`mailto:${contact.email}`} style={{ color: 'var(--orange)', textDecoration: 'none' }}>{contact.email}</a>
+                    </div>
+                    <div style={{ fontSize: '0.85rem', color: '#94a3b8' }}>
+                      Phone: <a href={`tel:${contact.phone}`} style={{ color: '#94a3b8', textDecoration: 'none' }}>{contact.phone}</a>
+                    </div>
                   </div>
                 ))}
               </div>
