@@ -195,7 +195,7 @@ export default function PosterPresentation() {
             <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '32px', display: 'flex', alignItems: 'center', gap: '12px' }}>
               <CheckCircle2 color="var(--orange)" /> Eligibility — Who Can Apply?
             </h2>
-            <div className="eligibility-grid">
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
               {posterData.eligibility.map((item, idx) => (
                 <motion.div whileHover={{ scale: 1.01 }} key={idx} style={{ 
                   gridColumn: `span ${item.span}`,
@@ -532,7 +532,6 @@ export default function PosterPresentation() {
 
         {/* Premium Floating CTA */}
         <motion.div 
-          className="floating-cta"
           initial={{ opacity: 0, y: 50 }} 
           whileInView={{ opacity: 1, y: 0 }} 
           viewport={{ once: true }}

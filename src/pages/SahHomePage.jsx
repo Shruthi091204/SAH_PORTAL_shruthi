@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
@@ -187,10 +187,13 @@ export default function SahHomePage() {
             <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '32px', display: 'flex', alignItems: 'center', gap: '12px' }}>
               <CheckCircle2 color="var(--orange)" /> Eligibility — Who Can Apply?
             </h2>
-            <div className="eligibility-grid">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {hackathonData.eligibility.map((item, idx) => (
-                <motion.div whileHover={{ scale: 1.01 }} key={idx} style={{ 
-                  gridColumn: `span ${item.span}`,
+                <motion.div 
+                  whileHover={{ scale: 1.01 }} 
+                  key={idx} 
+                  className={item.span === 2 ? "md:col-span-2" : ""}
+                  style={{ 
                   background: 'linear-gradient(145deg, #ffffff, #f8fafc)', 
                   padding: '24px', 
                   borderRadius: '16px', 
@@ -546,7 +549,6 @@ export default function SahHomePage() {
 
         {/* Premium Floating CTA */}
         <motion.div 
-          className="floating-cta"
           initial={{ opacity: 0, y: 50 }} 
           whileInView={{ opacity: 1, y: 0 }} 
           viewport={{ once: true }}
