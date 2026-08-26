@@ -117,7 +117,7 @@ export default function SahHomePage() {
   };
 
   return (
-    <div style={{ background: '#f4f7f9', minHeight: '100vh', overflowX: 'hidden' }}>
+    <div style={{ background: '#f4f7f9', minHeight: '100vh' }}>
       
       {/* Dynamic Glassy Hero */}
       <div style={{ 
