@@ -59,7 +59,16 @@ function CombinedLandingHub() {
   };
 
   return (
-    <div style={{ backgroundColor: '#030303', minHeight: '100vh', color: '#ffffff', paddingBottom: '80px' }}>
+    <div style={{ backgroundColor: '#030303', minHeight: '100vh', color: '#ffffff', paddingBottom: '80px', position: 'relative' }}>
+      {/* Institutional Branding */}
+      <div style={{ position: 'absolute', top: '32px', right: '40px', zIndex: 100, pointerEvents: 'none', filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.5))' }}>
+        <img 
+          src="https://upload.wikimedia.org/wikipedia/en/thumb/8/87/Amrita_Vishwa_Vidyapeetham_Logo.svg/512px-Amrita_Vishwa_Vidyapeetham_Logo.svg.png" 
+          alt="Amrita Vishwa Vidyapeetham Logo" 
+          style={{ height: '50px', width: 'auto', opacity: 0.9 }}
+        />
+      </div>
+
       <EventLandingPage onEnter={handleScrollDown} />
       <div ref={scrollRef}>
         <ConnoisseurStackInteractor />

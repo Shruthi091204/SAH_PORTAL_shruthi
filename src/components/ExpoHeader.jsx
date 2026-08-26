@@ -32,6 +32,15 @@ export default function ExpoHeader() {
           </div>
         </Link>
 
+        <div className="amrita-logo-wrapper" style={{ marginLeft: 'auto', marginRight: '32px', display: 'flex', alignItems: 'center' }}>
+          <img 
+            src="https://upload.wikimedia.org/wikipedia/en/thumb/8/87/Amrita_Vishwa_Vidyapeetham_Logo.svg/512px-Amrita_Vishwa_Vidyapeetham_Logo.svg.png" 
+            alt="Amrita Vishwa Vidyapeetham Logo" 
+            title="Amrita Vishwa Vidyapeetham, Chennai Campus"
+            style={{ height: '44px', width: 'auto', objectFit: 'contain' }}
+          />
+        </div>
+
         <div className="header-actions">
           {isAuthenticated && <NotificationBell />}
 
