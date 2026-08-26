@@ -91,9 +91,20 @@ export default function SahHomePage() {
     return nearestIdx !== -1 ? nearestIdx : hackathonData.keyDates.length - 1;
   }, [today]);
 
-  if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
-  }
+  useEffect(() => {
+    // Scroll to hash on load if present
+    if (window.location.hash) {
+      const id = window.location.hash.substring(1);
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 500); // Wait for framer motion and layout to settle
+    }
+  }, []);
+
+
 
   const containerVariants = {
     hidden: { opacity: 0, y: 40 },

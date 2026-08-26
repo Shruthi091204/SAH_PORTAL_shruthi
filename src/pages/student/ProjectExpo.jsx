@@ -109,6 +109,19 @@ export default function ProjectExpo() {
     return nearestIdx !== -1 ? nearestIdx : expoData.keyDates.length - 1;
   }, [today]);
 
+  useEffect(() => {
+    // Scroll to hash on load if present
+    if (window.location.hash) {
+      const id = window.location.hash.substring(1);
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 500);
+    }
+  }, []);
+
   const containerVariants = {
     hidden: { opacity: 0, y: 40 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut", staggerChildren: 0.1 } }

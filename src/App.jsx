@@ -52,9 +52,7 @@ function CombinedLandingHub() {
   const { isAuthenticated } = useAuth();
   const scrollRef = useRef(null);
   
-  if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
-  }
+
 
   const handleScrollDown = () => {
     scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
