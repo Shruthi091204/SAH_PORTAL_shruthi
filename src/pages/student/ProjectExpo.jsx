@@ -535,8 +535,7 @@ export default function ProjectExpo() {
           whileInView={{ opacity: 1, y: 0 }} 
           viewport={{ once: true }}
           style={{ 
-            position: 'sticky', 
-            bottom: '32px', 
+            position: 'relative', 
             background: 'rgba(255, 255, 255, 0.9)', 
             backdropFilter: 'blur(16px)',
             padding: '24px 32px', 
