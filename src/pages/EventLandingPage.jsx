@@ -411,35 +411,35 @@ export default function EventLandingPage({ onEnter }) {
   return (
     <>
       <main className="futuristic-hero">
-        <motion.img 
-          src={amritaLogo} 
-          alt="Amrita Logo" 
+        <motion.img
+          src={amritaLogo}
+          alt="Amrita Logo"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1, delay: 0.5 }}
-          style={{ 
-            position: 'absolute', 
-            top: '40px', 
-            left: 'clamp(20px, 5vw, 60px)', 
-            height: 'clamp(35px, 5vw, 55px)', 
+          style={{
+            position: 'absolute',
+            top: '40px',
+            left: 'clamp(20px, 5vw, 60px)',
+            height: 'clamp(35px, 5vw, 55px)',
             zIndex: 50,
             objectFit: 'contain'
-          }} 
+          }}
         />
-        <motion.img 
-          src={sahLogo} 
-          alt="SAH Logo" 
+        <motion.img
+          src={sahLogo}
+          alt="SAH Logo"
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1, delay: 0.5 }}
-          style={{ 
-            position: 'absolute', 
-            top: '40px', 
-            right: 'clamp(20px, 5vw, 60px)', 
-            height: 'clamp(50px, 8vw, 80px)', 
+          style={{
+            position: 'absolute',
+            top: '40px',
+            right: 'clamp(20px, 5vw, 60px)',
+            height: 'clamp(50px, 8vw, 80px)',
             zIndex: 50,
             objectFit: 'contain'
-          }} 
+          }}
         />
         <div className="futuristic-copy">
           <h1>
@@ -454,12 +454,12 @@ export default function EventLandingPage({ onEnter }) {
             ))}
           </h1>
           <p className="futuristic-subtitle is-visible">INNOVATE. BUILD. INSPIRE.</p>
-          
-          <motion.div 
+
+          <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 2.2 }}
-            style={{ 
+            style={{
               marginTop: '2rem',
               display: 'inline-flex',
               alignItems: 'center',
@@ -473,10 +473,10 @@ export default function EventLandingPage({ onEnter }) {
               boxShadow: '0 0 20px rgba(255,140,26,0.1)'
             }}
           >
-            <span style={{ 
-              fontSize: 'clamp(0.9rem, 4vw, 1.35rem)', 
-              fontWeight: 800, 
-              letterSpacing: 'clamp(0.1em, 1vw, 0.2em)', 
+            <span style={{
+              fontSize: 'clamp(0.9rem, 4vw, 1.35rem)',
+              fontWeight: 800,
+              letterSpacing: 'clamp(0.1em, 1vw, 0.2em)',
               textTransform: 'uppercase',
               background: 'linear-gradient(90deg, #ffffff 0%, #ffcf99 50%, #ffffff 100%)',
               WebkitBackgroundClip: 'text',
@@ -484,6 +484,7 @@ export default function EventLandingPage({ onEnter }) {
               textShadow: '0 0 30px rgba(255,140,26,0.3)'
             }}>
               
+              STUDENTS ARE MOTIVATED TO PARTICIPATE IN ALL 3 EVENTS
             </span>
           </motion.div>
         </div>
@@ -502,14 +503,14 @@ export default function EventLandingPage({ onEnter }) {
           Enter SAH 2026 <span className="futuristic-arrow">↓</span>
         </button>
 
-        <motion.div 
-          className="futuristic-visual" 
+        <motion.div
+          className="futuristic-visual"
           aria-hidden="true"
           initial={{ opacity: 0, scale: 0.85, y: 40 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ 
-            duration: 1.8, 
-            delay: 2.0, 
+          transition={{
+            duration: 1.8,
+            delay: 2.0,
             ease: [0.16, 1, 0.3, 1]
           }}
         >

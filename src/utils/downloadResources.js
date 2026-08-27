@@ -16,7 +16,7 @@ export function downloadPPTTemplate() {
 }
 
 export function downloadGuidelines() {
-  const url = '/SAH2026_Hackathon_Guidelines_Revised_VJ_24.08.2026.pdf';
+  const url = '/SAH2026_Hackathon_Guidelines_Revised_VJ_24.08.2026.pdf?v=2';
   const link = document.createElement('a');
   link.href = url;
   link.download = 'SAH2026_Hackathon_Guidelines_Revised.pdf';
@@ -28,7 +28,7 @@ export function downloadGuidelines() {
 }
 
 export function downloadExpoGuidelines() {
-  const url = '/SAH2026_Project_Expo_Guidelines_24.08.2026.pdf';
+  const url = '/SAH2026_Project_Expo_Guidelines_24.08.2026.pdf?v=2';
   const link = document.createElement('a');
   link.href = url;
   link.download = 'SAH2026_Project_Expo_Guidelines.pdf';
@@ -40,7 +40,7 @@ export function downloadExpoGuidelines() {
 }
 
 export function downloadPosterGuidelines() {
-  const url = '/SAH2026_Poster_Presentation_Guidelines_25_08_2026.pdf';
+  const url = '/SAH2026_Poster_Presentation_Guidelines_25_08_2026.pdf?v=2';
   const link = document.createElement('a');
   link.href = url;
   link.download = 'SAH2026_Poster_Presentation_Guidelines.pdf';
