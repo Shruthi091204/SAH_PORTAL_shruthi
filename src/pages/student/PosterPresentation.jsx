@@ -43,12 +43,12 @@ const posterData = {
     { title: "Awards & Opportunity Mapping", dateStr: "2026-09-10", displayDate: "Thu, 10 Sep 2026", icon: <Trophy size={18} /> }
   ],
   eligibility: [
-    { label: "Who may apply", value: "Students of any B.Tech, M.Tech or PhD programme, in any year of study.", span: 1 },
-    { label: "Mode of entry", value: "Individual. Each poster carries a single author; there are no teams in this category.", span: 1 },
-    { label: "Faculty mentor / guide", value: "Mandatory. A faculty mentor or research guide must endorse the entry, certifying authorship and originality.", span: 2 },
-    { label: "Entries per student", value: "One poster per student.", span: 1 },
-    { label: "Stage of work", value: "Completed, or sufficiently advanced to present a defensible result.", span: 1 },
-    { label: "Registration", value: "Free. No registration fee is charged for any SAH 2026 category.", span: 2 }
+    { label: "Who may apply", value: <>Students of any B.Tech, M.Tech or PhD programme, in any year of study.</>, span: 1 },
+    { label: "Mode of entry", value: <>Individual. Each poster carries a <strong style={{ color: 'var(--orange)' }}>single author</strong>; there are no teams in this category.</>, span: 1 },
+    { label: "Faculty mentor / guide", value: <><strong style={{ color: 'var(--orange)' }}>Mandatory.</strong> A faculty mentor or research guide must endorse the entry, certifying authorship and originality.</>, span: 2 },
+    { label: "Entries per student", value: <><strong style={{ color: 'var(--orange)' }}>One poster</strong> per student.</>, span: 1 },
+    { label: "Stage of work", value: <>Completed, or sufficiently advanced to present a defensible result.</>, span: 1 },
+    { label: "Registration", value: <><strong style={{ color: 'var(--orange)' }}>Free.</strong> No registration fee is charged for any SAH 2026 category.</>, span: 2 }
   ],
   outputs: [
     "A mini, capstone or design project",

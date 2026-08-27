@@ -32,12 +32,12 @@ const hackathonData = {
   ],
   eligibility: [
     { label: "Who may apply", value: <>Students of any B.Tech, M.Tech or PhD programme, in any year of study, from any department of the Chennai Campus.</>, span: 2 },
-    { label: "Team size", value: <>Exactly <strong>6 students</strong>, including a designated Team Leader. Teams of any other size cannot be nominated to the SIH portal.</>, span: 1 },
-    { label: "Woman member", value: <>Mandatory. Every team must include at least <strong>one woman member</strong>. All-women teams are welcome.</>, span: 1 },
-    { label: "Same institution", value: <><strong>All six members</strong> must be from Amrita Chennai Campus. Inter-institution teams are not permitted. Members from different departments are strongly encouraged.</>, span: 1 },
-    { label: "Mentors", value: <>Up to two mentors — senior faculty or domain experts from any department. Mentor endorsement at registration is mandatory.</>, span: 1 },
-    { label: "Entries per student", value: <><strong>One team only</strong>. A student registered in two teams will cause both teams to be disqualified. A team may address up to two problem statements.</>, span: 2 },
-    { label: "Problem mapping", value: <>Each team must register against one SIH 2026 Problem Statement (with its PS ID) or one Student Innovation idea mapped to a notified SIH theme.</>, span: 2 }
+    { label: "Team size", value: <>Exactly <strong style={{ color: 'var(--orange)' }}>6 students</strong>, including a designated Team Leader. Teams of any other size cannot be nominated to the SIH portal.</>, span: 1 },
+    { label: "Woman member", value: <>Mandatory. Every team must include at least <strong style={{ color: 'var(--orange)' }}>one woman member</strong>. All-women teams are welcome.</>, span: 1 },
+    { label: "Same institution", value: <><strong style={{ color: 'var(--orange)' }}>All six members</strong> must be from Amrita Chennai Campus. Inter-institution teams are not permitted. Members from different departments are strongly encouraged.</>, span: 1 },
+    { label: "Mentors", value: <>Mentor endorsement at registration is mandatory. </>, span: 1 },
+    { label: "Entries per student", value: <><strong style={{ color: 'var(--orange)' }}>One team only</strong>. A student registered in two teams will cause both teams to be disqualified. A team may address up to two problem statements.</>, span: 2 }
+    
   ],
   themes: [
     "Smart Automation", "Smart Education", "Smart Vehicles", "Robotics and Drones",
@@ -217,7 +217,7 @@ export default function SahHomePage() {
           <div style={{ background: 'var(--navy)', borderRadius: '32px', padding: '48px', color: 'white', position: 'relative', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)' }}>
             <div style={{ position: 'absolute', top: 0, right: 0, width: '400px', height: '400px', background: 'radial-gradient(circle, rgba(234,88,12,0.2) 0%, transparent 70%)', borderRadius: '50%', transform: 'translate(30%, -30%)' }} />
             
-            <h2 style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '32px', position: 'relative', zIndex: 10 }}>Themes & Categories</h2>
+            <h2 style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '32px', position: 'relative', zIndex: 10, color: 'white' }}>Themes & Categories</h2>
             
             <motion.div variants={childVariants} style={{ background: 'rgba(234, 88, 12, 0.1)', border: '1px solid rgba(234, 88, 12, 0.3)', padding: '20px 24px', borderRadius: '16px', display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '40px', backdropFilter: 'blur(10px)' }}>
               <AlertTriangle color="#F97316" size={32} style={{ flexShrink: 0 }} />

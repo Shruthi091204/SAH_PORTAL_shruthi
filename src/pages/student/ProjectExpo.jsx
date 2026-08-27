@@ -38,12 +38,12 @@ const expoData = {
     { title: "Awards & Opportunity Mapping", dateStr: "2026-09-10", displayDate: "Thu, 10 Sep 2026", icon: <Trophy size={18} /> }
   ],
   eligibility: [
-    { label: "Who may apply", value: "Students of any B.Tech, M.Tech or PhD programme, in any year of study.", span: 1 },
-    { label: "Team size", value: "2–3 students per project. Interdisciplinary teams across departments are strongly encouraged.", span: 1 },
-    { label: "Faculty mentor", value: "Mandatory. A faculty mentor from any department must endorse the project, certifying student authorship and demonstration readiness.", span: 2 },
-    { label: "Project stage", value: "Ongoing or completed, and sufficiently developed for a live demonstration before the jury.", span: 1 },
-    { label: "Entries per student", value: "A student may be part of not more than two Project Expo teams.", span: 1 },
-    { label: "Projects accepted", value: "Final-year, capstone and mini-projects with significant innovation; course-based projects with substantial engineering implementation; interdisciplinary projects; and independently developed student prototypes.", span: 2 }
+    { label: "Who may apply", value: <>Students of any B.Tech, M.Tech or PhD programme, in any year of study.</>, span: 1 },
+    { label: "Team size", value: <><strong style={{ color: 'var(--orange)' }}>2–3 students</strong> per project. Interdisciplinary teams across departments are strongly encouraged.</>, span: 1 },
+    { label: "Faculty mentor", value: <><strong style={{ color: 'var(--orange)' }}>Mandatory.</strong> A faculty mentor from any department must endorse the project, certifying student authorship and demonstration readiness.</>, span: 2 },
+    { label: "Project stage", value: <>Ongoing or completed, and sufficiently developed for a live demonstration before the jury.</>, span: 1 },
+    { label: "Entries per student", value: <>A student may be part of <strong style={{ color: 'var(--orange)' }}>not more than two</strong> Project Expo teams.</>, span: 1 },
+    { label: "Projects accepted", value: <>Final-year, capstone and mini-projects with significant innovation; course-based projects with substantial engineering implementation; interdisciplinary projects; and independently developed student prototypes.</>, span: 2 }
   ],
   outputs: [
     "Hardware prototype or device", "Software application/platform", "Integrated hardware-software system",
