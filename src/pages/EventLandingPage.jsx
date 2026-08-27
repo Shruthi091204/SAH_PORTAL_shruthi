@@ -421,7 +421,7 @@ export default function EventLandingPage({ onEnter }) {
             position: 'absolute', 
             top: '40px', 
             left: 'clamp(20px, 5vw, 60px)', 
-            height: 'clamp(50px, 8vw, 80px)', 
+            height: 'clamp(35px, 5vw, 55px)', 
             zIndex: 50,
             objectFit: 'contain'
           }} 
