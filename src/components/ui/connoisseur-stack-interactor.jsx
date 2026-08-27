@@ -6,7 +6,7 @@ import gsap from "gsap";
 const defaultItems = [
   {
     num: "01",
-    name: "Internal Hackathon",
+    name: "Internal SIH",
     tag: "Smart Amrita Hackathon (SAH 2026)",
     desc: "Official campus qualifying hackathon for Smart India Hackathon (SIH 2026). Pitch solutions under the official 50-mark rubric.",
     buttonText: "LAUNCH SAH 2026 PORTAL 🚀",
@@ -129,7 +129,7 @@ export const ConnoisseurStackInteractor = ({
                 key={item.num}
                 onMouseEnter={() => handleItemHover(index)}
                 onClick={() => {
-                  if (item.name === "Internal Hackathon") {
+                  if (item.name === "Internal SIH") {
                     window.scrollTo(0, 0);
                     navigate('/sah');
                   } else if (item.name === "Project Expo") {
@@ -221,7 +221,7 @@ export const ConnoisseurStackInteractor = ({
           <button
             onClick={(e) => {
               e.stopPropagation();
-              if (items[activeIndex].name === "Internal Hackathon") {
+              if (items[activeIndex].name === "Internal SIH") {
                 window.scrollTo(0, 0);
                 navigate('/sah');
               } else if (items[activeIndex].name === "Project Expo") {
