@@ -25,7 +25,7 @@ export default function ExpoHeader() {
   return (
     <header className="site-header">
       <div className="header-container">
-        <Link to={isPosterMode ? "/events/poster-presentation" : "/events/project-expo"} className="header-logo" style={{ textDecoration: 'none' }}>
+        <Link to="/" className="header-logo" style={{ textDecoration: 'none' }}>
           <img src={sahLogo} alt="SAH 2026 Logo" style={{ height: '48px', width: 'auto' }} />
           <div className="header-logo-text">
             <span className="title">{isPosterMode ? 'POSTER PRESENTATION 2026' : 'PROJECT EXPO 2026'}</span>
@@ -59,7 +59,7 @@ export default function ExpoHeader() {
             </div>
           ) : (
             <button className="btn-login-pill" onClick={handleAuthClick}>
-              <span>Login to Portal</span>
+              <span>Register Now</span>
               <span className="login-icon">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />

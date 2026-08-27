@@ -154,7 +154,7 @@ export default function SahHomePage() {
             Amrita Vishwa Vidyapeetham, Chennai Campus
           </div>
           <h1 style={{ fontSize: '4.5rem', fontWeight: 900, marginBottom: '24px', letterSpacing: '-0.03em', lineHeight: 1.1, background: 'linear-gradient(to right, #ffffff, #cbd5e1)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-            Smart Amrita Hackathon 2026
+            Amrita Hackathon 2026
           </h1>
           <p style={{ maxWidth: '800px', margin: '0 auto', fontSize: '1.25rem', opacity: 0.85, lineHeight: 1.6, fontWeight: 300 }}>
             Amrita Hackathon(Internal SIH) for Smart India Hackathon (SIH) 2026. Innovating India, Solving National Challenges.
