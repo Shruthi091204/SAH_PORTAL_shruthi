@@ -31,13 +31,13 @@ const hackathonData = {
     "Identify solutions with potential for patenting, deployment with the sponsoring organisation, or startup incubation."
   ],
   eligibility: [
-    { label: "Who may apply", value: "Students of any B.Tech, M.Tech or PhD programme, in any year of study, from any department of the Chennai Campus.", span: 2 },
-    { label: "Team size", value: "Exactly 6 students, including a designated Team Leader. Teams of any other size cannot be nominated to the SIH portal.", span: 1 },
-    { label: "Woman member", value: "Mandatory. Every team must include at least one woman member. All-women teams are welcome.", span: 1 },
-    { label: "Same institution", value: "All six members must be from Amrita Chennai Campus. Inter-institution teams are not permitted. Members from different departments are strongly encouraged.", span: 1 },
-    { label: "Mentors", value: "Up to two mentors — senior faculty or domain experts from any department. Mentor endorsement at registration is mandatory.", span: 1 },
-    { label: "Entries per student", value: "One team only. A student registered in two teams will cause both teams to be disqualified. A team may address up to two problem statements.", span: 2 },
-    { label: "Problem mapping", value: "Each team must register against one SIH 2026 Problem Statement (with its PS ID) or one Student Innovation idea mapped to a notified SIH theme.", span: 2 }
+    { label: "Who may apply", value: <>Students of any B.Tech, M.Tech or PhD programme, in any year of study, from any department of the Chennai Campus.</>, span: 2 },
+    { label: "Team size", value: <>Exactly <strong>6 students</strong>, including a designated Team Leader. Teams of any other size cannot be nominated to the SIH portal.</>, span: 1 },
+    { label: "Woman member", value: <>Mandatory. Every team must include at least <strong>one woman member</strong>. All-women teams are welcome.</>, span: 1 },
+    { label: "Same institution", value: <><strong>All six members</strong> must be from Amrita Chennai Campus. Inter-institution teams are not permitted. Members from different departments are strongly encouraged.</>, span: 1 },
+    { label: "Mentors", value: <>Up to two mentors — senior faculty or domain experts from any department. Mentor endorsement at registration is mandatory.</>, span: 1 },
+    { label: "Entries per student", value: <><strong>One team only</strong>. A student registered in two teams will cause both teams to be disqualified. A team may address up to two problem statements.</>, span: 2 },
+    { label: "Problem mapping", value: <>Each team must register against one SIH 2026 Problem Statement (with its PS ID) or one Student Innovation idea mapped to a notified SIH theme.</>, span: 2 }
   ],
   themes: [
     "Smart Automation", "Smart Education", "Smart Vehicles", "Robotics and Drones",
@@ -157,7 +157,7 @@ export default function SahHomePage() {
             Smart Amrita Hackathon 2026
           </h1>
           <p style={{ maxWidth: '800px', margin: '0 auto', fontSize: '1.25rem', opacity: 0.85, lineHeight: 1.6, fontWeight: 300 }}>
-            Internal SIH for Smart India Hackathon (SIH) 2026. Innovating India, Solving National Challenges.
+            Amrita Hackathon(Internal SIH) for Smart India Hackathon (SIH) 2026. Innovating India, Solving National Challenges.
           </p>
         </motion.div>
       </div>
@@ -203,7 +203,7 @@ export default function SahHomePage() {
                   <div style={{ fontSize: '0.85rem', color: 'var(--orange)', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.1em', marginBottom: '12px' }}>
                     {item.label}
                   </div>
-                  <div style={{ color: 'var(--navy)', fontWeight: 600, lineHeight: 1.5, fontSize: '1.1rem' }}>
+                  <div style={{ color: 'var(--navy)', fontWeight: 700, lineHeight: 1.5, fontSize: '1.1rem' }}>
                     {item.value}
                   </div>
                 </motion.div>

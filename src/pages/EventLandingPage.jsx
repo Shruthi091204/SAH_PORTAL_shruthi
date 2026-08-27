@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import * as THREE from 'three/webgpu';
 import { bloom } from 'three/examples/jsm/tsl/display/BloomNode.js';
 import { motion } from 'framer-motion';
+import amritaLogo from '../assets/AMRITA-LOGO.jpeg';
+import sahLogo from '../assets/Logo.png';
 import {
   abs, add, float, mix, mod, oneMinus, pass, sin,
   smoothstep, uniform, uv, vec3, positionLocal, normalView,
@@ -409,6 +411,36 @@ export default function EventLandingPage({ onEnter }) {
   return (
     <>
       <main className="futuristic-hero">
+        <motion.img 
+          src={amritaLogo} 
+          alt="Amrita Logo" 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1, delay: 0.5 }}
+          style={{ 
+            position: 'absolute', 
+            top: '40px', 
+            left: 'clamp(20px, 5vw, 60px)', 
+            height: 'clamp(50px, 8vw, 80px)', 
+            zIndex: 50,
+            objectFit: 'contain'
+          }} 
+        />
+        <motion.img 
+          src={sahLogo} 
+          alt="SAH Logo" 
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1, delay: 0.5 }}
+          style={{ 
+            position: 'absolute', 
+            top: '40px', 
+            right: 'clamp(20px, 5vw, 60px)', 
+            height: 'clamp(50px, 8vw, 80px)', 
+            zIndex: 50,
+            objectFit: 'contain'
+          }} 
+        />
         <div className="futuristic-copy">
           <h1>
             {words.map((word, index) => (
@@ -422,6 +454,38 @@ export default function EventLandingPage({ onEnter }) {
             ))}
           </h1>
           <p className="futuristic-subtitle is-visible">INNOVATE. BUILD. INSPIRE.</p>
+          
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 2.2 }}
+            style={{ 
+              marginTop: '2rem',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'linear-gradient(90deg, rgba(255,255,255,0.02) 0%, rgba(255,140,26,0.08) 50%, rgba(255,255,255,0.02) 100%)',
+              borderTop: '1px solid rgba(255,140,26,0.3)',
+              borderBottom: '1px solid rgba(255,140,26,0.3)',
+              padding: '12px 32px',
+              borderRadius: '100px',
+              backdropFilter: 'blur(12px)',
+              boxShadow: '0 0 20px rgba(255,140,26,0.1)'
+            }}
+          >
+            <span style={{ 
+              fontSize: '0.85rem', 
+              fontWeight: 700, 
+              letterSpacing: '0.2em', 
+              textTransform: 'uppercase',
+              background: 'linear-gradient(90deg, #ffffff 0%, #ffcf99 50%, #ffffff 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              textShadow: '0 0 30px rgba(255,140,26,0.3)'
+            }}>
+              Students can participate in all 3 events
+            </span>
+          </motion.div>
         </div>
 
         <button
