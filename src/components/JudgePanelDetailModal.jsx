@@ -91,8 +91,8 @@ export default function JudgePanelDetailModal({
           judgeDepartment: judge.department,
           isEvaluated: !!ev,
           score: parsed ? parsed.total : null,
-          understandingScore: parsed ? parsed.rubric.understanding : null,
-          innovationScore: parsed ? parsed.rubric.innovation : null,
+          understandingScore: parsed ? parsed.rubric.feasibility : null,
+          innovationScore: parsed ? parsed.rubric.novelty : null,
           technicalScore: parsed ? parsed.rubric.technical : null,
           prototypeScore: parsed ? parsed.rubric.prototype : null,
           impactScore: parsed ? parsed.rubric.impact : null,
@@ -664,12 +664,12 @@ export default function JudgePanelDetailModal({
                                           fontSize: '0.72rem',
                                           color: 'var(--text-secondary)'
                                         }}>
-                                          <div>Understanding: <strong>{jb.understandingScore}/5</strong></div>
-                                          <div>Innovation: <strong>{jb.innovationScore}/10</strong></div>
-                                          <div>Technical: <strong>{jb.technicalScore}/10</strong></div>
-                                          <div>Prototype: <strong>{jb.prototypeScore}/15</strong></div>
-                                          <div>Impact: <strong>{jb.impactScore}/5</strong></div>
-                                          <div>Presentation: <strong>{jb.presentationScore}/5</strong></div>
+                                          <div>Novelty: <strong>{jb.innovationScore}/10</strong></div>
+                                          <div>Technical: <strong>{jb.technicalScore}/5</strong></div>
+                                          <div>Feasibility: <strong>{jb.understandingScore}/10</strong></div>
+                                          <div>Impact: <strong>{jb.impactScore}/10</strong></div>
+                                          <div>Prototype: <strong>{jb.prototypeScore}/10</strong></div>
+                                          <div>Pitch: <strong>{jb.presentationScore}/5</strong></div>
                                         </div>
 
                                         {jb.evaluatedAt && (

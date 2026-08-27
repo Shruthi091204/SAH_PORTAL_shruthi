@@ -58,10 +58,10 @@ const hackathonData = {
   ],
   rubric: [
     { criterion: "Novelty & Innovation", marks: 10, color: "#3B82F6" },
-    { criterion: "Technical Approach & Complexity", marks: 10, color: "#8B5CF6" },
+    { criterion: "Technical Approach & Complexity", marks: 5, color: "#8B5CF6" },
     { criterion: "Feasibility & Viability", marks: 10, color: "#F59E0B" },
     { criterion: "Impact, Scale & Sustainability", marks: 10, color: "#10B981" },
-    { criterion: "Prototype & Demonstration Readiness", marks: 5, color: "#EC4899" },
+    { criterion: "Prototype & Demonstration Readiness", marks: 10, color: "#EC4899" },
     { criterion: "Presentation & Format Compliance", marks: 5, color: "#6366F1" }
   ],
   awards: [
