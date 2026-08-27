@@ -86,3 +86,39 @@ export function downloadPosterSoftwareSample() {
   link.click();
   document.body.removeChild(link);
 }
+
+export function downloadExpoSoftwareSample() {
+  const url = '/SAH_2026_Project_Expo_Sample_1_Software.pdf';
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'SAH_2026_Project_Expo_Sample_1_Software.pdf';
+  link.target = '_blank';
+  link.rel = 'noopener noreferrer';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+export function downloadExpoHardwareSample() {
+  const url = '/SAH_2026_Project_Expo_Sample_2_Hardware.pdf';
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'SAH_2026_Project_Expo_Sample_2_Hardware.pdf';
+  link.target = '_blank';
+  link.rel = 'noopener noreferrer';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+export function downloadSihAwarenessDoc() {
+  const url = '/SIH-2026-Awareness-Orientation.pdf';
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'SIH-2026-Awareness-Orientation.pdf';
+  link.target = '_blank';
+  link.rel = 'noopener noreferrer';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}

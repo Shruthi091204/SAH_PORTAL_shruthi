@@ -19,7 +19,11 @@ export default function ExpoHeader() {
     if (isAuthenticated) {
       navigate('/dashboard');
     } else {
-      navigate('/login', { state: { from: location.pathname } });
+      if (isPosterMode) {
+        navigate('/events/poster-presentation/register');
+      } else {
+        navigate('/events/project-expo/register');
+      }
     }
   };
 

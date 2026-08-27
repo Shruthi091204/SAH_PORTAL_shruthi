@@ -2,7 +2,7 @@ import React, { useMemo, useEffect } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
-import { downloadGuidelines, downloadPPTTemplate } from '../utils/downloadResources';
+import { downloadGuidelines, downloadPPTTemplate, downloadSihAwarenessDoc } from '../utils/downloadResources';
 import { 
   CheckCircle2, 
   AlertTriangle, 
@@ -544,6 +544,21 @@ export default function SahHomePage() {
                 <div>
                   <div style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '6px' }}>Official PPT Template</div>
                   <div style={{ fontSize: '0.9rem', color: '#fed7aa' }}>.pptx File (Available)</div>
+                </div>
+              </button>
+
+              <button 
+                onClick={downloadSihAwarenessDoc}
+                style={{ background: 'var(--navy)', color: 'white', border: 'none', padding: '24px', borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '16px', cursor: 'pointer', textAlign: 'left', transition: 'all 0.3s ease', boxShadow: '0 10px 20px -10px rgba(0,0,0,0.2)' }}
+                onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+                onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+              >
+                <div style={{ background: 'rgba(255,255,255,0.1)', padding: '12px', borderRadius: '12px' }}>
+                  <FileText color="var(--orange)" size={24} />
+                </div>
+                <div>
+                  <div style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '6px' }}>SIH Awareness & Orientation</div>
+                  <div style={{ fontSize: '0.9rem', color: '#94a3b8' }}>PDF Document (Available)</div>
                 </div>
               </button>
 

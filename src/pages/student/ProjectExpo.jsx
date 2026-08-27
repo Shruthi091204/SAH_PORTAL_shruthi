@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { downloadExpoGuidelines } from '../../utils/downloadResources';
+import { downloadExpoGuidelines, downloadExpoSoftwareSample, downloadExpoHardwareSample } from '../../utils/downloadResources';
 import { 
   CheckCircle2, 
   AlertTriangle, 
@@ -505,25 +505,35 @@ export default function ProjectExpo() {
                 </div>
               </div>
 
-              <div style={{ background: '#f8fafc', border: '2px dashed #cbd5e1', padding: '24px', borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '16px' }}>
-                <div style={{ background: '#e2e8f0', padding: '12px', borderRadius: '12px' }}>
-                  <FileText color="#64748b" size={24} />
+              <button 
+                onClick={downloadExpoSoftwareSample}
+                style={{ background: 'var(--navy)', color: 'white', border: 'none', padding: '24px', borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '16px', cursor: 'pointer', textAlign: 'left', transition: 'all 0.3s ease', boxShadow: '0 10px 20px -10px rgba(0,0,0,0.2)' }}
+                onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+                onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+              >
+                <div style={{ background: 'rgba(255,255,255,0.1)', padding: '12px', borderRadius: '12px' }}>
+                  <FileText color="var(--orange)" size={24} />
                 </div>
                 <div>
-                  <div style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--navy)', marginBottom: '6px' }}>Software Sample</div>
-                  <div style={{ fontSize: '0.85rem', color: '#f59e0b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', background: '#fef3c7', padding: '4px 10px', borderRadius: '20px', display: 'inline-block' }}>Coming Soon</div>
+                  <div style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '6px' }}>Software Sample</div>
+                  <div style={{ fontSize: '0.9rem', color: '#94a3b8' }}>PDF Document (Available)</div>
                 </div>
-              </div>
+              </button>
 
-              <div style={{ background: '#f8fafc', border: '2px dashed #cbd5e1', padding: '24px', borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '16px' }}>
-                <div style={{ background: '#e2e8f0', padding: '12px', borderRadius: '12px' }}>
-                  <FileText color="#64748b" size={24} />
+              <button 
+                onClick={downloadExpoHardwareSample}
+                style={{ background: 'var(--navy)', color: 'white', border: 'none', padding: '24px', borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '16px', cursor: 'pointer', textAlign: 'left', transition: 'all 0.3s ease', boxShadow: '0 10px 20px -10px rgba(0,0,0,0.2)' }}
+                onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+                onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+              >
+                <div style={{ background: 'rgba(255,255,255,0.1)', padding: '12px', borderRadius: '12px' }}>
+                  <FileText color="var(--orange)" size={24} />
                 </div>
                 <div>
-                  <div style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--navy)', marginBottom: '6px' }}>Hardware Sample</div>
-                  <div style={{ fontSize: '0.85rem', color: '#f59e0b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', background: '#fef3c7', padding: '4px 10px', borderRadius: '20px', display: 'inline-block' }}>Coming Soon</div>
+                  <div style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '6px' }}>Hardware Sample</div>
+                  <div style={{ fontSize: '0.9rem', color: '#94a3b8' }}>PDF Document (Available)</div>
                 </div>
-              </div>
+              </button>
 
             </div>
           </div>

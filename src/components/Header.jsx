@@ -27,7 +27,7 @@ export default function Header() {
         <Link to="/" className="header-logo" style={{ textDecoration: 'none' }}>
           <img src={sahLogo} alt="SAH 2026 Logo" style={{ height: '48px', width: 'auto' }} />
           <div className="header-logo-text">
-            <span className="title">SMART AMRITA HACKATHON 2026</span>
+            <span className="title">AMRITA HACKATHON 2026</span>
             <span className="subtitle">Amrita Vishwa Vidyapeetham, Chennai Campus</span>
           </div>
         </Link>
