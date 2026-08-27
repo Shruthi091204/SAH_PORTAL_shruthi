@@ -2,10 +2,10 @@
  * Evaluation Helper utilities for official SAH 2026 / SIH 2026 rubric.
  * Official 6-parameter breakdown (50 Marks Total):
  * 1. Novelty & Innovation (10 Marks)
- * 2. Technical Approach & Complexity (5 Marks)
+ * 2. Technical Approach & Complexity (10 Marks)
  * 3. Feasibility & Viability (10 Marks)
  * 4. Impact, Scale & Sustainability (10 Marks)
- * 5. Prototype & Demonstration Readiness (10 Marks)
+ * 5. Prototype & Demonstration Readiness (5 Marks)
  * 6. Presentation & Format Compliance (5 Marks)
  */
 
@@ -134,10 +134,10 @@ export function parseEvaluationScores(ev) {
 
     rubric = {
       novelty: Math.min(10, Number(ev.understanding_score) || 0),
-      technical: Math.min(5, Math.floor((Number(ev.execution_score) || 0) / 2)),
+      technical: Math.min(10, Math.floor((Number(ev.execution_score) || 0) / 2)),
       feasibility: 0,
       impact: Math.min(10, Number(ev.impact_score) || 0),
-      prototype: Math.min(10, Math.ceil((Number(ev.execution_score) || 0) / 2)),
+      prototype: Math.min(5, Math.ceil((Number(ev.execution_score) || 0) / 2)),
       presentation: Math.min(5, Number(ev.pitch_score) || 0)
     };
   }

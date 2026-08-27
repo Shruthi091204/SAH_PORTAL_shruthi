@@ -58,10 +58,10 @@ const hackathonData = {
   ],
   rubric: [
     { criterion: "Novelty & Innovation", marks: 10, color: "#3B82F6" },
-    { criterion: "Technical Approach & Complexity", marks: 5, color: "#8B5CF6" },
+    { criterion: "Technical Approach & Complexity", marks: 10, color: "#8B5CF6" },
     { criterion: "Feasibility & Viability", marks: 10, color: "#F59E0B" },
     { criterion: "Impact, Scale & Sustainability", marks: 10, color: "#10B981" },
-    { criterion: "Prototype & Demonstration Readiness", marks: 10, color: "#EC4899" },
+    { criterion: "Prototype & Demonstration Readiness", marks: 5, color: "#EC4899" },
     { criterion: "Presentation & Format Compliance", marks: 5, color: "#6366F1" }
   ],
   awards: [
@@ -203,7 +203,7 @@ export default function SahHomePage() {
                   <div style={{ fontSize: '0.85rem', color: 'var(--orange)', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.1em', marginBottom: '12px' }}>
                     {item.label}
                   </div>
-                  <div style={{ color: 'var(--navy)', fontWeight: 700, lineHeight: 1.5, fontSize: '1.1rem' }}>
+                  <div style={{ color: 'var(--navy)', fontWeight: 900, lineHeight: 1.5, fontSize: '1.1rem' }}>
                     {item.value}
                   </div>
                 </motion.div>

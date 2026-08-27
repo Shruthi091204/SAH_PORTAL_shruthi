@@ -26,8 +26,8 @@ const RUBRIC_CRITERIA = [
     id: 'technical',
     title: 'Technical Approach & Complexity',
     category: 'technical',
-    max: 5,
-    weightPct: 10,
+    max: 10,
+    weightPct: 20,
     color: '#06B6D4',
     bgColor: 'rgba(6, 182, 212, 0.08)',
     borderColor: 'rgba(6, 182, 212, 0.3)',
@@ -39,9 +39,9 @@ const RUBRIC_CRITERIA = [
     ),
     description: 'Soundness of architecture and methodology; justification of the technology stack; engineering depth and non-triviality.',
     levels: [
-      { score: '0 - 1', title: 'Trivial', text: 'Basic framework usage with superficial technical depth.' },
-      { score: '2 - 3', title: 'Sound Tech', text: 'Well-justified tech stack, solid architecture & methodology.' },
-      { score: '4 - 5', title: 'Engineering Depth', text: 'Complex, non-trivial engineering & robust system design.' }
+      { score: '0 - 3', title: 'Trivial', text: 'Basic framework usage with superficial technical depth.' },
+      { score: '4 - 7', title: 'Sound Tech', text: 'Well-justified tech stack, solid architecture & methodology.' },
+      { score: '8 - 10', title: 'Engineering Depth', text: 'Complex, non-trivial engineering & robust system design.' }
     ]
   },
   {
@@ -93,8 +93,8 @@ const RUBRIC_CRITERIA = [
     id: 'prototype',
     title: 'Prototype & Demonstration Readiness',
     category: 'technical',
-    max: 10,
-    weightPct: 20,
+    max: 5,
+    weightPct: 10,
     color: '#FF6B00',
     bgColor: 'rgba(255, 107, 0, 0.08)',
     borderColor: 'rgba(255, 107, 0, 0.35)',
@@ -107,9 +107,9 @@ const RUBRIC_CRITERIA = [
     ),
     description: 'Evidence of a working module or validated proof of concept; quality of the live demonstration; ability to explain measured results.',
     levels: [
-      { score: '0 - 3', title: 'Unvalidated', text: 'Concept stage without working module evidence.' },
-      { score: '4 - 7', title: 'POC Validated', text: 'Working module or proof of concept demonstrated.' },
-      { score: '8 - 10', title: 'Live Ready', text: 'High-quality live demo with validated, measured results.' }
+      { score: '0 - 1', title: 'Unvalidated', text: 'Concept stage without working module evidence.' },
+      { score: '2 - 3', title: 'POC Validated', text: 'Working module or proof of concept demonstrated.' },
+      { score: '4 - 5', title: 'Live Ready', text: 'High-quality live demo with validated, measured results.' }
     ]
   },
   {
@@ -226,7 +226,7 @@ export default function OfficialRubricCard({ isModal = false, onClose }) {
         <div style={{ marginTop: '20px', paddingTop: '16px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.74rem', color: '#94A3B8', marginBottom: '8px', fontWeight: 600 }}>
             <span>Jury Weightage Distribution</span>
-            <span>Innovation (20%) · Technical (10%) · Feasibility (20%) · Impact (20%) · Prototype (20%) · Pitch (10%)</span>
+            <span>Innovation (20%) · Technical (20%) · Feasibility (20%) · Impact (20%) · Prototype (10%) · Pitch (10%)</span>
           </div>
 
           <div style={{ display: 'flex', height: '10px', borderRadius: '6px', overflow: 'hidden', gap: '2px', background: 'rgba(0,0,0,0.3)' }}>

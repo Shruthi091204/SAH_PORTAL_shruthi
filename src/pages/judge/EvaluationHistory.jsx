@@ -46,10 +46,10 @@ export default function EvaluationHistory() {
                 <th>Team</th>
                 <th>Problem Statement</th>
                 <th style={{ textAlign: 'center' }}>Novelty (10)</th>
-                <th style={{ textAlign: 'center' }}>Technical (5)</th>
+                <th style={{ textAlign: 'center' }}>Technical (10)</th>
                 <th style={{ textAlign: 'center' }}>Feasibility (10)</th>
                 <th style={{ textAlign: 'center' }}>Impact (10)</th>
-                <th style={{ textAlign: 'center' }}>Prototype (10)</th>
+                <th style={{ textAlign: 'center' }}>Prototype (5)</th>
                 <th style={{ textAlign: 'center' }}>Pitch (5)</th>
                 <th style={{ textAlign: 'center' }}>Total Score (50)</th>
                 <th>Remarks</th>

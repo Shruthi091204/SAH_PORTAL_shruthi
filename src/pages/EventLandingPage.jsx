@@ -483,7 +483,7 @@ export default function EventLandingPage({ onEnter }) {
               WebkitTextFillColor: 'transparent',
               textShadow: '0 0 30px rgba(255,140,26,0.3)'
             }}>
-              Students can participate in all 3 events
+              
             </span>
           </motion.div>
         </div>

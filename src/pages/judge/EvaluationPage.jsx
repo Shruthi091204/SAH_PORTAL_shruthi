@@ -18,10 +18,10 @@ export default function EvaluationPage() {
 
   // 6 Official Rubric scoring parameters (initially null - no option selected)
   const [novelty, setNovelty] = useState(null);         // Max 10
-  const [technical, setTechnical] = useState(null);       // Max 5
+  const [technical, setTechnical] = useState(null);       // Max 10
   const [feasibility, setFeasibility] = useState(null);   // Max 10
   const [impact, setImpact] = useState(null);             // Max 10
-  const [prototype, setPrototype] = useState(null);       // Max 10
+  const [prototype, setPrototype] = useState(null);       // Max 5
   const [presentation, setPresentation] = useState(null); // Max 5
   const [remarks, setRemarks] = useState('');
 
@@ -169,10 +169,10 @@ export default function EvaluationPage() {
     // Strict validation: all 6 parameters must have a selected radio score
     const missing = [];
     if (novelty === null) missing.push('Novelty & Innovation (0-10)');
-    if (technical === null) missing.push('Technical Approach & Complexity (0-5)');
+    if (technical === null) missing.push('Technical Approach & Complexity (0-10)');
     if (feasibility === null) missing.push('Feasibility & Viability (0-10)');
     if (impact === null) missing.push('Impact, Scale & Sustainability (0-10)');
-    if (prototype === null) missing.push('Prototype Readiness (0-10)');
+    if (prototype === null) missing.push('Prototype Readiness (0-5)');
     if (presentation === null) missing.push('Presentation & Format (0-5)');
 
     if (missing.length > 0) {
@@ -183,10 +183,10 @@ export default function EvaluationPage() {
     // Strict range verification
     if (
       novelty < 0 || novelty > 10 ||
-      technical < 0 || technical > 5 ||
+      technical < 0 || technical > 10 ||
       feasibility < 0 || feasibility > 10 ||
       impact < 0 || impact > 10 ||
-      prototype < 0 || prototype > 10 ||
+      prototype < 0 || prototype > 5 ||
       presentation < 0 || presentation > 5
     ) {
       showToast('error', 'Invalid score selected. Please stay within the official rubric ranges.');
@@ -402,7 +402,7 @@ export default function EvaluationPage() {
                 name="technical"
                 label="2. Technical Approach & Complexity"
                 description="Soundness of architecture & methodology; justification of tech stack; engineering depth & non-triviality"
-                max={5}
+                max={10}
                 value={technical}
                 onChange={setTechnical}
               />
@@ -432,7 +432,7 @@ export default function EvaluationPage() {
                 name="prototype"
                 label="5. Prototype & Demonstration Readiness"
                 description="Evidence of working module or validated POC; quality of live demonstration & measured results"
-                max={10}
+                max={5}
                 value={prototype}
                 onChange={setPrototype}
               />

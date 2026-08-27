@@ -665,10 +665,10 @@ export default function JudgePanelDetailModal({
                                           color: 'var(--text-secondary)'
                                         }}>
                                           <div>Novelty: <strong>{jb.innovationScore}/10</strong></div>
-                                          <div>Technical: <strong>{jb.technicalScore}/5</strong></div>
+                                          <div>Technical: <strong>{jb.technicalScore}/10</strong></div>
                                           <div>Feasibility: <strong>{jb.understandingScore}/10</strong></div>
                                           <div>Impact: <strong>{jb.impactScore}/10</strong></div>
-                                          <div>Prototype: <strong>{jb.prototypeScore}/10</strong></div>
+                                          <div>Prototype: <strong>{jb.prototypeScore}/5</strong></div>
                                           <div>Pitch: <strong>{jb.presentationScore}/5</strong></div>
                                         </div>
 
