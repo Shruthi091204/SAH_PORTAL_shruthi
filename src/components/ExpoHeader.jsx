@@ -1,7 +1,8 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import NotificationBell from './NotificationBell';
-import sahLogo from '../assets/Logo.png';
+import posterLogo from '../assets/poster.png';
+import projectExpoLogo from '../assets/project_expo.png';
 
 export default function ExpoHeader() {
   const { isAuthenticated, profile, signOut } = useAuth();
@@ -26,7 +27,7 @@ export default function ExpoHeader() {
     <header className="site-header">
       <div className="header-container">
         <Link to="/" className="header-logo" style={{ textDecoration: 'none' }}>
-          <img src={sahLogo} alt="SAH 2026 Logo" style={{ height: '48px', width: 'auto' }} />
+          <img src={isPosterMode ? posterLogo : projectExpoLogo} alt="SAH 2026 Logo" style={{ height: '48px', width: 'auto' }} />
           <div className="header-logo-text">
             <span className="title">{isPosterMode ? 'POSTER PRESENTATION 2026' : 'PROJECT EXPO 2026'}</span>
             <span className="subtitle">Amrita Vishwa Vidyapeetham, Chennai Campus</span>

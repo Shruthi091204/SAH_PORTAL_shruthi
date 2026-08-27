@@ -1,7 +1,7 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import NotificationBell from './NotificationBell';
-import sahLogo from '../assets/Logo.png';
+import sahLogo from '../assets/AH.png';
 
 export default function Header() {
   const { isAuthenticated, profile, signOut } = useAuth();
