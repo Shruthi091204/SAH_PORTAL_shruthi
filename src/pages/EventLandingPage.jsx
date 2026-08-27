@@ -467,16 +467,16 @@ export default function EventLandingPage({ onEnter }) {
               background: 'linear-gradient(90deg, rgba(255,255,255,0.02) 0%, rgba(255,140,26,0.08) 50%, rgba(255,255,255,0.02) 100%)',
               borderTop: '1px solid rgba(255,140,26,0.3)',
               borderBottom: '1px solid rgba(255,140,26,0.3)',
-              padding: '12px 32px',
+              padding: 'clamp(12px, 3vw, 20px) clamp(20px, 5vw, 40px)',
               borderRadius: '100px',
               backdropFilter: 'blur(12px)',
               boxShadow: '0 0 20px rgba(255,140,26,0.1)'
             }}
           >
             <span style={{ 
-              fontSize: '0.85rem', 
-              fontWeight: 700, 
-              letterSpacing: '0.2em', 
+              fontSize: 'clamp(0.9rem, 4vw, 1.35rem)', 
+              fontWeight: 800, 
+              letterSpacing: 'clamp(0.1em, 1vw, 0.2em)', 
               textTransform: 'uppercase',
               background: 'linear-gradient(90deg, #ffffff 0%, #ffcf99 50%, #ffffff 100%)',
               WebkitBackgroundClip: 'text',

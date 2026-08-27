@@ -241,10 +241,14 @@ export function AuthProvider({ children }) {
     const userId = session?.user?.id || profile?.id;
     if (!userId) return { error: new Error('Not authenticated') };
 
+    // Prevent role escalation: ensure students cannot change their role
+    const sanitizedUpdates = { ...updates };
+    delete sanitizedUpdates.role;
+
     try {
       const { data, error: updateError } = await supabase
         .from('profiles')
-        .update(updates)
+        .update(sanitizedUpdates)
         .eq('id', userId)
         .select()
         .single();
