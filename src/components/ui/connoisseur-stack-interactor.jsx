@@ -227,6 +227,9 @@ export const ConnoisseurStackInteractor = ({
               } else if (items[activeIndex].name === "Project Expo") {
                 window.scrollTo(0, 0);
                 navigate('/events/project-expo');
+              } else if (items[activeIndex].name === "Poster Presentation") {
+                window.scrollTo(0, 0);
+                navigate('/events/poster-presentation');
               } else {
                 alert(`The ${items[activeIndex].name} portal is coming soon.`);
               }
