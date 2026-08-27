@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import * as THREE from 'three/webgpu';
 import { bloom } from 'three/examples/jsm/tsl/display/BloomNode.js';
 import { motion } from 'framer-motion';
+import amritaLogo from '../assets/AMRITA-LOGO.png';
 import {
   abs, add, float, mix, mod, oneMinus, pass, sin,
   smoothstep, uniform, uv, vec3, positionLocal, normalView,
@@ -409,6 +410,21 @@ export default function EventLandingPage({ onEnter }) {
   return (
     <>
       <main className="futuristic-hero">
+        <img 
+          src={amritaLogo} 
+          alt="Amrita Chennai Campus" 
+          className="animate-in fade-in slide-in-from-top-4 duration-1000"
+          style={{ 
+            position: 'absolute', 
+            top: '40px', 
+            left: '50%', 
+            transform: 'translateX(-50%)', 
+            height: '65px', 
+            zIndex: 100,
+            borderRadius: '8px',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.3)'
+          }} 
+        />
         <div className="futuristic-copy">
           <h1>
             {words.map((word, index) => (
