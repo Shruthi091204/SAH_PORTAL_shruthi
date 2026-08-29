@@ -1,7 +1,8 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
+import AdNewsTicker from '../components/AdNewsTicker';
 import { downloadGuidelines, downloadPPTTemplate, downloadSihAwarenessDoc } from '../utils/downloadResources';
 import { 
   CheckCircle2, 
@@ -161,6 +162,9 @@ export default function SahHomePage() {
           </p>
         </motion.div>
       </div>
+
+      {/* FLASH NEWS TICKER */}
+      <AdNewsTicker />
 
       <div style={{ maxWidth: '1200px', margin: '40px auto', padding: '0 24px', position: 'relative', zIndex: 20 }}>
         

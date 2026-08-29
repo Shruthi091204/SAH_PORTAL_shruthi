@@ -80,6 +80,9 @@ export default function AnalyticsDashboard() {
       if (t.ps_id) {
         psTeamCountMap[t.ps_id] = (psTeamCountMap[t.ps_id] || 0) + 1;
       }
+      if (t.ps_id_2) {
+        psTeamCountMap[t.ps_id_2] = (psTeamCountMap[t.ps_id_2] || 0) + 1;
+      }
     });
 
     ps.forEach(p => {
@@ -87,7 +90,7 @@ export default function AnalyticsDashboard() {
       if (p.category) categoryCounts[p.category] = (categoryCounts[p.category] || 0) + (psTeamCountMap[p.id] || 0);
     });
 
-    const teamsWithPs = teams.filter(t => t.ps_id).length;
+    const teamsWithPs = teams.filter(t => t.ps_id || t.ps_id_2).length;
     const teamsWithoutPs = teams.length - teamsWithPs;
 
     // Students in teams
@@ -148,6 +151,11 @@ export default function AnalyticsDashboard() {
       const key = t.ps_id || 'unassigned';
       if (!map[key]) map[key] = [];
       map[key].push(t);
+      
+      if (t.ps_id_2) {
+        if (!map[t.ps_id_2]) map[t.ps_id_2] = [];
+        map[t.ps_id_2].push(t);
+      }
     });
     return map;
   }, [allTeams]);

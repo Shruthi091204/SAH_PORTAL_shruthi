@@ -33,6 +33,7 @@ import PortalHubPage from './pages/PortalHubPage';
 import ProblemStatementsPage from './pages/ProblemStatementsPage';
 import SahHomePage from './pages/SahHomePage';
 import { ConnoisseurStackInteractor } from './components/ui/connoisseur-stack-interactor';
+import AdNewsTicker from './components/AdNewsTicker';
 
 // Admin Pages
 import ThemesAdmin from './pages/admin/ThemesAdmin';
@@ -62,6 +63,9 @@ function CombinedLandingHub() {
     <div style={{ backgroundColor: '#030303', minHeight: '100vh', color: '#ffffff', paddingBottom: '80px' }}>
       <EventLandingPage onEnter={handleScrollDown} />
       <div ref={scrollRef}>
+        <div style={{ padding: '20px 0', background: '#09090b' }}>
+          <AdNewsTicker />
+        </div>
         <ConnoisseurStackInteractor />
       </div>
 

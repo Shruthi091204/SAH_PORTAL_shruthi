@@ -8,6 +8,7 @@ import AdminDashboardDetailsModal from '../components/AdminDashboardDetailsModal
 import JudgePanelDetailModal from '../components/JudgePanelDetailModal';
 import UserProfileModal from '../components/UserProfileModal';
 import OfficialRubricCard from '../components/OfficialRubricCard';
+import AdNewsTicker from '../components/AdNewsTicker';
 import { downloadPPTTemplate, downloadGuidelines } from '../utils/downloadResources';
 
 export default function DashboardPage() {
@@ -861,6 +862,9 @@ export default function DashboardPage() {
           <>
             {!myTeam ? (
               <>
+                <div style={{ gridColumn: '1 / -1', marginBottom: '16px' }}>
+                  <AdNewsTicker />
+                </div>
                 <Link to="/create-team" className="quick-action-card">
                   <div className="action-icon">
                     <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

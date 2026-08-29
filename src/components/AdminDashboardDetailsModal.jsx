@@ -21,11 +21,10 @@ export default function AdminDashboardDetailsModal({
       if (e.key === 'Escape' && !viewingProfile) onClose();
     };
     window.addEventListener('keydown', handleKeyDown);
-    const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = originalOverflow;
+      document.body.style.overflow = '';
     };
   }, [onClose, viewingProfile]);
 

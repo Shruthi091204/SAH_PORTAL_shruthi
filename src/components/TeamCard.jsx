@@ -40,6 +40,12 @@ export default function TeamCard({
             <span className="pill-badge skill">+{team.needed_skills.length - 5} more</span>
           )}
         </div>
+
+        {team.recruitment_message && (
+          <div style={{ marginTop: '12px', fontSize: '0.85rem', color: 'var(--text-secondary)', fontStyle: 'italic', padding: '8px 12px', background: 'var(--off-white)', borderRadius: '8px', borderLeft: '3px solid var(--orange)' }}>
+            "{team.recruitment_message}"
+          </div>
+        )}
       </div>
 
       <div className="team-card-footer">

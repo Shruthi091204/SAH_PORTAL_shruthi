@@ -7,6 +7,7 @@ import MemberSlot from '../components/MemberSlot';
 import JoinRequestCard from '../components/JoinRequestCard';
 import TeamInvitationsCard from '../components/TeamInvitationsCard';
 import UserProfileModal from '../components/UserProfileModal';
+import SkillTagSelector from '../components/SkillTagSelector';
 import { DEPARTMENTS } from '../data/departments';
 import { downloadPPTTemplate, downloadGuidelines } from '../utils/downloadResources';
 
@@ -31,6 +32,11 @@ export default function MyTeamPage() {
   // Profile Preview Modal
   const [viewingProfile, setViewingProfile] = useState(null);
   const [viewingRole, setViewingRole] = useState(null);
+
+  // Recruitment Advertisement
+  const [neededSkills, setNeededSkills] = useState([]);
+  const [recruitmentMessage, setRecruitmentMessage] = useState('');
+  const [savingAd, setSavingAd] = useState(false);
 
   // Invite Modal & Candidate Search
   const [showInviteModal, setShowInviteModal] = useState(false);
@@ -96,12 +102,13 @@ export default function MyTeamPage() {
     setSelectedPsId2(teamData?.ps_id_2 || '');
     setPptUrl(teamData?.ppt_url || '');
     setPptUrl2(teamData?.ppt_url_2 || '');
-    setGithubUrl(teamData?.github_url || '');
     setGithubUrl2(teamData?.github_url_2 || '');
     setVideoUrl(teamData?.video_url || '');
     setVideoUrl2(teamData?.video_url_2 || '');
     setMentorName(teamData?.mentor_name || '');
     setMentorDepartment(teamData?.mentor_department || '');
+    setNeededSkills(teamData?.needed_skills || []);
+    setRecruitmentMessage(teamData?.recruitment_message || '');
 
     // Fetch all members
     const { data: membersData } = await supabase
@@ -496,13 +503,56 @@ export default function MyTeamPage() {
           userId: member.student_id,
           type: 'team_locked',
           title: 'Team Locked! ',
-          message: `Team "${team.team_name}"has been locked and is pending SPOC verification.`,
+          message: `Team "${team.team_name}" has been locked and is pending SPOC verification.`,
           metadata: { team_id: team.id }
         });
       }
 
       fetchTeamData();
     }
+  };
+
+  // Save Recruitment Ad
+  const handleSaveAd = async () => {
+    setSavingAd(true);
+    // Remove the message if skills are empty or message is empty
+    const { error } = await supabase
+      .from('teams')
+      .update({
+        needed_skills: neededSkills,
+        recruitment_message: recruitmentMessage || ''
+      })
+      .eq('id', team.id);
+
+    if (error) {
+      showToast('error', error.message || 'Failed to save advertisement. Ensure you ran the SQL command.');
+    } else {
+      showToast('success', 'Recruitment Advertisement updated successfully!');
+      fetchTeamData();
+    }
+    setSavingAd(false);
+  };
+  
+  // Remove Recruitment Ad
+  const handleRemoveAd = async () => {
+    setSavingAd(true);
+    const { error } = await supabase
+      .from('teams')
+      .update({
+        needed_skills: [],
+        recruitment_message: null
+      })
+      .eq('id', team.id);
+
+    if (error) {
+      showToast('error', error.message);
+    } else {
+      setNeededSkills([]);
+      setRecruitmentMessage('');
+      showToast('success', 'Advertisement removed.');
+      fetchTeamData();
+    }
+    setSavingAd(false);
   };
 
   // Unlock team for editing (Leader only)
@@ -715,6 +765,63 @@ export default function MyTeamPage() {
           </div>
         )}
       </div>
+
+      {/* Recruitment Advertisement */}
+      {isLeader && !team.is_locked && members.length < 6 && (
+        <div className="card" style={{ marginBottom: '24px', border: '2px solid var(--orange)', position: 'relative' }}>
+          <div style={{ position: 'absolute', top: '-12px', right: '20px', background: 'var(--orange)', color: 'white', padding: '4px 12px', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Public Board
+          </div>
+          <h3 style={{ margin: '0 0 8px 0', color: 'var(--navy)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            📣 Advertise Recruitment
+          </h3>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '20px' }}>
+            Looking for specific skills? Publish an ad to the SAH Landing Page and Login Page to attract talent!
+          </p>
+          
+          <div className="form-group">
+            <label className="form-label" style={{ fontWeight: 600 }}>What skills do you need? (Max 2)</label>
+            <SkillTagSelector
+              selectedSkills={neededSkills}
+              onChange={setNeededSkills}
+              maxSkills={2}
+            />
+          </div>
+
+          <div className="form-group" style={{ marginTop: '16px' }}>
+            <label className="form-label" style={{ fontWeight: 600 }}>Catchy Message / Pitch</label>
+            <input
+              type="text"
+              className="form-input"
+              placeholder="e.g., We need a React wizard for our healthcare AI idea! Join us!"
+              value={recruitmentMessage}
+              onChange={(e) => setRecruitmentMessage(e.target.value)}
+              maxLength={120}
+            />
+            <div className="form-hint" style={{ marginTop: '4px', fontSize: '0.75rem' }}>{recruitmentMessage.length}/120 characters</div>
+          </div>
+
+          <div style={{ display: 'flex', gap: '12px', marginTop: '20px' }}>
+            <button
+              className="btn btn-orange"
+              onClick={handleSaveAd}
+              disabled={savingAd || neededSkills.length === 0}
+            >
+              {savingAd ? 'Publishing...' : 'Publish Advertisement'}
+            </button>
+            {(neededSkills.length > 0 || recruitmentMessage) && (
+              <button
+                className="btn btn-outline"
+                onClick={handleRemoveAd}
+                disabled={savingAd}
+                style={{ color: 'var(--red)', borderColor: 'var(--red)' }}
+              >
+                Remove Ad
+              </button>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Sent Team Invitations (Leader only) */}
       {isLeader && !team.is_locked && sentInvitations.length > 0 && (
