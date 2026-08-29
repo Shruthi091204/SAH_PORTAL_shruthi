@@ -32,9 +32,9 @@ export default function AdNewsTicker() {
   const displayTeams = adTeams.length > 0 ? adTeams : [
     {
       isPlaceholder: true,
-      team_name: "Post Your Advertisement!",
-      recruitment_message: "Team Leaders: Need a specific skill? Advertise for up to 2 specialized members here! Only Team Leaders can post advertisements from the Team Dashboard.",
-      needed_skills: ["Your Skill 1", "Your Skill 2"]
+      team_name: "Hire Top Talent!",
+      recruitment_message: "Team Leaders: Need a specific skill? Post an ad from your Team Dashboard to recruit the perfect teammate.",
+      needed_skills: ["Any Skill"]
     }
   ];
 
