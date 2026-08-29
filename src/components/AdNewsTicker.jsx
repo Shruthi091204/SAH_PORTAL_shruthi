@@ -90,7 +90,7 @@ export default function AdNewsTicker() {
               .ticker-animation {
                 display: inline-flex;
                 gap: 40px;
-                animation: ticker 150s linear infinite;
+                animation: ticker ${displayTeams.length * 25}s linear infinite;
               }
               .ticker-animation:hover {
                 animation-play-state: paused;
@@ -145,6 +145,14 @@ export default function AdNewsTicker() {
                 )}
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* Sticky View All Button */}
+        <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, display: 'flex', alignItems: 'center', padding: '0 16px 0 32px', background: 'linear-gradient(to right, transparent, #f97316 30%, #f97316)', zIndex: 10 }}>
+          <div style={{ fontSize: '0.75rem', fontWeight: 800, background: 'white', color: '#ea580c', padding: '6px 12px', borderRadius: '20px', boxShadow: '0 2px 8px rgba(234,88,12,0.4)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <span>View All</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
           </div>
         </div>
       </div>
