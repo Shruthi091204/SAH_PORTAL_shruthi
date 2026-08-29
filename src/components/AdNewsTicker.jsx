@@ -32,7 +32,7 @@ export default function AdNewsTicker() {
   const displayTeams = adTeams.length > 0 ? adTeams : [
     {
       isPlaceholder: true,
-      team_name: "Hire Top Talent!",
+      team_name: "Need a Team Member?",
       recruitment_message: "Team Leaders: Need a specific skill? Post an ad from your Team Dashboard to recruit the perfect teammate.",
       needed_skills: ["Any Skill"]
     }
@@ -189,7 +189,7 @@ export default function AdNewsTicker() {
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap', gap: '10px' }}>
                       <h4 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#0f172a' }}>{team.team_name}</h4>
                       {team.isPlaceholder ? (
-                        <button 
+                        <button
                           onClick={() => { setShowModal(false); navigate('/dashboard'); }}
                           style={{ background: '#fff7ed', color: '#ea580c', border: '1px solid #fed7aa', padding: '6px 12px', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer' }}
                         >
