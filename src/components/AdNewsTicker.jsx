@@ -88,7 +88,7 @@ export default function AdNewsTicker() {
               .ticker-animation {
                 display: inline-flex;
                 gap: 40px;
-                animation: ticker ${displayTeams.length * 25}s linear infinite;
+                animation: ticker ${displayTeams.length * 75}s linear infinite;
               }
               .ticker-animation:hover {
                 animation-play-state: paused;
