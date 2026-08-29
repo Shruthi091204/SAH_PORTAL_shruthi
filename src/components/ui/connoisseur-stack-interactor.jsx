@@ -161,16 +161,14 @@ export const ConnoisseurStackInteractor = ({
                       "text-4xl md:text-6xl font-black uppercase tracking-tighter leading-[0.95] transition-all duration-500",
                       activeIndex === index
                         ? "text-zinc-950 dark:text-white opacity-100 translate-x-4"
-                        : "opacity-40 translate-x-0 " +
-                        "text-zinc-500 dark:text-transparent " +
-                        "dark:[text-stroke:1.5px_#52525b] dark:[-webkit-text-stroke:1.5px_#52525b]"
+                        : "translate-x-0 text-zinc-400 dark:text-zinc-600 transition-colors duration-300"
                     )}>
                       {item.name === "Amrita Hackathon(Internal SIH)" ? (
                         <div className="flex flex-col gap-1">
                           <span>Amrita Hackathon</span>
                           <span className={cn(
                             "text-2xl md:text-4xl tracking-wide font-extrabold transition-colors duration-500",
-                            activeIndex === index ? "text-orange-500" : "text-zinc-500 dark:text-transparent"
+                            activeIndex === index ? "text-orange-500" : "text-zinc-400 dark:text-zinc-600"
                           )}>
                             (Internal SIH)
                           </span>
