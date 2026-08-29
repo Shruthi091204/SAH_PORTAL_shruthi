@@ -9,25 +9,10 @@ export default function AdNewsTicker() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    async function fetchAdTeams() {
-      const { data, error } = await supabase
-        .from('teams')
-        .select('team_name, needed_skills, recruitment_message, profiles!teams_leader_id_fkey(email)')
-        .eq('is_open_for_recruitment', true)
-        .eq('is_locked', false)
-        .not('recruitment_message', 'is', null);
-
-      if (error) {
-        // Fallback or silently ignore if column doesn't exist yet
-        return;
-      }
-
-      if (data) {
-        setAdTeams(data.filter(t => t.needed_skills && t.needed_skills.length > 0));
-      }
-    }
-    fetchAdTeams();
+    // Component is disabled
   }, []);
+
+  return null;
 
   const displayTeams = adTeams.length > 0 ? adTeams : [
     {
