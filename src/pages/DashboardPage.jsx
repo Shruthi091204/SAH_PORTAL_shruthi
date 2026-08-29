@@ -1111,6 +1111,7 @@ export default function DashboardPage() {
       {viewingProfile && (
         <UserProfileModal
           profile={viewingProfile}
+          hidePhone={true}
           onClose={() => setViewingProfile(null)}
         />
       )}

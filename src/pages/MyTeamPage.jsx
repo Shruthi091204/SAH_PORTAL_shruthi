@@ -1384,14 +1384,15 @@ export default function MyTeamPage() {
         </div>
       )}
 
-      {/* User Profile Details Modal */}
+      {/* Student / User Profile Modal */}
       {viewingProfile && (
         <UserProfileModal
           profile={viewingProfile}
           memberRole={viewingRole}
+          hidePhone={viewingRole !== 'Leader' && viewingRole !== 'Member'}
           onClose={() => {
             setViewingProfile(null);
-            setViewingRole(null);
+            setViewingRole('');
           }}
         />
       )}
