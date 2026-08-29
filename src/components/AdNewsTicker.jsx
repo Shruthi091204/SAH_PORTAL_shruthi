@@ -9,10 +9,25 @@ export default function AdNewsTicker() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Component is disabled
-  }, []);
+    async function fetchAdTeams() {
+      const { data, error } = await supabase
+        .from('teams')
+        .select('team_name, needed_skills, recruitment_message, profiles!teams_leader_id_fkey(email)')
+        .eq('is_open_for_recruitment', true)
+        .eq('is_locked', false)
+        .not('recruitment_message', 'is', null);
 
-  return null;
+      if (error) {
+        // Fallback or silently ignore if column doesn't exist yet
+        return;
+      }
+
+      if (data) {
+        setAdTeams(data.filter(t => t.needed_skills && t.needed_skills.length > 0));
+      }
+    }
+    fetchAdTeams();
+  }, []);
 
   const displayTeams = adTeams.length > 0 ? adTeams : [
     {
@@ -51,9 +66,7 @@ export default function AdNewsTicker() {
         }}
         onClick={() => setShowModal(true)}
       >
-        <div className="ticker-title" style={{ fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap', marginRight: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ fontSize: '1.2rem' }}></span> SAH HIRING
-        </div>
+
 
         <div
           style={{
@@ -84,11 +97,7 @@ export default function AdNewsTicker() {
                 0% { transform: translateX(0); }
                 100% { transform: translateX(-50%); }
               }
-              @media (max-width: 768px) {
-                .ticker-title {
-                  display: none !important;
-                }
-              }
+
             `}
           </style>
           <div className="ticker-animation" style={{ paddingRight: '40px' }}>
@@ -148,9 +157,7 @@ export default function AdNewsTicker() {
 
             <div style={{ padding: '20px', borderBottom: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', background: 'linear-gradient(to right, #ea580c, #f97316)', color: 'white', gap: '16px' }}>
               <div style={{ flex: 1 }}>
-                <h3 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                  SAH HIRING
-                </h3>
+
                 <p style={{ margin: '6px 0 0 0', fontSize: '0.95rem', opacity: 0.95, lineHeight: 1.4 }}>
                   Exclusive Opportunities! Teams are scouting for niche talent to complete their winning rosters. If you have the exact skills they need, reach out to the Team Leader instantly!
                 </p>
