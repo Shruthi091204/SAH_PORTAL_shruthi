@@ -1,12 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useNotifications } from '../context/NotificationContext';
 
 export default function NotificationBell() {
   const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
-  const navigate = useNavigate();
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -39,37 +37,9 @@ export default function NotificationBell() {
       case 'join_request': return '📩';
       case 'request_accepted': return '✅';
       case 'request_declined': return '❌';
-      case 'team_invite': return '🤝';
-      case 'invite_accepted': return '🎉';
-      case 'invite_declined': return '😔';
       case 'team_locked': return '🔒';
       case 'team_verified': return '✔️';
       default: return '📢';
-    }
-  };
-
-  // Determine the navigation target for actionable notifications
-  const getNotifAction = (notif) => {
-    switch (notif.type) {
-      case 'team_invite':
-        return { label: 'View Invitation →', path: '/dashboard' };
-      case 'join_request':
-        return { label: 'Review Request →', path: '/my-team' };
-      case 'request_accepted':
-      case 'invite_accepted':
-        return { label: 'View Team →', path: '/my-team' };
-      default:
-        return null;
-    }
-  };
-
-  const handleNotifClick = (notif) => {
-    if (!notif.is_read) markAsRead(notif.id);
-
-    const action = getNotifAction(notif);
-    if (action) {
-      setIsOpen(false);
-      navigate(action.path);
     }
   };
 
@@ -107,36 +77,21 @@ export default function NotificationBell() {
               <p>🔔 No notifications yet</p>
             </div>
           ) : (
-            notifications.map(notif => {
-              const action = getNotifAction(notif);
-              return (
-                <div
-                  key={notif.id}
-                  className={`notification-item ${!notif.is_read ? 'unread' : ''} ${action ? 'actionable' : ''}`}
-                  onClick={() => handleNotifClick(notif)}
-                  style={action ? { cursor: 'pointer' } : undefined}
-                >
-                  <div className="notif-title">
-                    {getNotifIcon(notif.type)} {notif.title}
-                  </div>
-                  <div className="notif-message">{notif.message}</div>
-                  {action && (
-                    <div className="notif-action" style={{
-                      marginTop: '6px',
-                      fontSize: '0.8rem',
-                      fontWeight: 700,
-                      color: 'var(--orange, #ff6b35)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px'
-                    }}>
-                      {action.label}
-                    </div>
-                  )}
-                  <div className="notif-time">{formatTime(notif.created_at)}</div>
+            notifications.map(notif => (
+              <div
+                key={notif.id}
+                className={`notification-item ${!notif.is_read ? 'unread' : ''}`}
+                onClick={() => {
+                  if (!notif.is_read) markAsRead(notif.id);
+                }}
+              >
+                <div className="notif-title">
+                  {getNotifIcon(notif.type)} {notif.title}
                 </div>
-              );
-            })
+                <div className="notif-message">{notif.message}</div>
+                <div className="notif-time">{formatTime(notif.created_at)}</div>
+              </div>
+            ))
           )}
         </div>
       )}

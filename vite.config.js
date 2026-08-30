@@ -2,10 +2,8 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import nodemailer from 'nodemailer'
 import path from 'path'
-import dotenv from 'dotenv'
 
-dotenv.config()
-
+// ... existing code ...
 function otpEmailPlugin() {
   return {
     name: 'otp-email-plugin',
@@ -173,54 +171,6 @@ function otpEmailPlugin() {
               res.end(JSON.stringify({ error: err.message || 'Failed to send expo email.' }));
             }
           });
-        } else if (req.url === '/api/submit-join-request' && req.method === 'POST') {
-          let body = '';
-          req.on('data', chunk => {
-            body += chunk.toString();
-          });
-          req.on('end', async () => {
-            try {
-              const { team_id, student_id, message } = JSON.parse(body || '{}');
-
-              if (!team_id || !student_id) {
-                res.statusCode = 400;
-                res.end(JSON.stringify({ error: 'team_id and student_id required' }));
-                return;
-              }
-
-              const { createClient } = await import('@supabase/supabase-js');
-              const supabaseAdmin = createClient(
-                process.env.VITE_SUPABASE_URL,
-                process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY
-              );
-
-              const { data, error } = await supabaseAdmin
-                .from('join_requests')
-                .upsert({
-                  team_id,
-                  student_id,
-                  status: 'PENDING',
-                  message
-                }, { onConflict: 'team_id,student_id' })
-                .select()
-                .single();
-
-              if (error) {
-                res.statusCode = 500;
-                res.end(JSON.stringify({ error: error.message }));
-                return;
-              }
-
-              res.statusCode = 200;
-              res.setHeader('Content-Type', 'application/json');
-              res.end(JSON.stringify({ success: true, data }));
-            } catch (err) {
-              console.error('Submit Join Request Error:', err);
-              res.statusCode = 500;
-              res.setHeader('Content-Type', 'application/json');
-              res.end(JSON.stringify({ error: err.message || 'Failed to submit join request.' }));
-            }
-          });
         } else {
           next();
         }
@@ -230,7 +180,7 @@ function otpEmailPlugin() {
 }
 
 export default defineConfig({
-  base: '/',
+  base: '/SAH_PORTAL/',
   plugins: [react(), otpEmailPlugin()],
   resolve: {
     alias: {

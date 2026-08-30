@@ -6,7 +6,7 @@ import { useNotifications } from '../context/NotificationContext';
 
 export default function TeamInvitationsCard({ onUpdate }) {
   const { profile } = useAuth();
-  const { sendNotification, notifications } = useNotifications();
+  const { sendNotification } = useNotifications();
   const navigate = useNavigate();
   const [invitations, setInvitations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,40 +14,10 @@ export default function TeamInvitationsCard({ onUpdate }) {
   const [toastMsg, setToastMsg] = useState(null);
 
   useEffect(() => {
-    if (!profile?.id) return;
-
-    fetchInvitations();
-
-    // Subscribe to real-time changes on team_invitations for this student
-    const channel = supabase
-      .channel(`team-invitations-${profile.id}`)
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'team_invitations',
-          filter: `student_id=eq.${profile.id}`
-        },
-        () => {
-          fetchInvitations();
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [profile]);
-
-  // Fallback: re-fetch when a new team_invite notification arrives
-  useEffect(() => {
-    if (!profile?.id) return;
-    const hasTeamInvite = notifications.some(n => n.type === 'team_invite' && !n.is_read);
-    if (hasTeamInvite) {
+    if (profile?.id) {
       fetchInvitations();
     }
-  }, [notifications, profile]);
+  }, [profile]);
 
   async function fetchInvitations() {
     try {

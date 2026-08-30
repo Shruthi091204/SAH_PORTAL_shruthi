@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useNotifications } from '../context/NotificationContext';
 import { supabase } from '../lib/supabase';
 import TeamCard from '../components/TeamCard';
+import TeamInvitationsCard from '../components/TeamInvitationsCard';
 
 export default function TeamMarketplace() {
   const { profile } = useAuth();
@@ -147,20 +148,14 @@ export default function TeamMarketplace() {
       .insert({
         team_id: teamId,
         student_id: profile.id,
-        status: 'PENDING',
         message: `Hi! I'd like to join your team. My skills: ${profile.skills?.join(', ') || 'N/A'}`
       });
 
     if (error) {
-      if (error.code === '23505' || error.message.includes('duplicate key')) {
-        setToast({ type: 'error', message: 'You have already sent a request to this team, or were previously removed.' });
-      } else {
-        setToast({ type: 'error', message: error.message });
-      }
+      setToast({ type: 'error', message: error.message });
     } else {
       // Send notification to team leader
       const team = teams.find(t => t.id === teamId);
-
       if (team) {
         await sendNotification({
           userId: team.leader_id,
@@ -215,6 +210,9 @@ export default function TeamMarketplace() {
           </Link>
         </div>
       )}
+
+      {/* Pending Team Invitations */}
+      <TeamInvitationsCard onUpdate={fetchData} />
 
       {/* Filter Bar */}
       <div className="filter-bar">

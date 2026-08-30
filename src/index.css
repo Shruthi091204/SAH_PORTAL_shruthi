@@ -399,27 +399,6 @@ h4 { font-size: 1.125rem; }
   font-size: 0.85rem;
 }
 
-.notification-item.actionable:hover {
-  background: rgba(255, 107, 53, 0.06);
-}
-
-.notification-item.actionable.unread {
-  background: #FFF7ED;
-  border-left-color: var(--orange, #ff6b35);
-}
-
-.notification-item .notif-action {
-  margin-top: 6px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--orange, #ff6b35);
-  transition: color 0.15s ease;
-}
-
-.notification-item:hover .notif-action {
-  color: #e85d20;
-}
-
 /* ---- Navigation Bar (SIH Style) ---- */
 .main-navbar {
   background: var(--white);
