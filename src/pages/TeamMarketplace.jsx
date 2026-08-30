@@ -142,22 +142,25 @@ export default function TeamMarketplace() {
       return;
     }
 
-    try {
-      const response = await fetch('/api/submit-join-request', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          team_id: teamId,
-          student_id: profile.id,
-          message: `Hi! I'd like to join your team. My skills: ${profile.skills?.join(', ') || 'N/A'}`
-        })
+    const { error } = await supabase
+      .from('join_requests')
+      .insert({
+        team_id: teamId,
+        student_id: profile.id,
+        status: 'PENDING',
+        message: `Hi! I'd like to join your team. My skills: ${profile.skills?.join(', ') || 'N/A'}`
       });
 
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || 'Failed to submit request');
-
+    if (error) {
+      if (error.code === '23505' || error.message.includes('duplicate key')) {
+        setToast({ type: 'error', message: 'You have already sent a request to this team, or were previously removed.' });
+      } else {
+        setToast({ type: 'error', message: error.message });
+      }
+    } else {
       // Send notification to team leader
       const team = teams.find(t => t.id === teamId);
+
       if (team) {
         await sendNotification({
           userId: team.leader_id,
@@ -170,8 +173,6 @@ export default function TeamMarketplace() {
 
       setMyRequests(prev => [...prev, { team_id: teamId, status: 'PENDING' }]);
       setToast({ type: 'success', message: 'Join request sent successfully!' });
-    } catch (error) {
-      setToast({ type: 'error', message: error.message });
     }
 
     setTimeout(() => setToast(null), 4000);
