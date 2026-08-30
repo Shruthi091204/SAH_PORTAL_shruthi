@@ -5,7 +5,6 @@ import { useNotifications } from '../context/NotificationContext';
 import { supabase } from '../lib/supabase';
 import MemberSlot from '../components/MemberSlot';
 import JoinRequestCard from '../components/JoinRequestCard';
-import TeamInvitationsCard from '../components/TeamInvitationsCard';
 import UserProfileModal from '../components/UserProfileModal';
 import SkillTagSelector from '../components/SkillTagSelector';
 import { DEPARTMENTS } from '../data/departments';
@@ -238,6 +237,16 @@ export default function MyTeamPage() {
 
     // Ensure recruitment is open if a member is removed
     await supabase.from('teams').update({ is_open_for_recruitment: true }).eq('id', team.id);
+
+    // Clean up any accepted join requests so the student can apply to this team again if needed
+    await supabase.from('join_requests').update({ status: 'DECLINED' })
+      .eq('team_id', team.id)
+      .eq('student_id', studentId);
+
+    // Clean up any accepted invitations too
+    await supabase.from('team_invitations').update({ status: 'DECLINED' })
+      .eq('team_id', team.id)
+      .eq('student_id', studentId);
 
     await sendNotification({
       userId: studentId,
@@ -636,9 +645,6 @@ export default function MyTeamPage() {
   if (!team) {
     return (
       <div className="page-container">
-        {/* Pending Team Invitations for Student */}
-        <TeamInvitationsCard onUpdate={fetchTeamData} />
-
         <div className="empty-state">
           <div className="empty-icon"></div>
           <h3>You're not on a team yet</h3>

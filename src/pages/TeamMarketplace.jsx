@@ -4,7 +4,6 @@ import { useAuth } from '../context/AuthContext';
 import { useNotifications } from '../context/NotificationContext';
 import { supabase } from '../lib/supabase';
 import TeamCard from '../components/TeamCard';
-import TeamInvitationsCard from '../components/TeamInvitationsCard';
 
 export default function TeamMarketplace() {
   const { profile } = useAuth();
@@ -143,17 +142,20 @@ export default function TeamMarketplace() {
       return;
     }
 
-    const { error } = await supabase
-      .from('join_requests')
-      .insert({
-        team_id: teamId,
-        student_id: profile.id,
-        message: `Hi! I'd like to join your team. My skills: ${profile.skills?.join(', ') || 'N/A'}`
+    try {
+      const response = await fetch('/api/submit-join-request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          team_id: teamId,
+          student_id: profile.id,
+          message: `Hi! I'd like to join your team. My skills: ${profile.skills?.join(', ') || 'N/A'}`
+        })
       });
 
-    if (error) {
-      setToast({ type: 'error', message: error.message });
-    } else {
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Failed to submit request');
+
       // Send notification to team leader
       const team = teams.find(t => t.id === teamId);
       if (team) {
@@ -168,6 +170,8 @@ export default function TeamMarketplace() {
 
       setMyRequests(prev => [...prev, { team_id: teamId, status: 'PENDING' }]);
       setToast({ type: 'success', message: 'Join request sent successfully!' });
+    } catch (error) {
+      setToast({ type: 'error', message: error.message });
     }
 
     setTimeout(() => setToast(null), 4000);
@@ -210,9 +214,6 @@ export default function TeamMarketplace() {
           </Link>
         </div>
       )}
-
-      {/* Pending Team Invitations */}
-      <TeamInvitationsCard onUpdate={fetchData} />
 
       {/* Filter Bar */}
       <div className="filter-bar">

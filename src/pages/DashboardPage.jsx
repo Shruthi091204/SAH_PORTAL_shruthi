@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabase';
 import StatCard from '../components/StatCard';
-import TeamInvitationsCard from '../components/TeamInvitationsCard';
+import { useNotifications } from '../context/NotificationContext';
 import AdminDashboardDetailsModal from '../components/AdminDashboardDetailsModal';
 import JudgePanelDetailModal from '../components/JudgePanelDetailModal';
 import UserProfileModal from '../components/UserProfileModal';
@@ -13,6 +13,7 @@ import { downloadPPTTemplate, downloadGuidelines } from '../utils/downloadResour
 
 export default function DashboardPage() {
   const { profile } = useAuth();
+  const { sendNotification, notifications } = useNotifications();
   const [stats, setStats] = useState({
     totalTeams: 0,
     openTeams: 0,
@@ -23,6 +24,8 @@ export default function DashboardPage() {
   });
   const [myTeam, setMyTeam] = useState(null);
   const [judgePanelInfo, setJudgePanelInfo] = useState(null);
+  const [pendingInvitations, setPendingInvitations] = useState([]);
+  const [inviteActionId, setInviteActionId] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const [allPanels, setAllPanels] = useState([]);
@@ -46,6 +49,15 @@ export default function DashboardPage() {
     fetchDashboardData();
   }, [profile]);
 
+  // Re-fetch when a new team_invite notification arrives (reliable fallback)
+  useEffect(() => {
+    if (!profile || profile.role !== 'student') return;
+    const hasNewInvite = notifications.some(n => n.type === 'team_invite' && !n.is_read);
+    if (hasNewInvite) {
+      fetchDashboardData();
+    }
+  }, [notifications]);
+
   // Realtime subscription for live panel updates and stats
   useEffect(() => {
     if (!profile) return;
@@ -56,6 +68,9 @@ export default function DashboardPage() {
         fetchDashboardData();
       })
       .on('postgres_changes', { event: '*', schema: 'public', table: 'teams' }, () => {
+        fetchDashboardData();
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'team_invitations' }, () => {
         fetchDashboardData();
       })
       .on('postgres_changes', { event: '*', schema: 'public', table: 'judge_panels' }, () => {
@@ -139,7 +154,7 @@ export default function DashboardPage() {
         femaleRatio: profiles.length > 0 ? `${Math.round((femaleCount / profiles.length) * 100)}%` : '0%'
       });
 
-      // Fetch user's team if student
+      // Fetch user's team and pending invitations if student
       if (profile && profile.role === 'student') {
         const { data: memberData } = await supabase
           .from('team_members')
@@ -150,6 +165,69 @@ export default function DashboardPage() {
 
         if (memberData?.teams) {
           setMyTeam({ ...memberData.teams, role: memberData.member_role });
+        } else {
+          setMyTeam(null);
+        }
+
+        // Fetch pending team invitations for this student
+        try {
+          const { data: invData } = await supabase
+            .from('team_invitations')
+            .select('id, team_id, status, created_at')
+            .eq('student_id', profile.id)
+            .eq('status', 'PENDING')
+            .order('created_at', { ascending: false });
+
+          if (invData && invData.length > 0) {
+            // Fetch team details separately to avoid nested join issues
+            const teamIds = [...new Set(invData.map(inv => inv.team_id))];
+            const { data: invTeams } = await supabase
+              .from('teams')
+              .select('id, team_name, is_locked, leader_id, ps_id')
+              .in('id', teamIds);
+
+            const teamsMap = {};
+            (invTeams || []).forEach(t => { teamsMap[t.id] = t; });
+
+            // Fetch leaders
+            const leaderIds = [...new Set((invTeams || []).map(t => t.leader_id).filter(Boolean))];
+            const { data: leaders } = leaderIds.length > 0
+              ? await supabase.from('profiles').select('id, full_name, department').in('id', leaderIds)
+              : { data: [] };
+
+            const leaderMap = {};
+            (leaders || []).forEach(l => { leaderMap[l.id] = l; });
+
+            // Fetch PS info
+            const psIds = [...new Set((invTeams || []).map(t => t.ps_id).filter(Boolean))];
+            const { data: psData } = psIds.length > 0
+              ? await supabase.from('problem_statements').select('id, ps_code, title').in('id', psIds)
+              : { data: [] };
+
+            const psDataMap = {};
+            (psData || []).forEach(ps => { psDataMap[ps.id] = ps; });
+
+            const enriched = invData
+              .map(inv => {
+                const team = teamsMap[inv.team_id];
+                if (!team || team.is_locked) return null;
+                return {
+                  ...inv,
+                  team_name: team.team_name,
+                  leader_id: team.leader_id,
+                  leader: leaderMap[team.leader_id] || null,
+                  ps: team.ps_id ? psDataMap[team.ps_id] || null : null
+                };
+              })
+              .filter(Boolean);
+
+            setPendingInvitations(enriched);
+          } else {
+            setPendingInvitations([]);
+          }
+        } catch (invErr) {
+          console.warn('Dashboard invitations fetch:', invErr);
+          setPendingInvitations([]);
         }
       }
 
@@ -436,10 +514,6 @@ export default function DashboardPage() {
         </div>
       ) : null}
 
-      {/* Pending Team Invitations for Student */}
-      {!isAdmin && !isJudge && !isSpoc && (
-        <TeamInvitationsCard onUpdate={fetchDashboardData} />
-      )}
 
       {/* JUDGE: My Panel & Assigned Problem Statements Widget */}
       {isJudge && (
@@ -1042,6 +1116,159 @@ export default function DashboardPage() {
           <div className="action-desc">View and edit your account details & skills</div>
         </Link>
       </div>
+
+      {/* Pending Team Invitations — below Quick Actions */}
+      {!isAdmin && !isJudge && !isSpoc && pendingInvitations.length > 0 && (
+        <div className="card" style={{
+          marginTop: '24px',
+          border: '2px solid var(--orange)',
+          background: 'linear-gradient(135deg, rgba(255,107,53,0.06) 0%, rgba(255,255,255,1) 100%)'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
+            <div style={{
+              fontSize: '1.4rem',
+              background: 'rgba(255,107,53,0.15)',
+              width: '38px',
+              height: '38px',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              🤝
+            </div>
+            <div>
+              <h3 style={{ margin: 0, color: 'var(--navy)' }}>Team Invitations ({pendingInvitations.length})</h3>
+              <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                You have been invited to join a team! Accept or decline below.
+              </p>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {pendingInvitations.map(inv => (
+              <div
+                key={inv.id}
+                style={{
+                  background: 'var(--white)',
+                  border: '1px solid var(--border-light)',
+                  borderRadius: 'var(--radius-md)',
+                  padding: '16px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  flexWrap: 'wrap',
+                  gap: '16px'
+                }}
+              >
+                <div style={{ flex: '1 1 320px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                    <span style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--navy)' }}>
+                      {inv.team_name}
+                    </span>
+                    <span className="pill-badge status-open" style={{ fontSize: '0.72rem' }}>
+                      Invited You
+                    </span>
+                  </div>
+                  <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '4px' }}>
+                    👤 Leader: <strong>{inv.leader?.full_name || 'Team Leader'}</strong>
+                    {inv.leader?.department && ` (${inv.leader.department})`}
+                  </div>
+                  {inv.ps ? (
+                    <div style={{ fontSize: '0.82rem', color: 'var(--navy)', marginTop: '4px' }}>
+                      📋 <strong>[{inv.ps.ps_code}]</strong> {inv.ps.title}
+                    </div>
+                  ) : (
+                    <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                      📋 Problem Statement: Not selected yet
+                    </div>
+                  )}
+                </div>
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                  <button
+                    className="btn btn-sm btn-ghost"
+                    onClick={async () => {
+                      setInviteActionId(inv.id);
+                      try {
+                        await supabase.from('team_invitations').update({ status: 'DECLINED' }).eq('id', inv.id);
+                        if (inv.leader_id) {
+                          await sendNotification({
+                            userId: inv.leader_id,
+                            type: 'invite_declined',
+                            title: 'Invitation Declined',
+                            message: `${profile.full_name} declined the invitation to join team "${inv.team_name}".`,
+                            metadata: { team_id: inv.team_id }
+                          });
+                        }
+                        fetchDashboardData();
+                      } catch (err) {
+                        console.error('Error declining:', err);
+                      } finally {
+                        setInviteActionId(null);
+                      }
+                    }}
+                    disabled={inviteActionId === inv.id}
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    ✕ Decline
+                  </button>
+                  <button
+                    className="btn btn-sm btn-primary"
+                    onClick={async () => {
+                      setInviteActionId(inv.id);
+                      try {
+                        // Check not already in a team
+                        const { data: existing } = await supabase.from('team_members').select('id').eq('student_id', profile.id).limit(1);
+                        if (existing && existing.length > 0) {
+                          alert('You are already a member of a team. Leave your current team first.');
+                          setInviteActionId(null);
+                          return;
+                        }
+                        // Check capacity
+                        const { data: curMembers } = await supabase.from('team_members').select('id').eq('team_id', inv.team_id);
+                        if (curMembers && curMembers.length >= 6) {
+                          alert('This team is already full (6/6 members).');
+                          await supabase.from('team_invitations').update({ status: 'DECLINED' }).eq('id', inv.id);
+                          fetchDashboardData();
+                          setInviteActionId(null);
+                          return;
+                        }
+                        // Join team
+                        const { error: joinErr } = await supabase.from('team_members').insert({ team_id: inv.team_id, student_id: profile.id, member_role: 'Member' });
+                        if (joinErr) throw joinErr;
+                        // Accept this invitation
+                        await supabase.from('team_invitations').update({ status: 'ACCEPTED' }).eq('id', inv.id);
+                        // Decline all other pending
+                        await supabase.from('team_invitations').update({ status: 'DECLINED' }).eq('student_id', profile.id).eq('status', 'PENDING');
+                        // Notify leader
+                        if (inv.leader_id) {
+                          await sendNotification({
+                            userId: inv.leader_id,
+                            type: 'invite_accepted',
+                            title: 'Invitation Accepted! 🎉',
+                            message: `${profile.full_name} accepted your team invitation and joined "${inv.team_name}"!`,
+                            metadata: { team_id: inv.team_id }
+                          });
+                        }
+                        alert(`You have joined "${inv.team_name}"! 🎉`);
+                        fetchDashboardData();
+                      } catch (err) {
+                        alert(`Error accepting invitation: ${err.message}`);
+                      } finally {
+                        setInviteActionId(null);
+                      }
+                    }}
+                    disabled={inviteActionId === inv.id}
+                    style={{ minWidth: '140px', background: 'var(--green)', borderColor: 'var(--green)' }}
+                  >
+                    {inviteActionId === inv.id ? 'Joining...' : '✓ Accept & Join'}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Deadlines Timeline */}
       <div className="card" style={{ marginTop: '24px' }}>
