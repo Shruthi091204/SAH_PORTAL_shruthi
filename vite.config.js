@@ -91,9 +91,9 @@ function otpEmailPlugin() {
           });
           req.on('end', async () => {
             try {
-              const { 
-                leaderName, leaderEmail, projectTitle, domain, 
-                teamSize, member2Name, member3Name, mentorName 
+              const {
+                leaderName, leaderEmail, projectTitle, domain,
+                teamSize, member2Name, member3Name, mentorName
               } = JSON.parse(body || '{}');
 
               if (!leaderEmail || !leaderName) {
@@ -180,7 +180,7 @@ function otpEmailPlugin() {
 }
 
 export default defineConfig({
-  base: '/SAH_PORTAL/',
+  base: '/',
   plugins: [react(), otpEmailPlugin()],
   resolve: {
     alias: {
