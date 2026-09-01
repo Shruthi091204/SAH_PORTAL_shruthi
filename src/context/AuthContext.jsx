@@ -500,31 +500,22 @@ export function AuthProvider({ children }) {
       const cleanCollegeEmail = collegeEmail.trim().toLowerCase();
       const cleanToken = otpToken.trim();
 
-      // 1. Check registration_otps table
-      const { data: records, error: fetchErr } = await supabase
-        .from('registration_otps')
-        .select('*')
-        .ilike('college_email', cleanCollegeEmail)
-        .eq('otp_code', cleanToken)
-        .gte('expires_at', new Date().toISOString())
-        .order('created_at', { ascending: false })
-        .limit(1);
+      // 1. Check OTP via secure RPC
+      const { data: safeDbFormData, error: rpcError } = await supabase.rpc('verify_registration_otp', {
+        p_email: cleanCollegeEmail,
+        p_otp: cleanToken
+      });
 
-      let validRecord = records && records.length > 0 ? records[0] : null;
-
-      if (!validRecord) {
-        throw new Error('Invalid or expired 6-digit OTP code. Please check your College Mail ID or request a new OTP.');
+      if (rpcError) {
+        throw new Error(rpcError.message || 'Invalid or expired 6-digit OTP code. Please check your College Mail ID or request a new OTP.');
       }
 
-      // Merge the DB form data (which lacks password now) with the active in-memory formData
-      const activeFormData = { ...(validRecord.form_data || {}), ...formData };
+      // Merge the sanitized DB form data with the active in-memory formData (which has the password)
+      const activeFormData = { ...(safeDbFormData || {}), ...formData };
 
       // 2. Now create the permanent account
       const signUpResult = await signUp(activeFormData);
       if (signUpResult.error) throw signUpResult.error;
-
-      // 3. Delete OTP record
-      await supabase.from('registration_otps').delete().ilike('college_email', cleanCollegeEmail).eq('otp_code', cleanToken);
 
       // 4. Send Registration Successful email via Edge Function
       try {
