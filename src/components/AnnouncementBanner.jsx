@@ -4,7 +4,7 @@ export default function AnnouncementBanner() {
       <div className="banner-content">
         <span> Smart Amrita Hackathon (SAH) 2026 — Amrita Chennai Campus</span>
         <span className="deadline-pill">
-          Registration Closes: Mon, 31 Aug 2026 (11:59 PM)
+          Registration Closes: Thu, 3 Sep 2026 (11:59 PM)
         </span>
         <span className="deadline-pill urgent">
           SIH Portal Upload: Sun, 20 Sep 2026 (5:00 PM)

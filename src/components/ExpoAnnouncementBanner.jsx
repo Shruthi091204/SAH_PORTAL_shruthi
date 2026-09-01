@@ -4,7 +4,7 @@ export default function ExpoAnnouncementBanner() {
       <div className="banner-content">
         <span> Project Expo 2026 — Amrita Chennai Campus</span>
         <span className="deadline-pill">
-           Registration Closes: Mon, 31 Aug 2026 (5:00 PM)
+           Registration Closes: Thu, 3 Sep 2026 (5:00 PM)
         </span>
         <span className="deadline-pill urgent">
            Expo Date: Thu, 10 Sep 2026

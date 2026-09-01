@@ -50,7 +50,7 @@ const hackathonData = {
   ],
   keyDates: [
     { title: "Registration Opens", dateStr: "2026-08-25", displayDate: "Tue, 25 Aug 2026", icon: <Users size={18} /> },
-    { title: "Registration Closes", dateStr: "2026-08-31", displayDate: "Mon, 31 Aug 2026", icon: <AlertTriangle size={18} /> },
+    { title: "Registration Closes", dateStr: "2026-09-03", displayDate: "Thu, 3 Sep 2026", icon: <AlertTriangle size={18} /> },
     { title: "Pitch Deck Submission", dateStr: "2026-09-05", displayDate: "Sat, 5 Sep 2026", icon: <CheckSquare size={18} /> },
     { title: "Smart Amrita Hackathon (SAH) 2026", dateStr: "2026-09-10", displayDate: "Thu, 10 Sep 2026", icon: <Cpu size={18} /> },
     { title: "Announcement of Nominated Teams", dateStr: "2026-09-11", displayDate: "Fri, 11 Sep 2026", icon: <Trophy size={18} /> },

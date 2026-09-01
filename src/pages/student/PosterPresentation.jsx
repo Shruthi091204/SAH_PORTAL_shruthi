@@ -35,7 +35,7 @@ const posterData = {
   ],
   keyDates: [
     { title: "Call for Posters & Registration Opens", dateStr: "2026-08-24", displayDate: "Mon, 24 Aug 2026", icon: <Users size={18} /> },
-    { title: "Registration Closes", dateStr: "2026-08-31", displayDate: "Mon, 31 Aug 2026 (5:00 PM)", icon: <AlertTriangle size={18} /> },
+    { title: "Registration Closes", dateStr: "2026-09-03", displayDate: "Thu, 3 Sep 2026 (5:00 PM)", icon: <AlertTriangle size={18} /> },
     { title: "Poster Submission", dateStr: "2026-09-05", displayDate: "Sat, 5 Sep 2026", icon: <CheckSquare size={18} /> },
     { title: "Screening & Shortlisting", dateStr: "2026-09-06", displayDate: "Sun–Mon, 6–7 Sep 2026", icon: <Target size={18} /> },
     { title: "Announcement of Shortlist", dateStr: "2026-09-07", displayDate: "Mon, 7 Sep 2026", icon: <Zap size={18} /> },
