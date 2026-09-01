@@ -97,16 +97,30 @@ BEGIN
 
   -- If caller is not admin/spoc, ensure they cannot change protected fields
   IF v_caller_role NOT IN ('admin', 'spoc') THEN
-    IF NEW.is_locked IS DISTINCT FROM OLD.is_locked THEN
-      RAISE EXCEPTION 'Only Admins/SPOCs can modify the locked status of a team.';
+    
+    -- If caller is not the leader
+    IF auth.uid() != OLD.leader_id THEN
+      IF NEW.is_locked IS DISTINCT FROM OLD.is_locked THEN
+        RAISE EXCEPTION 'Only the Team Leader or Admins/SPOCs can modify the locked status of a team.';
+      END IF;
+      IF NEW.is_spoc_verified IS DISTINCT FROM OLD.is_spoc_verified THEN
+        RAISE EXCEPTION 'Only Admins/SPOCs can modify the verified status of a team.';
+      END IF;
+    ELSE
+      -- Caller is the leader.
+      -- They can change is_locked (lock or unlock).
+      -- They can only change is_spoc_verified to FALSE (when unlocking).
+      IF NEW.is_spoc_verified IS DISTINCT FROM OLD.is_spoc_verified THEN
+        IF NEW.is_spoc_verified = TRUE THEN
+           RAISE EXCEPTION 'Team Leaders cannot verify their own team. Only Admins/SPOCs can verify.';
+        END IF;
+      END IF;
     END IF;
-    IF NEW.is_spoc_verified IS DISTINCT FROM OLD.is_spoc_verified THEN
-      RAISE EXCEPTION 'Only Admins/SPOCs can modify the verified status of a team.';
-    END IF;
+
     -- If a team is locked, the leader cannot change the PS ID anymore
     IF OLD.is_locked = TRUE THEN
         IF NEW.ps_id IS DISTINCT FROM OLD.ps_id OR NEW.ps_id_2 IS DISTINCT FROM OLD.ps_id_2 THEN
-          RAISE EXCEPTION 'Cannot modify problem statements of a locked team.';
+          RAISE EXCEPTION 'Cannot modify problem statements of a locked team. Please unlock the team first.';
         END IF;
     END IF;
   END IF;

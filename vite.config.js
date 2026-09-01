@@ -181,7 +181,7 @@ function otpEmailPlugin() {
 
 export default defineConfig({
   base: '/',
-  plugins: [react(), otpEmailPlugin()],
+  plugins: [react()],
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "./src"),
