@@ -200,7 +200,7 @@ export default function ExpoNavbar() {
                   onMouseEnter={(e) => e.target.style.backgroundColor = '#F8FAFC'}
                   onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                 >
-                  Internal Hackathon <span>→</span>
+                  Amrita Hackathon(Internal SIH) <span>→</span>
                 </NavLink>
                 {isPosterMode ? (
                   <NavLink 

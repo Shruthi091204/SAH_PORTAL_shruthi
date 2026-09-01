@@ -1,14 +1,14 @@
 /**
- * Validates Amrita Roll Number format: CH.EN.U4[DEPT][YEAR][NUMBER] or CH.SC.U4[DEPT][YEAR][NUMBER]
- * Examples: CH.EN.U4ARE23008, CH.SC.U4CSE23244
+ * Validates Amrita Roll Number format: CH.EN.U4[DEPT][YEAR][NUMBER], CH.SC.U4..., CH.AI.U4..., or CH.EN.P2... (for M.Tech)
+ * Examples: CH.EN.U4ARE23008, CH.SC.U4CSE23244, CH.AI.U4AID25043, CH.EN.P2VID24001
  */
 export function validateRollNo(rollNo) {
   if (!rollNo) return { valid: false, message: 'Roll number is required.' };
-  const pattern = /^CH\.(EN|SC)\.U4[A-Z]{2,4}\d{5}$/i;
+  const pattern = /^CH\.(EN|SC|AI)\.(U4|P2|R4)[A-Z]{2,4}\d{5}(-[A-Z]{2})?$/i;
   if (!pattern.test(rollNo.trim())) {
     return {
       valid: false,
-      message: 'Invalid Roll ID format. Expected format: CH.EN.U4ARE23008 or CH.SC.U4CSE23244'
+      message: 'Invalid Roll ID format. Expected format: CH.EN.U4ARE23008, CH.SC.U4CSE23244, or CH.EN.P2VID24001'
     };
   }
   return { valid: true, message: '' };
@@ -31,9 +31,9 @@ export function validateEmail(email) {
  */
 export function validateCollegeEmail(collegeEmail) {
   if (!collegeEmail) return { valid: false, message: 'College Mail ID is required.' };
-  const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const pattern = /^[^\s@]+@ch\.students\.amrita\.edu$/i;
   if (!pattern.test(collegeEmail.trim())) {
-    return { valid: false, message: 'Invalid College Mail ID format.' };
+    return { valid: false, message: 'Must be a valid @ch.students.amrita.edu email address.' };
   }
   return { valid: true, message: '' };
 }

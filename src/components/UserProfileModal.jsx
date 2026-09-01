@@ -1,16 +1,15 @@
 import { useEffect } from 'react';
 
-export default function UserProfileModal({ profile, memberRole, onClose }) {
+export default function UserProfileModal({ profile, memberRole, onClose, hidePhone = false }) {
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', handleKeyDown);
-    const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = originalOverflow;
+      document.body.style.overflow = '';
     };
   }, [onClose]);
 
@@ -94,18 +93,18 @@ export default function UserProfileModal({ profile, memberRole, onClose }) {
               📞 Contact Information
             </h4>
             <div className="upm-contact-box">
-              {profile.email && (
+              {profile.college_email && (
                 <div className="upm-contact-row">
                   <span style={{ fontSize: '1.1rem' }}>✉️</span>
                   <a
-                    href={`mailto:${profile.email}`}
+                    href={`mailto:${profile.college_email}`}
                     style={{ color: 'var(--blue-link)', textDecoration: 'none', fontWeight: 600, wordBreak: 'break-all' }}
                   >
-                    {profile.email}
+                    {profile.college_email}
                   </a>
                 </div>
               )}
-              {profile.phone ? (
+              {(!hidePhone && profile.phone) ? (
                 <div className="upm-contact-row">
                   <span style={{ fontSize: '1.1rem' }}>📱</span>
                   <a
@@ -117,11 +116,11 @@ export default function UserProfileModal({ profile, memberRole, onClose }) {
                     {profile.phone} (WhatsApp / Call) ↗
                   </a>
                 </div>
-              ) : (
+              ) : !hidePhone ? (
                 <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
                   📵 Phone / WhatsApp: Not provided
                 </div>
-              )}
+              ) : null}
             </div>
           </div>
 

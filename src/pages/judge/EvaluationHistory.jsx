@@ -45,12 +45,12 @@ export default function EvaluationHistory() {
               <tr>
                 <th>Team</th>
                 <th>Problem Statement</th>
-                <th style={{ textAlign: 'center' }}>Understanding (5)</th>
-                <th style={{ textAlign: 'center' }}>Innovation (10)</th>
+                <th style={{ textAlign: 'center' }}>Novelty (10)</th>
                 <th style={{ textAlign: 'center' }}>Technical (10)</th>
-                <th style={{ textAlign: 'center' }}>Prototype (15)</th>
-                <th style={{ textAlign: 'center' }}>Impact (5)</th>
-                <th style={{ textAlign: 'center' }}>Presentation (5)</th>
+                <th style={{ textAlign: 'center' }}>Feasibility (10)</th>
+                <th style={{ textAlign: 'center' }}>Impact (10)</th>
+                <th style={{ textAlign: 'center' }}>Prototype (5)</th>
+                <th style={{ textAlign: 'center' }}>Pitch (5)</th>
                 <th style={{ textAlign: 'center' }}>Total Score (50)</th>
                 <th>Remarks</th>
                 <th>Date</th>
@@ -69,11 +69,11 @@ export default function EvaluationHistory() {
                         </span>
                       ) : '—'}
                     </td>
-                    <td style={{ textAlign: 'center' }}>{parsed.rubric.understanding}</td>
-                    <td style={{ textAlign: 'center' }}>{parsed.rubric.innovation}</td>
+                    <td style={{ textAlign: 'center' }}>{parsed.rubric.novelty}</td>
                     <td style={{ textAlign: 'center' }}>{parsed.rubric.technical}</td>
-                    <td style={{ textAlign: 'center' }}>{parsed.rubric.prototype}</td>
+                    <td style={{ textAlign: 'center' }}>{parsed.rubric.feasibility}</td>
                     <td style={{ textAlign: 'center' }}>{parsed.rubric.impact}</td>
+                    <td style={{ textAlign: 'center' }}>{parsed.rubric.prototype}</td>
                     <td style={{ textAlign: 'center' }}>{parsed.rubric.presentation}</td>
                     <td style={{ textAlign: 'center' }}>
                       <span className="pill-badge status-verified" style={{ fontWeight: 800, fontSize: '0.9rem' }}>

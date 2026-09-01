@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '../../lib/supabase';
 import StatCard from '../../components/StatCard';
 import UserProfileModal from '../../components/UserProfileModal';
+import { fetchAllRecords } from '../../utils/supabaseHelpers';
 import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut, Bar } from 'react-chartjs-2';
 
@@ -27,12 +28,18 @@ export default function AnalyticsDashboard() {
   }, []);
 
   async function fetchAnalytics() {
-    const [teamsRes, profilesRes, membersRes, psRes] = await Promise.all([
-      supabase.from('teams').select('*').order('created_at', { ascending: false }),
-      supabase.from('profiles').select('*').eq('role', 'student').order('full_name', { ascending: true }),
-      supabase.from('team_members').select('*'),
-      supabase.from('problem_statements').select('*').order('ps_code', { ascending: true })
-    ]);
+    const psRes = await supabase.from('problem_statements').select('*').order('ps_code', { ascending: true });
+    
+    const teamsRes = await fetchAllRecords(supabase, 'teams', {
+      order: { column: 'created_at', options: { ascending: false } }
+    });
+    
+    const profilesRes = await fetchAllRecords(supabase, 'profiles', {
+      eq: [{ column: 'role', value: 'student' }],
+      order: { column: 'full_name', options: { ascending: true } }
+    });
+    
+    const membersRes = await fetchAllRecords(supabase, 'team_members');
 
     const teams = teamsRes.data || [];
     const profiles = profilesRes.data || [];
@@ -80,6 +87,9 @@ export default function AnalyticsDashboard() {
       if (t.ps_id) {
         psTeamCountMap[t.ps_id] = (psTeamCountMap[t.ps_id] || 0) + 1;
       }
+      if (t.ps_id_2) {
+        psTeamCountMap[t.ps_id_2] = (psTeamCountMap[t.ps_id_2] || 0) + 1;
+      }
     });
 
     ps.forEach(p => {
@@ -87,7 +97,7 @@ export default function AnalyticsDashboard() {
       if (p.category) categoryCounts[p.category] = (categoryCounts[p.category] || 0) + (psTeamCountMap[p.id] || 0);
     });
 
-    const teamsWithPs = teams.filter(t => t.ps_id).length;
+    const teamsWithPs = teams.filter(t => t.ps_id || t.ps_id_2).length;
     const teamsWithoutPs = teams.length - teamsWithPs;
 
     // Students in teams
@@ -148,6 +158,11 @@ export default function AnalyticsDashboard() {
       const key = t.ps_id || 'unassigned';
       if (!map[key]) map[key] = [];
       map[key].push(t);
+      
+      if (t.ps_id_2) {
+        if (!map[t.ps_id_2]) map[t.ps_id_2] = [];
+        map[t.ps_id_2].push(t);
+      }
     });
     return map;
   }, [allTeams]);

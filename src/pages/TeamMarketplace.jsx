@@ -143,6 +143,12 @@ export default function TeamMarketplace() {
       return;
     }
 
+    // Try to delete any old request to clear the unique constraint
+    await supabase.from('join_requests').delete()
+      .eq('team_id', teamId)
+      .eq('student_id', profile.id);
+
+    // Insert as a fresh request
     const { error } = await supabase
       .from('join_requests')
       .insert({

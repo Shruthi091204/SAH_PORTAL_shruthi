@@ -1,8 +1,9 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
-import { downloadGuidelines, downloadPPTTemplate } from '../utils/downloadResources';
+import AdNewsTicker from '../components/AdNewsTicker';
+import { downloadGuidelines, downloadPPTTemplate, downloadSihAwarenessDoc } from '../utils/downloadResources';
 import { 
   CheckCircle2, 
   AlertTriangle, 
@@ -31,13 +32,13 @@ const hackathonData = {
     "Identify solutions with potential for patenting, deployment with the sponsoring organisation, or startup incubation."
   ],
   eligibility: [
-    { label: "Who may apply", value: "Students of any B.Tech, M.Tech or PhD programme, in any year of study, from any department of the Chennai Campus.", span: 2 },
-    { label: "Team size", value: "Exactly 6 students, including a designated Team Leader. Teams of any other size cannot be nominated to the SIH portal.", span: 1 },
-    { label: "Woman member", value: "Mandatory. Every team must include at least one woman member. All-women teams are welcome.", span: 1 },
-    { label: "Same institution", value: "All six members must be from Amrita Chennai Campus. Inter-institution teams are not permitted. Members from different departments are strongly encouraged.", span: 1 },
-    { label: "Mentors", value: "Up to two mentors — senior faculty or domain experts from any department. Mentor endorsement at registration is mandatory.", span: 1 },
-    { label: "Entries per student", value: "One team only. A student registered in two teams will cause both teams to be disqualified. A team may address up to two problem statements.", span: 2 },
-    { label: "Problem mapping", value: "Each team must register against one SIH 2026 Problem Statement (with its PS ID) or one Student Innovation idea mapped to a notified SIH theme.", span: 2 }
+    { label: "Who may apply", value: <>Students of any B.Tech, M.Tech or PhD programme, in any year of study, from any department of the Chennai Campus.</>, span: 2 },
+    { label: "Team size", value: <>Exactly <strong style={{ color: 'var(--orange)' }}>6 students</strong>, including a designated Team Leader. Teams of any other size cannot be nominated to the SIH portal.</>, span: 1 },
+    { label: "Woman member", value: <>Mandatory. Every team must include at least <strong style={{ color: 'var(--orange)' }}>one woman member</strong>. All-women teams are welcome.</>, span: 1 },
+    { label: "Same institution", value: <><strong style={{ color: 'var(--orange)' }}>All six members</strong> must be from Amrita Chennai Campus. Inter-institution teams are not permitted. Members from different departments are strongly encouraged.</>, span: 1 },
+    { label: "Mentors", value: <>Mentor endorsement at registration is mandatory. </>, span: 1 },
+    { label: "Entries per student", value: <><strong style={{ color: 'var(--orange)' }}>One team only</strong>. A student registered in two teams will cause both teams to be disqualified. A team may address up to two problem statements.</>, span: 2 }
+    
   ],
   themes: [
     "Smart Automation", "Smart Education", "Smart Vehicles", "Robotics and Drones",
@@ -117,7 +118,7 @@ export default function SahHomePage() {
   };
 
   return (
-    <div style={{ background: '#f4f7f9', minHeight: '100vh', overflowX: 'hidden' }}>
+    <div style={{ background: '#f4f7f9', minHeight: '100vh' }}>
       
       {/* Dynamic Glassy Hero */}
       <div style={{ 
@@ -154,13 +155,16 @@ export default function SahHomePage() {
             Amrita Vishwa Vidyapeetham, Chennai Campus
           </div>
           <h1 style={{ fontSize: '4.5rem', fontWeight: 900, marginBottom: '24px', letterSpacing: '-0.03em', lineHeight: 1.1, background: 'linear-gradient(to right, #ffffff, #cbd5e1)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-            Smart Amrita Hackathon 2026
+            Amrita Hackathon 2026
           </h1>
           <p style={{ maxWidth: '800px', margin: '0 auto', fontSize: '1.25rem', opacity: 0.85, lineHeight: 1.6, fontWeight: 300 }}>
-            Internal Hackathon for Smart India Hackathon (SIH) 2026. Innovating India, Solving National Challenges.
+            Amrita Hackathon(Internal SIH) for Smart India Hackathon (SIH) 2026. Innovating India, Solving National Challenges.
           </p>
         </motion.div>
       </div>
+
+      {/* FLASH NEWS TICKER */}
+      <AdNewsTicker />
 
       <div style={{ maxWidth: '1200px', margin: '40px auto', padding: '0 24px', position: 'relative', zIndex: 20 }}>
         
@@ -187,10 +191,13 @@ export default function SahHomePage() {
             <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '32px', display: 'flex', alignItems: 'center', gap: '12px' }}>
               <CheckCircle2 color="var(--orange)" /> Eligibility — Who Can Apply?
             </h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {hackathonData.eligibility.map((item, idx) => (
-                <motion.div whileHover={{ scale: 1.01 }} key={idx} style={{ 
-                  gridColumn: `span ${item.span}`,
+                <motion.div 
+                  whileHover={{ scale: 1.01 }} 
+                  key={idx} 
+                  className={item.span === 2 ? "md:col-span-2" : ""}
+                  style={{ 
                   background: 'linear-gradient(145deg, #ffffff, #f8fafc)', 
                   padding: '24px', 
                   borderRadius: '16px', 
@@ -200,7 +207,7 @@ export default function SahHomePage() {
                   <div style={{ fontSize: '0.85rem', color: 'var(--orange)', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.1em', marginBottom: '12px' }}>
                     {item.label}
                   </div>
-                  <div style={{ color: 'var(--navy)', fontWeight: 600, lineHeight: 1.5, fontSize: '1.1rem' }}>
+                  <div style={{ color: 'var(--navy)', fontWeight: 900, lineHeight: 1.5, fontSize: '1.1rem' }}>
                     {item.value}
                   </div>
                 </motion.div>
@@ -214,7 +221,7 @@ export default function SahHomePage() {
           <div style={{ background: 'var(--navy)', borderRadius: '32px', padding: '48px', color: 'white', position: 'relative', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)' }}>
             <div style={{ position: 'absolute', top: 0, right: 0, width: '400px', height: '400px', background: 'radial-gradient(circle, rgba(234,88,12,0.2) 0%, transparent 70%)', borderRadius: '50%', transform: 'translate(30%, -30%)' }} />
             
-            <h2 style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '32px', position: 'relative', zIndex: 10 }}>Themes & Categories</h2>
+            <h2 style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '32px', position: 'relative', zIndex: 10, color: 'white' }}>Themes & Categories</h2>
             
             <motion.div variants={childVariants} style={{ background: 'rgba(234, 88, 12, 0.1)', border: '1px solid rgba(234, 88, 12, 0.3)', padding: '20px 24px', borderRadius: '16px', display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '40px', backdropFilter: 'blur(10px)' }}>
               <AlertTriangle color="#F97316" size={32} style={{ flexShrink: 0 }} />
@@ -485,15 +492,19 @@ export default function SahHomePage() {
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 {[
-                  'Kutralingam A', 
-                  'K L Vishnu Kamesh', 
-                  'Shruthika Rajan', 
-                  'Vishal P'
-                ].map((name, i) => (
+                  { name: 'Kutralingam A', email: '27.kutralingam.xi.b@gmail.com', phone: '6382725104' },
+                  { name: 'K L Vishnu Kamesh', email: 'kothapallilalithavishnukamesh@gmail.com', phone: '736250061' },
+                  { name: 'Shruthika Rajan', email: 'shruthika.rajan@gmail.com', phone: '9074383050' },
+                  { name: 'Vishal P', email: 'vishal.pr2004@gmail.com', phone: '8951313335' }
+                ].map((contact, i) => (
                   <div key={i}>
-                    <div style={{ fontSize: '1.2rem', fontWeight: 700, color: 'white', marginBottom: '4px' }}>{name}</div>
-                    <div style={{ fontSize: '0.85rem', color: '#94a3b8' }}>Email ID: To be updated</div>
-                    <div style={{ fontSize: '0.85rem', color: '#94a3b8' }}>Phone: To be updated</div>
+                    <div style={{ fontSize: '1.2rem', fontWeight: 700, color: 'white', marginBottom: '4px' }}>{contact.name}</div>
+                    <div style={{ fontSize: '0.85rem', color: '#94a3b8' }}>
+                      Email ID: <a href={`mailto:${contact.email}`} style={{ color: 'var(--orange)', textDecoration: 'none' }}>{contact.email}</a>
+                    </div>
+                    <div style={{ fontSize: '0.85rem', color: '#94a3b8' }}>
+                      Phone: <a href={`tel:${contact.phone}`} style={{ color: '#94a3b8', textDecoration: 'none' }}>{contact.phone}</a>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -540,6 +551,21 @@ export default function SahHomePage() {
                 </div>
               </button>
 
+              <button 
+                onClick={downloadSihAwarenessDoc}
+                style={{ background: 'var(--navy)', color: 'white', border: 'none', padding: '24px', borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '16px', cursor: 'pointer', textAlign: 'left', transition: 'all 0.3s ease', boxShadow: '0 10px 20px -10px rgba(0,0,0,0.2)' }}
+                onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+                onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+              >
+                <div style={{ background: 'rgba(255,255,255,0.1)', padding: '12px', borderRadius: '12px' }}>
+                  <FileText color="var(--orange)" size={24} />
+                </div>
+                <div>
+                  <div style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '6px' }}>SIH Awareness & Orientation</div>
+                  <div style={{ fontSize: '0.9rem', color: '#94a3b8' }}>PDF Document (Available)</div>
+                </div>
+              </button>
+
             </div>
           </div>
         </motion.section>
@@ -550,8 +576,7 @@ export default function SahHomePage() {
           whileInView={{ opacity: 1, y: 0 }} 
           viewport={{ once: true }}
           style={{ 
-            position: 'sticky', 
-            bottom: '32px', 
+            position: 'relative', 
             background: 'rgba(255, 255, 255, 0.9)', 
             backdropFilter: 'blur(16px)',
             padding: '24px 32px', 

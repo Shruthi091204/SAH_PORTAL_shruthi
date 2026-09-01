@@ -397,7 +397,7 @@ export default function EvaluationPage() {
                 onChange={setNovelty}
               />
 
-              {/* 2. Technical Approach & Complexity (0-10) */}
+              {/* 2. Technical Approach & Complexity (0-5) */}
               <RubricRadioGroup
                 name="technical"
                 label="2. Technical Approach & Complexity"
@@ -427,7 +427,7 @@ export default function EvaluationPage() {
                 onChange={setImpact}
               />
 
-              {/* 5. Prototype & Demonstration Readiness (0-5) */}
+              {/* 5. Prototype & Demonstration Readiness (0-10) */}
               <RubricRadioGroup
                 name="prototype"
                 label="5. Prototype & Demonstration Readiness"

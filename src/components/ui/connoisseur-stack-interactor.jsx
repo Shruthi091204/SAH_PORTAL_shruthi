@@ -6,7 +6,7 @@ import gsap from "gsap";
 const defaultItems = [
   {
     num: "01",
-    name: "Internal Hackathon",
+    name: "Amrita Hackathon(Internal SIH)",
     tag: "Smart Amrita Hackathon (SAH 2026)",
     desc: "Official campus qualifying hackathon for Smart India Hackathon (SIH 2026). Pitch solutions under the official 50-mark rubric.",
     buttonText: "LAUNCH SAH 2026 PORTAL 🚀",
@@ -129,7 +129,7 @@ export const ConnoisseurStackInteractor = ({
                 key={item.num}
                 onMouseEnter={() => handleItemHover(index)}
                 onClick={() => {
-                  if (item.name === "Internal Hackathon") {
+                  if (item.name === "Amrita Hackathon(Internal SIH)") {
                     window.scrollTo(0, 0);
                     navigate('/sah');
                   } else if (item.name === "Project Expo") {
@@ -158,14 +158,24 @@ export const ConnoisseurStackInteractor = ({
                   {/* Title */}
                   <div className="flex flex-col justify-center flex-1">
                     <h2 className={cn(
-                      "text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[0.9] transition-all duration-500",
+                      "text-4xl md:text-6xl font-black uppercase tracking-tighter leading-[0.95] transition-all duration-500",
                       activeIndex === index
                         ? "text-zinc-950 dark:text-white opacity-100 translate-x-4"
-                        : "opacity-40 translate-x-0 " +
-                        "text-zinc-500 dark:text-transparent " +
-                        "dark:[text-stroke:1.5px_#52525b] dark:[-webkit-text-stroke:1.5px_#52525b]"
+                        : "translate-x-0 text-zinc-400 dark:text-zinc-600 transition-colors duration-300"
                     )}>
-                      {item.name}
+                      {item.name === "Amrita Hackathon(Internal SIH)" ? (
+                        <div className="flex flex-col gap-1">
+                          <span>Amrita Hackathon</span>
+                          <span className={cn(
+                            "text-2xl md:text-4xl tracking-wide font-extrabold transition-colors duration-500",
+                            activeIndex === index ? "text-orange-500" : "text-zinc-400 dark:text-zinc-600"
+                          )}>
+                            (Internal SIH)
+                          </span>
+                        </div>
+                      ) : (
+                        item.name
+                      )}
                     </h2>
 
                   </div>
@@ -221,12 +231,15 @@ export const ConnoisseurStackInteractor = ({
           <button
             onClick={(e) => {
               e.stopPropagation();
-              if (items[activeIndex].name === "Internal Hackathon") {
+              if (items[activeIndex].name === "Amrita Hackathon(Internal SIH)") {
                 window.scrollTo(0, 0);
                 navigate('/sah');
               } else if (items[activeIndex].name === "Project Expo") {
                 window.scrollTo(0, 0);
                 navigate('/events/project-expo');
+              } else if (items[activeIndex].name === "Poster Presentation") {
+                window.scrollTo(0, 0);
+                navigate('/events/poster-presentation');
               } else {
                 alert(`The ${items[activeIndex].name} portal is coming soon.`);
               }

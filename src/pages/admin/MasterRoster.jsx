@@ -1,10 +1,12 @@
 import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '../../lib/supabase';
 import { parseEvaluationScores } from '../../lib/evaluationHelper';
+import { fetchAllRecords } from '../../utils/supabaseHelpers';
 
 export default function MasterRoster() {
   const [teams, setTeams] = useState([]);
   const [members, setMembers] = useState({});
+  const [allProfiles, setAllProfiles] = useState([]);
   const [problemStatements, setProblemStatements] = useState([]);
   const [panels, setPanels] = useState([]);
   const [panelJudges, setPanelJudges] = useState([]);
@@ -26,22 +28,29 @@ export default function MasterRoster() {
     setLoading(true);
     try {
       const [
-        teamsRes,
-        membersRes,
         psRes,
         panelsRes,
         pjRes,
         ppsRes,
         evalsRes
       ] = await Promise.all([
-        supabase.from('teams').select('*, problem_statements!ps_id(id, ps_code, title, category, domain)').order('team_name'),
-        supabase.from('team_members').select('*, profiles(id, full_name, roll_no, gender, department, skills)'),
         supabase.from('problem_statements').select('*').order('ps_code'),
         supabase.from('judge_panels').select('*').order('name'),
         supabase.from('panel_judges').select('*, profiles(id, full_name, email, department)'),
         supabase.from('panel_problem_statements').select('*'),
         supabase.from('evaluations').select('*, profiles:judge_id(id, full_name, email)')
       ]);
+
+      const teamsRes = await fetchAllRecords(supabase, 'teams', {
+        select: '*, problem_statements!ps_id(id, ps_code, title, category, domain), problem_statements_2:problem_statements!ps_id_2(id, ps_code, title, category, domain)',
+        order: { column: 'team_name' }
+      });
+      const membersRes = await fetchAllRecords(supabase, 'team_members', {
+        select: '*, profiles(id, full_name, roll_no, gender, department, skills)'
+      });
+      const profilesRes = await fetchAllRecords(supabase, 'profiles', {
+        order: { column: 'full_name' }
+      });
 
       // Group members by team
       const membersByTeam = {};
@@ -52,6 +61,7 @@ export default function MasterRoster() {
 
       setTeams(teamsRes.data || []);
       setMembers(membersByTeam);
+      setAllProfiles(profilesRes.data || []);
       setProblemStatements(psRes.data || []);
       setPanels(panelsRes.data || []);
       setPanelJudges(pjRes.data || []);
@@ -156,7 +166,9 @@ export default function MasterRoster() {
         const term = search.toLowerCase();
         const matchName = t.team_name.toLowerCase().includes(term);
         const matchPS = t.problem_statements?.ps_code?.toLowerCase().includes(term) ||
-          t.problem_statements?.title?.toLowerCase().includes(term);
+          t.problem_statements?.title?.toLowerCase().includes(term) ||
+          t.problem_statements_2?.ps_code?.toLowerCase().includes(term) ||
+          t.problem_statements_2?.title?.toLowerCase().includes(term);
         const teamMembers = members[t.id] || [];
         const matchMember = teamMembers.some(m =>
           m.profiles?.full_name?.toLowerCase().includes(term) ||
@@ -281,7 +293,21 @@ export default function MasterRoster() {
               }}
               onClick={() => setActiveView('roster')}
             >
-              👥 3. Member Roster
+              👥 3. Team Roster
+            </button>
+            <button
+              className="btn btn-sm"
+              style={{
+                background: activeView === 'all_persons' ? 'var(--navy)' : 'transparent',
+                color: activeView === 'all_persons' ? '#ffffff' : 'var(--text-secondary)',
+                fontWeight: activeView === 'all_persons' ? 700 : 500,
+                border: 'none',
+                boxShadow: activeView === 'all_persons' ? 'var(--shadow-sm)' : 'none',
+                padding: '6px 14px'
+              }}
+              onClick={() => setActiveView('all_persons')}
+            >
+              👤 4. All Registered Persons
             </button>
           </div>
 
@@ -373,7 +399,7 @@ export default function MasterRoster() {
                         </td>
 
                         {problemStatements.map(ps => {
-                          const isAssigned = team.ps_id === ps.id;
+                          const isAssigned = team.ps_id === ps.id || team.ps_id_2 === ps.id;
                           if (!isAssigned) {
                             return (
                               <td key={ps.id} style={{ textAlign: 'center', color: 'var(--text-muted)' }}>
@@ -432,7 +458,7 @@ export default function MasterRoster() {
           {problemStatements
             .filter(ps => !selectedPsFilter || ps.id === selectedPsFilter)
             .map(ps => {
-              const psTeams = teams.filter(t => t.ps_id === ps.id);
+              const psTeams = teams.filter(t => t.ps_id === ps.id || t.ps_id_2 === ps.id);
               const panel = psPanelMap[ps.id];
               const judgesInPanel = panel ? (panelJudgesMap[panel.id] || []) : [];
 
@@ -589,13 +615,23 @@ export default function MasterRoster() {
                       </div>
 
                       <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                        <strong>Problem Statement: </strong>
+                        <strong>Problem Statement 1: </strong>
                         {team.problem_statements ? (
                           <span>
                             <span style={{ fontWeight: 700, color: 'var(--navy)' }}>{team.problem_statements.ps_code}</span> — {team.problem_statements.title}
                           </span>
                         ) : (
                           <span style={{ color: 'var(--orange)', fontStyle: 'italic' }}>No PS Selected</span>
+                        )}
+                      </div>
+                      <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                        <strong>Problem Statement 2: </strong>
+                        {team.problem_statements_2 ? (
+                          <span>
+                            <span style={{ fontWeight: 700, color: 'var(--navy)' }}>{team.problem_statements_2.ps_code}</span> — {team.problem_statements_2.title}
+                          </span>
+                        ) : (
+                          <span style={{ color: 'var(--text-muted)', fontStyle: 'italic' }}>No PS 2 Selected</span>
                         )}
                       </div>
                     </div>
@@ -725,6 +761,54 @@ export default function MasterRoster() {
               );
             })
           )}
+        </div>
+      )}
+
+      {/* ============================================================ */}
+      {/* 4. ALL REGISTERED PERSONS VIEW                               */}
+      {/* ============================================================ */}
+      {activeView === 'all_persons' && (
+        <div className="card" style={{ padding: 0, overflowX: 'auto', marginBottom: '20px' }}>
+          <div style={{ padding: '14px 18px', background: 'var(--off-white)', borderBottom: '1px solid var(--border-light)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: '0.86rem', fontWeight: 600, color: 'var(--navy)' }}>
+              All Registered Persons ({allProfiles.length} Total)
+            </span>
+          </div>
+
+          <table className="data-table" style={{ fontSize: '0.84rem' }}>
+            <thead>
+              <tr>
+                <th style={{ minWidth: '180px', position: 'sticky', left: 0, background: 'var(--navy)', zIndex: 2 }}>
+                  Full Name
+                </th>
+                <th>Role</th>
+                <th>Email</th>
+                <th>Gender</th>
+                <th>Department</th>
+                <th>Roll No</th>
+              </tr>
+            </thead>
+            <tbody>
+              {allProfiles
+                .filter(p => !search || p.full_name?.toLowerCase().includes(search.toLowerCase()) || p.email?.toLowerCase().includes(search.toLowerCase()))
+                .map(p => (
+                <tr key={p.id}>
+                  <td style={{ position: 'sticky', left: 0, background: '#FFFFFF', zIndex: 1, boxShadow: '2px 0 4px rgba(0,0,0,0.05)' }}>
+                    <strong style={{ color: 'var(--navy)' }}>{p.full_name}</strong>
+                  </td>
+                  <td>
+                    <span className="pill-badge" style={{ fontSize: '0.7rem', textTransform: 'uppercase' }}>
+                      {p.role}
+                    </span>
+                  </td>
+                  <td>{p.email}</td>
+                  <td>{p.gender || '—'}</td>
+                  <td>{p.department || '—'}</td>
+                  <td>{p.roll_no || '—'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>

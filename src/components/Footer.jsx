@@ -5,7 +5,7 @@ export default function Footer() {
         <div className="footer-section">
           <h4>Smart Amrita Hackathon 2026</h4>
           <p>
-            Internal Hackathon by Amrita Vishwa Vidyapeetham, Chennai Campus
+            Amrita Hackathon(Internal SIH) by Amrita Vishwa Vidyapeetham, Chennai Campus
             (Amrita School of Engineering and Computing) to nominate teams for Smart India Hackathon 2026.
           </p>
           <p style={{ marginTop: '12px', fontSize: '0.8rem', opacity: 0.7 }}>

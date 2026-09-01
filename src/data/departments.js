@@ -7,7 +7,10 @@ export const DEPARTMENTS = [
   'CSE',
   'CSE AI',
   'CSE AIDS',
-  'CSE CYS'
+  'CSE CYS',
+  'M.Tech VLSI',
+  'M.Tech CSE',
+  'PhD'
 ];
 
 export const YEARS_OF_STUDY = [

@@ -241,10 +241,14 @@ export function AuthProvider({ children }) {
     const userId = session?.user?.id || profile?.id;
     if (!userId) return { error: new Error('Not authenticated') };
 
+    // Prevent role escalation: ensure students cannot change their role
+    const sanitizedUpdates = { ...updates };
+    delete sanitizedUpdates.role;
+
     try {
       const { data, error: updateError } = await supabase
         .from('profiles')
-        .update(updates)
+        .update(sanitizedUpdates)
         .eq('id', userId)
         .select()
         .single();
@@ -317,29 +321,14 @@ export function AuthProvider({ children }) {
       const targetEmail = hasCollegeEmail ? userProfile.college_email.trim().toLowerCase() : userProfile.email.trim().toLowerCase();
       const primaryAuthEmail = userProfile.email.trim().toLowerCase();
 
-      // 2. Generate random 6-digit OTP code
-      const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-      const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
-
-      // 3. Save to password_resets table in Supabase
-      const resetsToInsert = [
-        { email: targetEmail, otp_code: otpCode, expires_at: expiresAt }
-      ];
-      if (targetEmail !== primaryAuthEmail) {
-        resetsToInsert.push({ email: primaryAuthEmail, otp_code: otpCode, expires_at: expiresAt });
-      }
-
-      const { error: dbErr } = await supabase
-        .from('password_resets')
-        .insert(resetsToInsert);
-
-      if (dbErr) {
-        console.warn('DB OTP Log warning:', dbErr);
-      }
-
-      // 4. Send OTP code via Supabase Edge Function to target email
+      // 2. Generate and Send OTP code via Supabase Edge Function
       const { data: resData, error: invokeErr } = await supabase.functions.invoke('send-email', {
-        body: { email: targetEmail, otpCode, type: 'password_reset' }
+        body: { 
+          email: targetEmail, 
+          type: 'password_reset',
+          targetEmail,
+          primaryAuthEmail
+        }
       });
 
       if (invokeErr || (resData && resData.error)) {
@@ -477,27 +466,14 @@ export function AuthProvider({ children }) {
         throw new Error(`Email address "${cleanEmail}" is already registered. Please log in instead.`);
       }
 
-      // Generate 6-digit OTP code
-      const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-      const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+      // Strip passwords before sending to Edge Function for temporary DB storage
+      const safeFormData = { ...formData };
+      delete safeFormData.password;
+      delete safeFormData.confirmPassword;
 
-      // Store in registration_otps table
-      const { error: dbErr } = await supabase
-        .from('registration_otps')
-        .insert({
-          college_email: cleanCollegeEmail,
-          otp_code: otpCode,
-          form_data: formData,
-          expires_at: expiresAt
-        });
-
-      if (dbErr) {
-        console.warn('registration_otps table note:', dbErr);
-      }
-
-      // Send 6-digit OTP code to College Mail ID via Supabase Edge Function
+      // Call Supabase Edge Function to generate OTP, store it, and send email
       const { data: resData, error: invokeErr } = await supabase.functions.invoke('send-email', {
-        body: { email: cleanCollegeEmail, otpCode, type: 'registration' }
+        body: { email: cleanCollegeEmail, type: 'registration', formData: safeFormData }
       });
 
       if (invokeErr || (resData && resData.error)) {
@@ -507,8 +483,7 @@ export function AuthProvider({ children }) {
       return {
         data: {
           collegeEmail: cleanCollegeEmail,
-          otpCode,
-          expiresAt
+          expiresAt: new Date(Date.now() + 10 * 60 * 1000).toISOString()
         },
         error: null
       };
@@ -519,41 +494,28 @@ export function AuthProvider({ children }) {
   };
 
   // Verify Registration OTP and Create Account
-  const verifyRegistrationOtpAndCreateAccount = async ({ collegeEmail, otpToken, formData, serverOtpCode }) => {
+  const verifyRegistrationOtpAndCreateAccount = async ({ collegeEmail, otpToken, formData }) => {
     setError(null);
     try {
       const cleanCollegeEmail = collegeEmail.trim().toLowerCase();
       const cleanToken = otpToken.trim();
 
-      // 1. Check registration_otps table
-      const { data: records, error: fetchErr } = await supabase
-        .from('registration_otps')
-        .select('*')
-        .ilike('college_email', cleanCollegeEmail)
-        .eq('otp_code', cleanToken)
-        .gte('expires_at', new Date().toISOString())
-        .order('created_at', { ascending: false })
-        .limit(1);
+      // 1. Check OTP via secure RPC
+      const { data: safeDbFormData, error: rpcError } = await supabase.rpc('verify_registration_otp', {
+        p_email: cleanCollegeEmail,
+        p_otp: cleanToken
+      });
 
-      let validRecord = records && records.length > 0 ? records[0] : null;
-
-      // Fallback verification if table not initialized
-      if (!validRecord && serverOtpCode && serverOtpCode === cleanToken) {
-        validRecord = { form_data: formData };
+      if (rpcError) {
+        throw new Error(rpcError.message || 'Invalid or expired 6-digit OTP code. Please check your College Mail ID or request a new OTP.');
       }
 
-      if (!validRecord) {
-        throw new Error('Invalid or expired 6-digit OTP code. Please check your College Mail ID or request a new OTP.');
-      }
-
-      const activeFormData = validRecord.form_data || formData;
+      // Merge the sanitized DB form data with the active in-memory formData (which has the password)
+      const activeFormData = { ...(safeDbFormData || {}), ...formData };
 
       // 2. Now create the permanent account
       const signUpResult = await signUp(activeFormData);
       if (signUpResult.error) throw signUpResult.error;
-
-      // 3. Delete OTP record
-      await supabase.from('registration_otps').delete().ilike('college_email', cleanCollegeEmail).eq('otp_code', cleanToken);
 
       // 4. Send Registration Successful email via Edge Function
       try {

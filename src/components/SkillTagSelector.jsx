@@ -51,9 +51,40 @@ export default function SkillTagSelector({ selectedSkills, onChange, maxSkills =
         placeholder="Search skills..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && searchTerm.trim()) {
+            e.preventDefault();
+            const customSkill = searchTerm.trim();
+            if (!selectedSkills.includes(customSkill) && selectedSkills.length < maxSkills) {
+              onChange([...selectedSkills, customSkill]);
+              setSearchTerm('');
+            }
+          }
+        }}
       />
 
       <div className="skill-categories">
+        {searchTerm.trim() && !selectedSkills.includes(searchTerm.trim()) && (
+          <div style={{ marginBottom: '12px' }}>
+            <div className="skill-category-title">Custom Skill</div>
+            <div className="skill-options">
+              <button
+                type="button"
+                className="skill-option"
+                onClick={() => {
+                  const customSkill = searchTerm.trim();
+                  if (selectedSkills.length < maxSkills) {
+                    onChange([...selectedSkills, customSkill]);
+                    setSearchTerm('');
+                  }
+                }}
+                style={{ background: 'var(--orange)', color: 'white', border: 'none', fontWeight: 600 }}
+              >
+                + Add "{searchTerm.trim()}"
+              </button>
+            </div>
+          </div>
+        )}
         {Object.entries(filteredCategories).map(([category, skills]) => (
           <div key={category}>
             <div className="skill-category-title">{category}</div>

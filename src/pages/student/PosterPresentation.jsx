@@ -43,12 +43,12 @@ const posterData = {
     { title: "Awards & Opportunity Mapping", dateStr: "2026-09-10", displayDate: "Thu, 10 Sep 2026", icon: <Trophy size={18} /> }
   ],
   eligibility: [
-    { label: "Who may apply", value: "Students of any B.Tech, M.Tech or PhD programme, in any year of study.", span: 1 },
-    { label: "Mode of entry", value: "Individual. Each poster carries a single author; there are no teams in this category.", span: 1 },
-    { label: "Faculty mentor / guide", value: "Mandatory. A faculty mentor or research guide must endorse the entry, certifying authorship and originality.", span: 2 },
-    { label: "Entries per student", value: "One poster per student.", span: 1 },
-    { label: "Stage of work", value: "Completed, or sufficiently advanced to present a defensible result.", span: 1 },
-    { label: "Registration", value: "Free. No registration fee is charged for any SAH 2026 category.", span: 2 }
+    { label: "Who may apply", value: <>Students of any B.Tech, M.Tech or PhD programme, in any year of study.</>, span: 1 },
+    { label: "Mode of entry", value: <>Individual. Each poster carries a <strong style={{ color: 'var(--orange)' }}>single author</strong>; there are no teams in this category.</>, span: 1 },
+    { label: "Faculty mentor / guide", value: <><strong style={{ color: 'var(--orange)' }}>Mandatory.</strong> A faculty mentor or research guide must endorse the entry, certifying authorship and originality.</>, span: 2 },
+    { label: "Entries per student", value: <><strong style={{ color: 'var(--orange)' }}>One poster</strong> per student.</>, span: 1 },
+    { label: "Stage of work", value: <>Completed, or sufficiently advanced to present a defensible result.</>, span: 1 },
+    { label: "Registration", value: <><strong style={{ color: 'var(--orange)' }}>Free.</strong> No registration fee is charged for any SAH 2026 category.</>, span: 2 }
   ],
   outputs: [
     "A mini, capstone or design project",
@@ -125,7 +125,7 @@ export default function PosterPresentation() {
   };
 
   return (
-    <div style={{ background: '#f4f7f9', minHeight: '100vh', overflowX: 'hidden' }}>
+    <div style={{ background: '#f4f7f9', minHeight: '100vh' }}>
       
       {/* Dynamic Glassy Hero */}
       <div style={{ 
@@ -195,10 +195,13 @@ export default function PosterPresentation() {
             <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '32px', display: 'flex', alignItems: 'center', gap: '12px' }}>
               <CheckCircle2 color="var(--orange)" /> Eligibility — Who Can Apply?
             </h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {posterData.eligibility.map((item, idx) => (
-                <motion.div whileHover={{ scale: 1.01 }} key={idx} style={{ 
-                  gridColumn: `span ${item.span}`,
+                <motion.div 
+                  whileHover={{ scale: 1.01 }} 
+                  key={idx} 
+                  className={item.span === 2 ? "md:col-span-2" : ""}
+                  style={{ 
                   background: 'linear-gradient(145deg, #ffffff, #f8fafc)', 
                   padding: '24px', 
                   borderRadius: '16px', 
@@ -208,7 +211,7 @@ export default function PosterPresentation() {
                   <div style={{ fontSize: '0.85rem', color: 'var(--orange)', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.1em', marginBottom: '12px' }}>
                     {item.label}
                   </div>
-                  <div style={{ color: 'var(--navy)', fontWeight: 600, lineHeight: 1.5, fontSize: '1.1rem' }}>
+                  <div style={{ color: 'var(--navy)', fontWeight: 900, lineHeight: 1.5, fontSize: '1.1rem' }}>
                     {item.value}
                   </div>
                 </motion.div>
@@ -536,8 +539,7 @@ export default function PosterPresentation() {
           whileInView={{ opacity: 1, y: 0 }} 
           viewport={{ once: true }}
           style={{ 
-            position: 'sticky', 
-            bottom: '32px', 
+            position: 'relative', 
             background: 'rgba(255, 255, 255, 0.9)', 
             backdropFilter: 'blur(16px)',
             padding: '24px 32px', 

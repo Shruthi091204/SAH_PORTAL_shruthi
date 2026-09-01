@@ -99,7 +99,17 @@ export default function Navbar() {
       e.preventDefault();
       const el = document.getElementById(hash);
       if (el) {
-        el.scrollIntoView({ behavior: 'smooth' });
+        const offset = 80; // approximate navbar height
+        const bodyRect = document.body.getBoundingClientRect().top;
+        const elementRect = el.getBoundingClientRect().top;
+        const elementPosition = elementRect - bodyRect;
+        const offsetPosition = elementPosition - offset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+        
         setActiveHash('#' + hash);
         window.history.pushState(null, '', path);
       }

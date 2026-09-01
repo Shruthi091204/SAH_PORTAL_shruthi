@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { downloadExpoGuidelines } from '../../utils/downloadResources';
+import { downloadExpoGuidelines, downloadExpoSoftwareSample, downloadExpoHardwareSample } from '../../utils/downloadResources';
 import { 
   CheckCircle2, 
   AlertTriangle, 
@@ -38,12 +38,12 @@ const expoData = {
     { title: "Awards & Opportunity Mapping", dateStr: "2026-09-10", displayDate: "Thu, 10 Sep 2026", icon: <Trophy size={18} /> }
   ],
   eligibility: [
-    { label: "Who may apply", value: "Students of any B.Tech, M.Tech or PhD programme, in any year of study.", span: 1 },
-    { label: "Team size", value: "2–3 students per project. Interdisciplinary teams across departments are strongly encouraged.", span: 1 },
-    { label: "Faculty mentor", value: "Mandatory. A faculty mentor from any department must endorse the project, certifying student authorship and demonstration readiness.", span: 2 },
-    { label: "Project stage", value: "Ongoing or completed, and sufficiently developed for a live demonstration before the jury.", span: 1 },
-    { label: "Entries per student", value: "A student may be part of not more than two Project Expo teams.", span: 1 },
-    { label: "Projects accepted", value: "Final-year, capstone and mini-projects with significant innovation; course-based projects with substantial engineering implementation; interdisciplinary projects; and independently developed student prototypes.", span: 2 }
+    { label: "Who may apply", value: <>Students of any B.Tech, M.Tech or PhD programme, in any year of study.</>, span: 1 },
+    { label: "Team size", value: <><strong style={{ color: 'var(--orange)' }}>2–3 students</strong> per project. Interdisciplinary teams across departments are strongly encouraged.</>, span: 1 },
+    { label: "Faculty mentor", value: <><strong style={{ color: 'var(--orange)' }}>Mandatory.</strong> A faculty mentor from any department must endorse the project, certifying student authorship and demonstration readiness.</>, span: 2 },
+    { label: "Project stage", value: <>Ongoing or completed, and sufficiently developed for a live demonstration before the jury.</>, span: 1 },
+    { label: "Entries per student", value: <>A student may be part of <strong style={{ color: 'var(--orange)' }}>not more than two</strong> Project Expo teams.</>, span: 1 },
+    { label: "Projects accepted", value: <>Final-year, capstone and mini-projects with significant innovation; course-based projects with substantial engineering implementation; interdisciplinary projects; and independently developed student prototypes.</>, span: 2 }
   ],
   outputs: [
     "Hardware prototype or device", "Software application/platform", "Integrated hardware-software system",
@@ -109,19 +109,6 @@ export default function ProjectExpo() {
     return nearestIdx !== -1 ? nearestIdx : expoData.keyDates.length - 1;
   }, [today]);
 
-  useEffect(() => {
-    // Scroll to hash on load if present
-    if (window.location.hash) {
-      const id = window.location.hash.substring(1);
-      setTimeout(() => {
-        const el = document.getElementById(id);
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 500);
-    }
-  }, []);
-
   const containerVariants = {
     hidden: { opacity: 0, y: 40 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut", staggerChildren: 0.1 } }
@@ -133,7 +120,7 @@ export default function ProjectExpo() {
   };
 
   return (
-    <div style={{ background: '#f4f7f9', minHeight: '100vh', overflowX: 'hidden' }}>
+    <div style={{ background: '#f4f7f9', minHeight: '100vh' }}>
       
       {/* Dynamic Glassy Hero */}
       <div style={{ 
@@ -205,10 +192,13 @@ export default function ProjectExpo() {
             <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--navy)', marginBottom: '32px', display: 'flex', alignItems: 'center', gap: '12px' }}>
               <CheckCircle2 color="var(--orange)" /> Eligibility — Who Can Apply?
             </h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {expoData.eligibility.map((item, idx) => (
-                <motion.div whileHover={{ scale: 1.01 }} key={idx} style={{ 
-                  gridColumn: `span ${item.span}`,
+                <motion.div 
+                  whileHover={{ scale: 1.01 }} 
+                  key={idx} 
+                  className={item.span === 2 ? "md:col-span-2" : ""}
+                  style={{ 
                   background: 'linear-gradient(145deg, #ffffff, #f8fafc)', 
                   padding: '24px', 
                   borderRadius: '16px', 
@@ -218,7 +208,7 @@ export default function ProjectExpo() {
                   <div style={{ fontSize: '0.85rem', color: 'var(--orange)', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.1em', marginBottom: '12px' }}>
                     {item.label}
                   </div>
-                  <div style={{ color: 'var(--navy)', fontWeight: 600, lineHeight: 1.5, fontSize: '1.1rem' }}>
+                  <div style={{ color: 'var(--navy)', fontWeight: 900, lineHeight: 1.5, fontSize: '1.1rem' }}>
                     {item.value}
                   </div>
                 </motion.div>
@@ -515,25 +505,35 @@ export default function ProjectExpo() {
                 </div>
               </div>
 
-              <div style={{ background: '#f8fafc', border: '2px dashed #cbd5e1', padding: '24px', borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '16px' }}>
-                <div style={{ background: '#e2e8f0', padding: '12px', borderRadius: '12px' }}>
-                  <FileText color="#64748b" size={24} />
+              <button 
+                onClick={downloadExpoSoftwareSample}
+                style={{ background: 'var(--navy)', color: 'white', border: 'none', padding: '24px', borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '16px', cursor: 'pointer', textAlign: 'left', transition: 'all 0.3s ease', boxShadow: '0 10px 20px -10px rgba(0,0,0,0.2)' }}
+                onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+                onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+              >
+                <div style={{ background: 'rgba(255,255,255,0.1)', padding: '12px', borderRadius: '12px' }}>
+                  <FileText color="var(--orange)" size={24} />
                 </div>
                 <div>
-                  <div style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--navy)', marginBottom: '6px' }}>Software Sample</div>
-                  <div style={{ fontSize: '0.85rem', color: '#f59e0b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', background: '#fef3c7', padding: '4px 10px', borderRadius: '20px', display: 'inline-block' }}>Coming Soon</div>
+                  <div style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '6px' }}>Software Sample</div>
+                  <div style={{ fontSize: '0.9rem', color: '#94a3b8' }}>PDF Document (Available)</div>
                 </div>
-              </div>
+              </button>
 
-              <div style={{ background: '#f8fafc', border: '2px dashed #cbd5e1', padding: '24px', borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '16px' }}>
-                <div style={{ background: '#e2e8f0', padding: '12px', borderRadius: '12px' }}>
-                  <FileText color="#64748b" size={24} />
+              <button 
+                onClick={downloadExpoHardwareSample}
+                style={{ background: 'var(--navy)', color: 'white', border: 'none', padding: '24px', borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '16px', cursor: 'pointer', textAlign: 'left', transition: 'all 0.3s ease', boxShadow: '0 10px 20px -10px rgba(0,0,0,0.2)' }}
+                onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+                onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+              >
+                <div style={{ background: 'rgba(255,255,255,0.1)', padding: '12px', borderRadius: '12px' }}>
+                  <FileText color="var(--orange)" size={24} />
                 </div>
                 <div>
-                  <div style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--navy)', marginBottom: '6px' }}>Hardware Sample</div>
-                  <div style={{ fontSize: '0.85rem', color: '#f59e0b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', background: '#fef3c7', padding: '4px 10px', borderRadius: '20px', display: 'inline-block' }}>Coming Soon</div>
+                  <div style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '6px' }}>Hardware Sample</div>
+                  <div style={{ fontSize: '0.9rem', color: '#94a3b8' }}>PDF Document (Available)</div>
                 </div>
-              </div>
+              </button>
 
             </div>
           </div>
@@ -545,8 +545,7 @@ export default function ProjectExpo() {
           whileInView={{ opacity: 1, y: 0 }} 
           viewport={{ once: true }}
           style={{ 
-            position: 'sticky', 
-            bottom: '32px', 
+            position: 'relative', 
             background: 'rgba(255, 255, 255, 0.9)', 
             backdropFilter: 'blur(16px)',
             padding: '24px 32px', 
