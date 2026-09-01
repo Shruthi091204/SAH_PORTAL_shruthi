@@ -46,13 +46,25 @@ serve(async (req) => {
           expires_at: expiresAt
         });
       } else if (type === 'password_reset') {
-        const resetsToInsert = [
-          { email: targetEmail, otp_code: otpCode, expires_at: expiresAt }
-        ];
-        if (primaryAuthEmail && targetEmail !== primaryAuthEmail) {
-          resetsToInsert.push({ email: primaryAuthEmail, otp_code: otpCode, expires_at: expiresAt });
+        // VULNERABILITY FIX: Ignore primaryAuthEmail from the client entirely!
+        // We look up the user by the requested email (personal or college) and find their TRUE auth email.
+        const inputEmail = targetEmail || email;
+        
+        const { data: userProfile } = await supabase
+          .from('profiles')
+          .select('email')
+          .or(`email.eq.${inputEmail},college_email.eq.${inputEmail}`)
+          .single();
+          
+        if (!userProfile) {
+           throw new Error("Cannot send password reset: User not found in database.");
         }
-        await supabase.from('password_resets').insert(resetsToInsert);
+
+        const trueAuthEmail = userProfile.email;
+
+        await supabase.from('password_resets').insert([
+          { email: trueAuthEmail, otp_code: otpCode, expires_at: expiresAt }
+        ]);
       }
     }
 
