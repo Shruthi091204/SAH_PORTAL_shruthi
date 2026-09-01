@@ -35,10 +35,14 @@ serve(async (req) => {
       const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
       
       if (type === 'registration') {
+        const safeFormData = formData ? { ...formData } : {};
+        delete safeFormData.password;
+        delete safeFormData.confirmPassword;
+        
         await supabase.from('registration_otps').insert({
           college_email: email,
           otp_code: otpCode,
-          form_data: formData,
+          form_data: safeFormData,
           expires_at: expiresAt
         });
       } else if (type === 'password_reset') {

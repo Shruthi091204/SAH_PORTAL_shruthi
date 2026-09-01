@@ -466,9 +466,14 @@ export function AuthProvider({ children }) {
         throw new Error(`Email address "${cleanEmail}" is already registered. Please log in instead.`);
       }
 
+      // Strip passwords before sending to Edge Function for temporary DB storage
+      const safeFormData = { ...formData };
+      delete safeFormData.password;
+      delete safeFormData.confirmPassword;
+
       // Call Supabase Edge Function to generate OTP, store it, and send email
       const { data: resData, error: invokeErr } = await supabase.functions.invoke('send-email', {
-        body: { email: cleanCollegeEmail, type: 'registration', formData }
+        body: { email: cleanCollegeEmail, type: 'registration', formData: safeFormData }
       });
 
       if (invokeErr || (resData && resData.error)) {
@@ -511,7 +516,8 @@ export function AuthProvider({ children }) {
         throw new Error('Invalid or expired 6-digit OTP code. Please check your College Mail ID or request a new OTP.');
       }
 
-      const activeFormData = validRecord.form_data || formData;
+      // Merge the DB form data (which lacks password now) with the active in-memory formData
+      const activeFormData = { ...(validRecord.form_data || {}), ...formData };
 
       // 2. Now create the permanent account
       const signUpResult = await signUp(activeFormData);
