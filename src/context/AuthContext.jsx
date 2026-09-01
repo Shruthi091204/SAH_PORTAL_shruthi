@@ -383,36 +383,20 @@ export function AuthProvider({ children }) {
         primaryEmail = userProfile.email;
       }
 
-      // 1. Verify 6-digit OTP code against password_resets table
-      const { data: records, error: fetchErr } = await supabase
-        .from('password_resets')
-        .select('*')
-        .or(`email.eq.${cleanInput},email.eq.${primaryEmail}`)
-        .eq('otp_code', cleanToken)
-        .gte('expires_at', new Date().toISOString())
-        .order('created_at', { ascending: false })
-        .limit(1);
-
-      if (fetchErr || !records || records.length === 0) {
-        throw new Error('Invalid or expired 6-digit OTP code. Please check your email or request a new OTP.');
-      }
-
-      // 2. Update user password via RPC (using primaryEmail for auth.users lookup)
-      const { data: rpcData, error: rpcErr } = await supabase.rpc('reset_user_password_by_email', {
+      // 1. Call Secure Backend RPC to verify OTP and reset password simultaneously
+      const { data: rpcData, error: rpcErr } = await supabase.rpc('verify_otp_and_reset_password', {
         p_email: primaryEmail,
+        p_otp: cleanToken,
         p_new_password: newPassword
       });
 
       if (rpcErr) {
-        // Fallback: try session updateUser if RPC function not created yet
-        const { error: updateErr } = await supabase.auth.updateUser({ password: newPassword });
-        if (updateErr) {
-          throw new Error('Database password update function missing. Please run the SQL snippet in Supabase SQL Editor.');
-        }
+        throw new Error(rpcErr.message || 'Database error occurred while resetting password.');
       }
-
-      // 3. Clean up used OTP from password_resets table
-      await supabase.from('password_resets').delete().or(`email.eq.${cleanInput},email.eq.${primaryEmail}`).eq('otp_code', cleanToken);
+      
+      if (!rpcData || rpcData.success === false) {
+        throw new Error(rpcData?.message || 'Invalid or expired 6-digit OTP code. Please check your email or request a new OTP.');
+      }
 
       return { data: { success: true }, error: null };
     } catch (err) {
