@@ -30,7 +30,6 @@ export default function RegisterPage() {
   });
 
   const [dispatchedCollegeEmail, setDispatchedCollegeEmail] = useState('');
-  const [serverOtpCode, setServerOtpCode] = useState('');
   const [otpToken, setOtpToken] = useState('');
 
   const [errors, setErrors] = useState({});
@@ -107,7 +106,6 @@ export default function RegisterPage() {
       setErrors({ submit: sendErr.message || 'Failed to send OTP to College Mail ID. Please try again.' });
     } else {
       setDispatchedCollegeEmail(otpData?.collegeEmail || form.collegeEmail);
-      setServerOtpCode(otpData?.otpCode || '');
       setStep(2);
     }
     setLoading(false);
@@ -128,8 +126,7 @@ export default function RegisterPage() {
     const { error: verifyErr } = await verifyRegistrationOtpAndCreateAccount({
       collegeEmail: dispatchedCollegeEmail || form.collegeEmail,
       otpToken,
-      formData: form,
-      serverOtpCode
+      formData: form
     });
 
     if (verifyErr) {
@@ -211,7 +208,7 @@ export default function RegisterPage() {
                 onChange={(e) => updateField('rollNo', e.target.value.toUpperCase())}
               />
               {errors.rollNo && <div className="form-error">{errors.rollNo}</div>}
-              <div className="form-hint">Format: CH.EN.U4[DEPT][YEAR][NUMBER] or CH.SC.U4[DEPT][YEAR][NUMBER]</div>
+              <div className="form-hint">Format: CH.EN.U4... or CH.EN.P2... (M.Tech)</div>
             </div>
 
             {/* Full Name */}

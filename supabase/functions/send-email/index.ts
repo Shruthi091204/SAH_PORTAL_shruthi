@@ -2,6 +2,8 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 // @ts-ignore
 import nodemailer from "npm:nodemailer"
+// @ts-ignore
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3"
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -15,18 +17,48 @@ serve(async (req) => {
 
   try {
     const body = await req.json()
-    const { 
-      type, email, otpCode, 
+    const {
+      type, email,
       leaderName, leaderEmail, projectTitle, domain, teamSize, member2Name, member3Name, mentorName,
-      authorName, authorEmail, posterTitle, track
+      authorName, authorEmail, posterTitle, track,
+      formData, targetEmail, primaryAuthEmail
     } = body
 
-    // Use Supabase Secrets for SMTP credentials, with a fallback to hardcoded ones for local dev
+    let otpCode = body.otpCode || '';
+    
+    const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
+    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || Deno.env.get('SUPABASE_ANON_KEY') || '';
+    
+    if ((type === 'registration' || type === 'password_reset') && supabaseUrl && supabaseKey) {
+      const supabase = createClient(supabaseUrl, supabaseKey);
+      otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+      const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+      
+      if (type === 'registration') {
+        await supabase.from('registration_otps').insert({
+          college_email: email,
+          otp_code: otpCode,
+          form_data: formData,
+          expires_at: expiresAt
+        });
+      } else if (type === 'password_reset') {
+        const resetsToInsert = [
+          { email: targetEmail, otp_code: otpCode, expires_at: expiresAt }
+        ];
+        if (primaryAuthEmail && targetEmail !== primaryAuthEmail) {
+          resetsToInsert.push({ email: primaryAuthEmail, otp_code: otpCode, expires_at: expiresAt });
+        }
+        await supabase.from('password_resets').insert(resetsToInsert);
+      }
+    }
+
+    // Use Supabase Secrets for SMTP credentials
     const smtpUser = Deno.env.get('SMTP_USER') || '27.kutralingam.xi.b@gmail.com';
-    const smtpPass = Deno.env.get('SMTP_PASS') || 'ccmdrfqcdibluewc';
+    const smtpPass = Deno.env.get('SMTP_PASS') || 'nxskrnmgtszehjox';
+    const smtpHost = Deno.env.get('SMTP_HOST') || 'smtp.gmail.com';
 
     const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
+      host: smtpHost,
       port: 587,
       secure: false,
       auth: {
@@ -37,7 +69,7 @@ serve(async (req) => {
 
     let subject = '';
     let htmlContent = '';
-    const targetEmail = type === 'expo' ? leaderEmail : (type === 'poster' ? authorEmail : email);
+    const recipientEmail = type === 'expo' ? leaderEmail : (type === 'poster' ? authorEmail : (targetEmail || email));
 
     if (type === 'registration' || type === 'password_reset') {
       const isRegistration = type === 'registration';
@@ -162,7 +194,7 @@ serve(async (req) => {
 
     await transporter.sendMail({
       from: `"SAH Admin" <${smtpUser}>`,
-      to: targetEmail,
+      to: recipientEmail,
       subject,
       html: htmlContent
     });
@@ -173,8 +205,8 @@ serve(async (req) => {
     )
   } catch (error) {
     return new Response(
-      JSON.stringify({ error: error.message }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 500 },
+      JSON.stringify({ success: false, error: error.message }),
+      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 },
     )
   }
 })

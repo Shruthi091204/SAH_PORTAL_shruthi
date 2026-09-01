@@ -10,6 +10,7 @@ import UserProfileModal from '../components/UserProfileModal';
 import SkillTagSelector from '../components/SkillTagSelector';
 import { DEPARTMENTS } from '../data/departments';
 import { downloadPPTTemplate, downloadGuidelines } from '../utils/downloadResources';
+import { fetchAllRecords } from '../utils/supabaseHelpers';
 
 export default function MyTeamPage() {
   const { profile } = useAuth();
@@ -239,6 +240,15 @@ export default function MyTeamPage() {
     // Ensure recruitment is open if a member is removed
     await supabase.from('teams').update({ is_open_for_recruitment: true }).eq('id', team.id);
 
+    // FIX: Delete the request entirely so they can re-apply in the future
+    await supabase.from('join_requests').delete()
+      .eq('team_id', team.id)
+      .eq('student_id', studentId);
+    // FIX: Delete invitations too
+    await supabase.from('team_invitations').delete()
+      .eq('team_id', team.id)
+      .eq('student_id', studentId);
+
     await sendNotification({
       userId: studentId,
       type: 'request_declined',
@@ -284,9 +294,15 @@ export default function MyTeamPage() {
   const fetchCandidates = async () => {
     setLoadingCandidates(true);
     try {
-      const [studentsRes, membersRes, invitesRes] = await Promise.all([
-        supabase.from('profiles').select('*').eq('role', 'student').order('full_name'),
-        supabase.from('team_members').select('student_id, team_id, teams(id, team_name, is_locked)'),
+      const studentsRes = await fetchAllRecords(supabase, 'profiles', {
+        eq: [{ column: 'role', value: 'student' }],
+        order: { column: 'full_name' }
+      });
+      const membersRes = await fetchAllRecords(supabase, 'team_members', {
+        select: 'student_id, team_id, teams(id, team_name, is_locked)'
+      });
+
+      const [invitesRes] = await Promise.all([
         team?.id 
           ? supabase.from('team_invitations').select('id, student_id, status').eq('team_id', team.id).eq('status', 'PENDING')
           : Promise.resolve({ data: [] })

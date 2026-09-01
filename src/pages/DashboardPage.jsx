@@ -5,6 +5,7 @@ import { supabase } from '../lib/supabase';
 import StatCard from '../components/StatCard';
 import TeamInvitationsCard from '../components/TeamInvitationsCard';
 import AdminDashboardDetailsModal from '../components/AdminDashboardDetailsModal';
+import { fetchAllRecords } from '../utils/supabaseHelpers';
 import JudgePanelDetailModal from '../components/JudgePanelDetailModal';
 import UserProfileModal from '../components/UserProfileModal';
 import OfficialRubricCard from '../components/OfficialRubricCard';
@@ -83,19 +84,14 @@ export default function DashboardPage() {
   async function fetchDashboardData() {
     try {
       // Fetch all relevant data concurrently
-      const [
-        teamsRes,
-        profilesRes,
-        membersRes,
-        psRes,
-        panelsRes,
-        panelJudgesRes,
-        panelPsRes,
-        evalsRes
-      ] = await Promise.all([
-        supabase.from('teams').select('*').order('created_at', { ascending: false }),
-        supabase.from('profiles').select('*').eq('role', 'student').order('full_name', { ascending: true }),
-        supabase.from('team_members').select('*'),
+      // Use fetchAllRecords for large tables to bypass 1000-row limit
+      const teamsRes = await fetchAllRecords(supabase, 'teams');
+      const profilesRes = await fetchAllRecords(supabase, 'profiles', {
+        order: { column: 'full_name', options: { ascending: true } }
+      });
+      const membersRes = await fetchAllRecords(supabase, 'team_members');
+
+      const [psRes, panelsRes, panelJudgesRes, panelPsRes, evalsRes] = await Promise.all([
         supabase.from('problem_statements').select('*'),
         supabase.from('judge_panels').select('*').order('created_at', { ascending: true }),
         supabase.from('panel_judges').select('panel_id, judge_id, profiles(id, full_name, email, department)'),

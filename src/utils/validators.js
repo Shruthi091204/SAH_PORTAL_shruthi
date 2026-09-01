@@ -1,14 +1,14 @@
 /**
- * Validates Amrita Roll Number format: CH.EN.U4[DEPT][YEAR][NUMBER], CH.SC.U4[DEPT][YEAR][NUMBER], or CH.AI.U4[DEPT][YEAR][NUMBER]
- * Examples: CH.EN.U4ARE23008, CH.SC.U4CSE23244, CH.AI.U4AID25043
+ * Validates Amrita Roll Number format: CH.EN.U4[DEPT][YEAR][NUMBER], CH.SC.U4..., CH.AI.U4..., or CH.EN.P2... (for M.Tech)
+ * Examples: CH.EN.U4ARE23008, CH.SC.U4CSE23244, CH.AI.U4AID25043, CH.EN.P2VID24001
  */
 export function validateRollNo(rollNo) {
   if (!rollNo) return { valid: false, message: 'Roll number is required.' };
-  const pattern = /^CH\.(EN|SC|AI)\.U4[A-Z]{2,4}\d{5}$/i;
+  const pattern = /^CH\.(EN|SC|AI)\.(U4|P2|R4)[A-Z]{2,4}\d{5}(-[A-Z]{2})?$/i;
   if (!pattern.test(rollNo.trim())) {
     return {
       valid: false,
-      message: 'Invalid Roll ID format. Expected format: CH.EN.U4ARE23008, CH.SC.U4CSE23244, or CH.AI.U4AID25043'
+      message: 'Invalid Roll ID format. Expected format: CH.EN.U4ARE23008, CH.SC.U4CSE23244, or CH.EN.P2VID24001'
     };
   }
   return { valid: true, message: '' };

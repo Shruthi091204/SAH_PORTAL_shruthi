@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '../../lib/supabase';
 import { parseEvaluationScores } from '../../lib/evaluationHelper';
+import { fetchAllRecords } from '../../utils/supabaseHelpers';
 
 export default function MasterRoster() {
   const [teams, setTeams] = useState([]);
@@ -27,24 +28,29 @@ export default function MasterRoster() {
     setLoading(true);
     try {
       const [
-        teamsRes,
-        membersRes,
         psRes,
         panelsRes,
         pjRes,
         ppsRes,
-        evalsRes,
-        profilesRes
+        evalsRes
       ] = await Promise.all([
-        supabase.from('teams').select('*, problem_statements!ps_id(id, ps_code, title, category, domain), problem_statements_2:problem_statements!ps_id_2(id, ps_code, title, category, domain)').order('team_name'),
-        supabase.from('team_members').select('*, profiles(id, full_name, roll_no, gender, department, skills)'),
         supabase.from('problem_statements').select('*').order('ps_code'),
         supabase.from('judge_panels').select('*').order('name'),
         supabase.from('panel_judges').select('*, profiles(id, full_name, email, department)'),
         supabase.from('panel_problem_statements').select('*'),
-        supabase.from('evaluations').select('*, profiles:judge_id(id, full_name, email)'),
-        supabase.from('profiles').select('*').order('full_name')
+        supabase.from('evaluations').select('*, profiles:judge_id(id, full_name, email)')
       ]);
+
+      const teamsRes = await fetchAllRecords(supabase, 'teams', {
+        select: '*, problem_statements!ps_id(id, ps_code, title, category, domain), problem_statements_2:problem_statements!ps_id_2(id, ps_code, title, category, domain)',
+        order: { column: 'team_name' }
+      });
+      const membersRes = await fetchAllRecords(supabase, 'team_members', {
+        select: '*, profiles(id, full_name, roll_no, gender, department, skills)'
+      });
+      const profilesRes = await fetchAllRecords(supabase, 'profiles', {
+        order: { column: 'full_name' }
+      });
 
       // Group members by team
       const membersByTeam = {};

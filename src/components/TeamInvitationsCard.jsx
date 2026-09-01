@@ -21,40 +21,63 @@ export default function TeamInvitationsCard({ onUpdate }) {
 
   async function fetchInvitations() {
     try {
-      const { data, error } = await supabase
+      // Fetch invitations and basic team info
+      const { data: invData, error: invError } = await supabase
         .from('team_invitations')
         .select(`
-          id,
-          team_id,
-          student_id,
-          status,
-          created_at,
+          id, team_id, student_id, status, created_at,
           teams:team_id (
-            id,
-            team_name,
-            is_locked,
-            leader_id,
-            problem_statements (
-              ps_code,
-              title,
-              category,
-              domain
-            ),
-            leader:leader_id (
-              id,
-              full_name,
-              department,
-              email
-            )
+            id, team_name, is_locked, leader_id, ps_id
           )
         `)
         .eq('student_id', profile.id)
         .eq('status', 'PENDING')
         .order('created_at', { ascending: false });
 
-      if (!error && data) {
-        setInvitations(data.filter(inv => inv.teams && !inv.teams.is_locked));
+      if (invError) {
+        console.error('Invitations fetch error:', invError.message);
+        setLoading(false);
+        return;
       }
+
+      if (!invData || invData.length === 0) {
+        setInvitations([]);
+        setLoading(false);
+        return;
+      }
+
+      // Filter out locked teams
+      const validInvs = invData.filter(inv => inv.teams && !inv.teams.is_locked);
+
+      // Now fetch the leaders and problem statements manually to avoid foreign key relation crashes
+      const leaderIds = validInvs.map(inv => inv.teams.leader_id).filter(Boolean);
+      const psIds = validInvs.map(inv => inv.teams.ps_id).filter(Boolean);
+
+      let leadersMap = {};
+      if (leaderIds.length > 0) {
+        const { data: leaders } = await supabase.from('profiles').select('id, full_name, department, email').in('id', leaderIds);
+        (leaders || []).forEach(l => { leadersMap[l.id] = l; });
+      }
+
+      let psMap = {};
+      if (psIds.length > 0) {
+        const { data: pss } = await supabase.from('problem_statements').select('id, ps_code, title, category, domain').in('id', psIds);
+        (pss || []).forEach(ps => { psMap[ps.id] = ps; });
+      }
+
+      // Stitch them together
+      const enrichedInvs = validInvs.map(inv => {
+        return {
+          ...inv,
+          teams: {
+            ...inv.teams,
+            leader: leadersMap[inv.teams.leader_id] || null,
+            problem_statements: psMap[inv.teams.ps_id] || null
+          }
+        };
+      });
+
+      setInvitations(enrichedInvs);
     } catch (err) {
       console.warn('Invitations fetch note:', err);
     } finally {

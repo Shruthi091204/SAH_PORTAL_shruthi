@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '../../lib/supabase';
 import StatCard from '../../components/StatCard';
 import UserProfileModal from '../../components/UserProfileModal';
+import { fetchAllRecords } from '../../utils/supabaseHelpers';
 import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut, Bar } from 'react-chartjs-2';
 
@@ -27,12 +28,18 @@ export default function AnalyticsDashboard() {
   }, []);
 
   async function fetchAnalytics() {
-    const [teamsRes, profilesRes, membersRes, psRes] = await Promise.all([
-      supabase.from('teams').select('*').order('created_at', { ascending: false }),
-      supabase.from('profiles').select('*').eq('role', 'student').order('full_name', { ascending: true }),
-      supabase.from('team_members').select('*'),
-      supabase.from('problem_statements').select('*').order('ps_code', { ascending: true })
-    ]);
+    const psRes = await supabase.from('problem_statements').select('*').order('ps_code', { ascending: true });
+    
+    const teamsRes = await fetchAllRecords(supabase, 'teams', {
+      order: { column: 'created_at', options: { ascending: false } }
+    });
+    
+    const profilesRes = await fetchAllRecords(supabase, 'profiles', {
+      eq: [{ column: 'role', value: 'student' }],
+      order: { column: 'full_name', options: { ascending: true } }
+    });
+    
+    const membersRes = await fetchAllRecords(supabase, 'team_members');
 
     const teams = teamsRes.data || [];
     const profiles = profilesRes.data || [];
