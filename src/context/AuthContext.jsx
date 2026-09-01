@@ -292,20 +292,30 @@ export function AuthProvider({ children }) {
 
       // 1. Check if user profile exists (search by personal email or college email)
       let userProfile = null;
-      const { data: byPersonal } = await supabase
+      const { data: byPersonal, error: personalErr } = await supabase
         .from('profiles')
         .select('id, email, college_email')
         .ilike('email', cleanInput)
         .maybeSingle();
 
+      if (personalErr) {
+        console.error('Database error fetching profile by personal email:', personalErr);
+        throw new Error('Database error while looking up account.');
+      }
+
       if (byPersonal) {
         userProfile = byPersonal;
       } else {
-        const { data: byCollege } = await supabase
+        const { data: byCollege, error: collegeErr } = await supabase
           .from('profiles')
           .select('id, email, college_email')
           .ilike('college_email', cleanInput)
           .maybeSingle();
+
+        if (collegeErr) {
+          console.error('Database error fetching profile by college email:', collegeErr);
+          throw new Error('Database error while looking up account.');
+        }
 
         if (byCollege) {
           userProfile = byCollege;
