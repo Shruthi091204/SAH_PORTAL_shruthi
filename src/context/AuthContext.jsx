@@ -290,54 +290,12 @@ export function AuthProvider({ children }) {
     try {
       const cleanInput = emailInput.trim().toLowerCase();
 
-      // 1. Check if user profile exists (search by personal email or college email)
-      let userProfile = null;
-      const { data: byPersonal, error: personalErr } = await supabase
-        .from('profiles')
-        .select('id, email, college_email')
-        .ilike('email', cleanInput)
-        .maybeSingle();
-
-      if (personalErr) {
-        console.error('Database error fetching profile by personal email:', personalErr);
-        throw new Error('Database error while looking up account.');
-      }
-
-      if (byPersonal) {
-        userProfile = byPersonal;
-      } else {
-        const { data: byCollege, error: collegeErr } = await supabase
-          .from('profiles')
-          .select('id, email, college_email')
-          .ilike('college_email', cleanInput)
-          .maybeSingle();
-
-        if (collegeErr) {
-          console.error('Database error fetching profile by college email:', collegeErr);
-          throw new Error('Database error while looking up account.');
-        }
-
-        if (byCollege) {
-          userProfile = byCollege;
-        }
-      }
-
-      if (!userProfile) {
-        throw new Error('No account found with this email address or College Mail ID.');
-      }
-
-      // Priority: Send to College Mail ID if present, otherwise Personal Email
-      const hasCollegeEmail = !!(userProfile.college_email && userProfile.college_email.trim());
-      const targetEmail = hasCollegeEmail ? userProfile.college_email.trim().toLowerCase() : userProfile.email.trim().toLowerCase();
-      const primaryAuthEmail = userProfile.email.trim().toLowerCase();
-
-      // 2. Generate and Send OTP code via Supabase Edge Function
+      // 1. Generate and Send OTP code via Supabase Edge Function
+      // The Edge Function will securely look up the user and determine the correct routing
       const { data: resData, error: invokeErr } = await supabase.functions.invoke('send-email', {
         body: { 
-          email: targetEmail, 
-          type: 'password_reset',
-          targetEmail,
-          primaryAuthEmail
+          email: cleanInput, 
+          type: 'password_reset'
         }
       });
 
@@ -347,9 +305,9 @@ export function AuthProvider({ children }) {
 
       return {
         data: {
-          targetEmail,
-          primaryAuthEmail,
-          isCollegeEmail: hasCollegeEmail
+          targetEmail: cleanInput, // The Edge Function handles mapping to college email if needed
+          primaryAuthEmail: cleanInput, // The UI just needs this for state
+          isCollegeEmail: false // The Edge Function manages the routing entirely
         },
         error: null
       };
