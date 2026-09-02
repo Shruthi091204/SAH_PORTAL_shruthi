@@ -198,14 +198,11 @@ export function AuthProvider({ children }) {
       let authEmail = cleanInput;
 
       // Check if user entered a College Mail ID instead of primary Auth email
-      const { data: matchedProfile } = await supabase
-        .from('profiles')
-        .select('email')
-        .ilike('college_email', cleanInput)
-        .maybeSingle();
-
-      if (matchedProfile?.email) {
-        authEmail = matchedProfile.email;
+      // We use a secure RPC because 'anon' users cannot select from 'profiles' due to RLS
+      const { data: resolvedEmail, error: resolveErr } = await supabase.rpc('resolve_auth_email', { p_input: cleanInput });
+      
+      if (!resolveErr && resolvedEmail) {
+        authEmail = resolvedEmail;
       }
 
       const { data, error: signInError } = await supabase.auth.signInWithPassword({
@@ -339,21 +336,10 @@ export function AuthProvider({ children }) {
       const cleanInput = email.trim().toLowerCase();
       const cleanToken = token.trim();
 
-      // Find user profile to resolve primary auth email
-      let primaryEmail = cleanInput;
-      const { data: userProfile } = await supabase
-        .from('profiles')
-        .select('email, college_email')
-        .or(`email.ilike.${cleanInput},college_email.ilike.${cleanInput}`)
-        .maybeSingle();
-
-      if (userProfile?.email) {
-        primaryEmail = userProfile.email;
-      }
-
       // 1. Call Secure Backend RPC to verify OTP and reset password simultaneously
+      // The RPC will handle resolving the college_email to the primary email securely.
       const { data: rpcData, error: rpcErr } = await supabase.rpc('verify_otp_and_reset_password', {
-        p_email: primaryEmail,
+        p_email: cleanInput,
         p_otp: cleanToken,
         p_new_password: newPassword
       });

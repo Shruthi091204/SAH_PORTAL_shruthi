@@ -23,11 +23,23 @@ CREATE OR REPLACE FUNCTION verify_otp_and_reset_password(p_email TEXT, p_otp TEX
 RETURNS JSONB AS $$
 DECLARE
     v_otp_record RECORD;
+    v_true_email TEXT;
 BEGIN
+    -- Resolve the true email by checking profiles (matches edge function logic)
+    SELECT email INTO v_true_email
+    FROM profiles
+    WHERE email = p_email OR college_email = p_email
+    LIMIT 1;
+
+    -- Fallback to the provided email if not found in profiles (just in case)
+    IF v_true_email IS NULL THEN
+        v_true_email := p_email;
+    END IF;
+
     -- 1. Check if OTP exists and is valid
     SELECT * INTO v_otp_record
     FROM password_resets
-    WHERE email = p_email 
+    WHERE email = v_true_email 
       AND otp_code = p_otp 
       AND expires_at > NOW()
     ORDER BY created_at DESC
@@ -40,11 +52,11 @@ BEGIN
     -- 2. Update the user's password securely using Supabase auth
     UPDATE auth.users 
     SET encrypted_password = crypt(p_new_password, gen_salt('bf'))
-    WHERE email = p_email;
+    WHERE email = v_true_email;
 
     -- 3. Delete the used OTP to prevent reuse
     DELETE FROM password_resets 
-    WHERE email = p_email AND otp_code = p_otp;
+    WHERE email = v_true_email AND otp_code = p_otp;
 
     RETURN jsonb_build_object('success', true, 'message', 'Password successfully reset.');
 END;
@@ -79,5 +91,22 @@ BEGIN
 
     -- Return the form data so the frontend can proceed with account creation
     RETURN v_form_data;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+
+-- 5. RESOLVE AUTH EMAIL FUNCTION
+-- Allows unauthenticated users to securely resolve a college email to the primary auth email for login
+CREATE OR REPLACE FUNCTION resolve_auth_email(p_input TEXT)
+RETURNS TEXT AS $$
+DECLARE
+    v_email TEXT;
+BEGIN
+    SELECT email INTO v_email
+    FROM profiles
+    WHERE email = p_input OR college_email = p_input
+    LIMIT 1;
+    
+    RETURN COALESCE(v_email, p_input);
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;

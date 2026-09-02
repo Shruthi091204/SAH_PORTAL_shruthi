@@ -1,0 +1,4 @@
+- [x] Create `secure_reset_password.sql` for the user.
+- [x] Update `src/context/AuthContext.jsx` to call `secure_reset_password` and remove direct `password_resets` table queries.
+- [x] Present the SQL file to the user for execution.
+- [x] Update walkthrough.md.
