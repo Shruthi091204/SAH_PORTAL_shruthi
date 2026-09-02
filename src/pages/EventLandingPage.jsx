@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import * as THREE from 'three/webgpu';
 import { bloom } from 'three/examples/jsm/tsl/display/BloomNode.js';
 import { motion } from 'framer-motion';
-import amritaLogo from '../assets/AMRITA-LOGO.jpeg';
+import amritaLogo from '../assets/AMRITA-LOGO.png';
 import sahLogo from '../assets/Logo.png';
 import {
   abs, add, float, mix, mod, oneMinus, pass, sin,
@@ -483,7 +483,7 @@ export default function EventLandingPage({ onEnter }) {
               WebkitTextFillColor: 'transparent',
               textShadow: '0 0 30px rgba(255,140,26,0.3)'
             }}>
-              
+
               STUDENTS ARE MOTIVATED TO PARTICIPATE IN ALL 3 EVENTS
             </span>
           </motion.div>
