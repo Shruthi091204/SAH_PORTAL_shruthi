@@ -122,3 +122,15 @@ export function downloadSihAwarenessDoc() {
   link.click();
   document.body.removeChild(link);
 }
+
+export function downloadExpoInfoSheet() {
+  const url = '/SAH2026_ProjectExpo_Information_Sheet_TEMPLATE.docx';
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'SAH2026_ProjectExpo_Information_Sheet_TEMPLATE.docx';
+  link.target = '_blank';
+  link.rel = 'noopener noreferrer';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}

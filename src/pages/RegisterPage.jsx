@@ -208,7 +208,7 @@ export default function RegisterPage() {
                 onChange={(e) => updateField('rollNo', e.target.value.toUpperCase())}
               />
               {errors.rollNo && <div className="form-error">{errors.rollNo}</div>}
-              <div className="form-hint">Format: CH.EN.U4... or CH.EN.P2... (M.Tech)</div>
+              <div className="form-hint">Format: CH.EN.U4..., CH.PS.R4..., or CH.EN.P2...</div>
             </div>
 
             {/* Full Name */}
