@@ -147,7 +147,7 @@ export default function PosterPresentation() {
           style={{ position: 'absolute', bottom: '-20%', right: '-10%', width: '500px', height: '500px', background: 'radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 70%)', borderRadius: '50%' }}
         />
 
-        <div style={{ position: 'absolute', top: '40px', right: '40px', zIndex: 30 }}>
+        <div style={{ position: 'absolute', top: '40px', right: '40px', zIndex: 30, display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'flex-end' }}>
           <button 
             className="btn btn-orange btn-lg" 
             onClick={() => navigate('/events/poster-presentation/register')}
@@ -155,6 +155,16 @@ export default function PosterPresentation() {
           >
             Register Now <ChevronRight size={18} strokeWidth={3} />
           </button>
+          
+          <a 
+            className="btn btn-lg" 
+            href="https://forms.cloud.microsoft/r/gVi190wHV6"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1rem', padding: '12px 24px', borderRadius: '50px', cursor: 'pointer', border: '2px solid var(--orange)', color: 'var(--orange)', backgroundColor: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(4px)', fontWeight: 'bold', textDecoration: 'none', position: 'relative', zIndex: 50 }}
+          >
+            Submit Now <ExternalLink size={18} strokeWidth={3} />
+          </a>
         </div>
 
         <motion.div relative zIndex={10} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }}>
@@ -561,13 +571,24 @@ export default function PosterPresentation() {
               <strong style={{color: 'var(--orange)'}}>Note: Posters carry a single author. There are no teams in this category.</strong>
             </p>
           </div>
-          <button 
-            className="btn btn-orange btn-lg" 
-            onClick={() => navigate('/events/poster-presentation/register')}
-            style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '1.1rem', padding: '16px 40px', borderRadius: '50px', boxShadow: '0 10px 25px -5px rgba(234, 88, 12, 0.4)' }}
-          >
-            Register Now <ChevronRight size={20} strokeWidth={3} />
-          </button>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center' }}>
+            <button 
+              className="btn btn-orange btn-lg" 
+              onClick={() => navigate('/events/poster-presentation/register')}
+              style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '1.1rem', padding: '16px 40px', borderRadius: '50px', boxShadow: '0 10px 25px -5px rgba(234, 88, 12, 0.4)' }}
+            >
+              Register Now <ChevronRight size={20} strokeWidth={3} />
+            </button>
+            <a 
+              className="btn btn-lg" 
+              href="https://forms.cloud.microsoft/r/gVi190wHV6"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '1.1rem', padding: '16px 40px', borderRadius: '50px', cursor: 'pointer', border: '2px solid var(--orange)', color: 'var(--orange)', backgroundColor: 'transparent', fontWeight: 'bold', textDecoration: 'none', position: 'relative', zIndex: 50 }}
+            >
+              Submit Now <ExternalLink size={20} strokeWidth={3} />
+            </a>
+          </div>
         </motion.div>
 
       </div>

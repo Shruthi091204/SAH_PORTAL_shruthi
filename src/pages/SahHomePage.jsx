@@ -74,9 +74,16 @@ const hackathonData = {
 };
 
 export default function SahHomePage() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isTeamLeader } = useAuth();
   const navigate = useNavigate();
   const today = new Date();
+  const [isLeader, setIsLeader] = useState(false);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      isTeamLeader().then(setIsLeader);
+    }
+  }, [isAuthenticated, isTeamLeader]);
   
   const upcomingIndex = useMemo(() => {
     let nearestIdx = -1;
@@ -140,14 +147,29 @@ export default function SahHomePage() {
           style={{ position: 'absolute', bottom: '-20%', right: '-10%', width: '500px', height: '500px', background: 'radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%)', borderRadius: '50%' }}
         />
 
-        <div style={{ position: 'absolute', top: '40px', right: '40px', zIndex: 30 }}>
+        <div style={{ position: 'absolute', top: '40px', right: '40px', zIndex: 30, display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'flex-end' }}>
           <button 
             className="btn btn-orange btn-lg" 
-            onClick={() => navigate('/login')}
+            onClick={() => navigate(isAuthenticated ? '/dashboard' : '/login')}
             style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1rem', padding: '12px 24px', borderRadius: '50px', boxShadow: '0 10px 25px -5px rgba(234, 88, 12, 0.4)' }}
           >
-            Login to Portal <ChevronRight size={18} strokeWidth={3} />
+            {isAuthenticated ? 'Go to Dashboard' : 'Login to Portal'} <ChevronRight size={18} strokeWidth={3} />
           </button>
+          
+          {isLeader && (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+              <a 
+                className="btn btn-lg" 
+                href="https://forms.cloud.microsoft/r/vWgMYJky7h"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1rem', padding: '12px 24px', borderRadius: '50px', cursor: 'pointer', border: '2px solid var(--orange)', color: 'var(--orange)', backgroundColor: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(4px)', fontWeight: 'bold', textDecoration: 'none', position: 'relative', zIndex: 50 }}
+              >
+                Submit Now <ExternalLink size={18} strokeWidth={3} />
+              </a>
+              <span style={{ fontSize: '0.75rem', color: 'var(--orange)', marginTop: '4px', fontWeight: '500' }}>*Only Team Leaders should submit</span>
+            </div>
+          )}
         </div>
 
         <motion.div relative="true" zIndex={10} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }}>
@@ -598,13 +620,30 @@ export default function SahHomePage() {
               <strong style={{color: 'var(--orange)'}}>Note: Registration occurs strictly inside the Dashboard once you log in.</strong>
             </p>
           </div>
-          <button 
-            className="btn btn-orange btn-lg" 
-            onClick={() => navigate('/login')}
-            style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '1.1rem', padding: '16px 40px', borderRadius: '50px', boxShadow: '0 10px 25px -5px rgba(234, 88, 12, 0.4)' }}
-          >
-            Login to Portal <ChevronRight size={20} strokeWidth={3} />
-          </button>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center' }}>
+            <button 
+              className="btn btn-orange btn-lg" 
+              onClick={() => navigate(isAuthenticated ? '/dashboard' : '/login')}
+              style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '1.1rem', padding: '16px 40px', borderRadius: '50px', boxShadow: '0 10px 25px -5px rgba(234, 88, 12, 0.4)' }}
+            >
+              {isAuthenticated ? 'Go to Dashboard' : 'Login to Portal'} <ChevronRight size={20} strokeWidth={3} />
+            </button>
+            
+            {isLeader && (
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <a 
+                  className="btn btn-lg" 
+                  href="https://forms.cloud.microsoft/r/vWgMYJky7h"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '1.1rem', padding: '16px 40px', borderRadius: '50px', cursor: 'pointer', border: '2px solid var(--orange)', color: 'var(--orange)', backgroundColor: 'transparent', fontWeight: 'bold', textDecoration: 'none', position: 'relative', zIndex: 50 }}
+                >
+                  Submit Now <ExternalLink size={20} strokeWidth={3} />
+                </a>
+                <span style={{ fontSize: '0.85rem', color: 'var(--orange)', marginTop: '6px', fontWeight: '500' }}>*Only Team Leaders should submit</span>
+              </div>
+            )}
+          </div>
         </motion.div>
 
       </div>

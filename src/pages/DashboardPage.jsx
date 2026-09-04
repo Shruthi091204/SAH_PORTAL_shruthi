@@ -299,18 +299,40 @@ export default function DashboardPage() {
   return (
     <div className="page-container">
       {/* Welcome Banner */}
-      <div className="hero-banner">
-        <h1>Welcome back, {profile?.full_name || 'Innovator'}!</h1>
-        <p>
-          {isAdmin && 'Admin Portal — Live system telemetry, judge panels, verification queue & analytics.'}
-          {isJudge && (judgePanelInfo ? `Judge Dashboard — Assigned to ${judgePanelInfo.panel?.name || 'Panel'} · Official 50-Mark Rubric Evaluation.` : 'Judge Dashboard — Evaluate assigned teams on the official 50-mark SAH rubric.')}
-          {isSpoc && 'SPOC Dashboard — Team verification, member compliance & SIH guardrails.'}
-          {!isAdmin && !isJudge && !isSpoc && (
-            myTeam
-              ? `You are a ${myTeam.role} in "${myTeam.team_name}". Check your team status below.`
-              : 'Smart Amrita Hackathon 2026 Internal Portal. Form your team of 6 and select a Problem Statement.'
-          )}
-        </p>
+      <div className="hero-banner" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '20px' }}>
+        <div>
+          <h1>Welcome back, {profile?.full_name || 'Innovator'}!</h1>
+          <p>
+            {isAdmin && 'Admin Portal — Live system telemetry, judge panels, verification queue & analytics.'}
+            {isJudge && (judgePanelInfo ? `Judge Dashboard — Assigned to ${judgePanelInfo.panel?.name || 'Panel'} · Official 50-Mark Rubric Evaluation.` : 'Judge Dashboard — Evaluate assigned teams on the official 50-mark SAH rubric.')}
+            {isSpoc && 'SPOC Dashboard — Team verification, member compliance & SIH guardrails.'}
+            {!isAdmin && !isJudge && !isSpoc && (
+              myTeam
+                ? `You are a ${myTeam.role} in "${myTeam.team_name}". Check your team status below.`
+                : 'Smart Amrita Hackathon 2026 Internal Portal. Form your team of 6 and select a Problem Statement.'
+            )}
+          </p>
+        </div>
+
+        {!isAdmin && !isJudge && !isSpoc && myTeam && myTeam.role === 'Leader' && (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+            <a 
+              className="btn btn-orange btn-lg" 
+              href="https://forms.cloud.microsoft/r/vWgMYJky7h"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1rem', padding: '12px 24px', borderRadius: '50px', cursor: 'pointer', fontWeight: 'bold', color: 'white', border: 'none', textDecoration: 'none', position: 'relative', zIndex: 50 }}
+            >
+              Submit Now
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
+            </a>
+            <span style={{ fontSize: '0.75rem', color: 'var(--orange)', marginTop: '4px', fontWeight: '500' }}>*Only Team Leaders should submit</span>
+          </div>
+        )}
       </div>
 
 
