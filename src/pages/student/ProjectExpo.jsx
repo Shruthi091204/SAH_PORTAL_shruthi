@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { downloadExpoGuidelines, downloadExpoSoftwareSample, downloadExpoHardwareSample, downloadExpoInfoSheet } from '../../utils/downloadResources';
@@ -18,8 +18,7 @@ import {
   ShieldCheck,
   CheckSquare,
   Download,
-  FileText,
-  Upload
+  FileText
 } from 'lucide-react';
 
 const expoData = {
@@ -95,7 +94,6 @@ const expoData = {
 export default function ProjectExpo() {
   const navigate = useNavigate();
   const today = new Date();
-  const [submittedFile, setSubmittedFile] = useState(null);
   
   const upcomingIndex = useMemo(() => {
     let nearestIdx = -1;
@@ -146,7 +144,7 @@ export default function ProjectExpo() {
         />
 
         {/* Register Now Button in Hero Right */}
-        <div style={{ position: 'absolute', top: '40px', right: '40px', zIndex: 30, display: 'flex', gap: '12px', alignItems: 'center' }}>
+        <div style={{ position: 'absolute', top: '40px', right: '40px', zIndex: 30 }}>
           <button 
             className="btn btn-orange btn-lg" 
             onClick={() => navigate('/events/project-expo/register')}
@@ -154,32 +152,6 @@ export default function ProjectExpo() {
           >
             Register Now <ChevronRight size={18} strokeWidth={3} />
           </button>
-          
-          {submittedFile && (
-            <button 
-              className="btn btn-orange btn-lg" 
-              style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1rem', padding: '12px 24px', borderRadius: '50px', cursor: 'pointer', fontWeight: 'bold', boxShadow: '0 10px 25px -5px rgba(234, 88, 12, 0.4)' }}
-              onClick={() => window.open(URL.createObjectURL(submittedFile), '_blank')}
-            >
-              View Submission
-            </button>
-          )}
-          <label 
-            className="btn btn-lg" 
-            style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1rem', padding: '12px 24px', borderRadius: '50px', cursor: 'pointer', border: '2px solid var(--orange)', color: 'var(--orange)', backgroundColor: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(4px)', fontWeight: 'bold' }}
-          >
-            {submittedFile ? "Update" : "Submit"} <Upload size={18} strokeWidth={3} />
-            <input 
-              type="file" 
-              accept=".pdf" 
-              style={{ display: 'none' }} 
-              onChange={(e) => { 
-                if(e.target.files.length) {
-                  setSubmittedFile(e.target.files[0]);
-                }
-              }} 
-            />
-          </label>
         </div>
 
         <motion.div relative zIndex={10} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }}>
@@ -607,68 +579,6 @@ export default function ProjectExpo() {
           >
             Register Now <ChevronRight size={20} strokeWidth={3} />
           </button>
-        </motion.div>
-
-        {/* Submit Project CTA */}
-        <motion.div 
-          initial={{ opacity: 0, y: 50 }} 
-          whileInView={{ opacity: 1, y: 0 }} 
-          viewport={{ once: true }}
-          style={{ 
-            position: 'relative', 
-            background: 'rgba(255, 255, 255, 0.9)', 
-            backdropFilter: 'blur(16px)',
-            padding: '24px 32px', 
-            borderRadius: '24px', 
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            border: '1px solid rgba(255,255,255,0.5)',
-            flexWrap: 'wrap',
-            gap: '20px',
-            marginBottom: '40px'
-          }}
-        >
-          <div>
-            <h3 style={{ margin: '0 0 8px 0', color: 'var(--navy)', fontSize: '1.5rem', fontWeight: 800 }}>
-              {submittedFile ? "Project Submitted Successfully!" : "Already registered?"}
-            </h3>
-            <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '1rem', fontWeight: 500 }}>
-              {submittedFile ? (
-                <>Your file <strong>{submittedFile.name}</strong> has been uploaded.</>
-              ) : (
-                <>Submit your project file here.<br/><strong style={{color: 'var(--orange)'}}>Accepted format: PDF</strong></>
-              )}
-            </p>
-          </div>
-          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-            {submittedFile && (
-              <button 
-                className="btn btn-orange btn-lg" 
-                style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '1.1rem', padding: '16px 32px', borderRadius: '50px', cursor: 'pointer', fontWeight: 'bold' }}
-                onClick={() => window.open(URL.createObjectURL(submittedFile), '_blank')}
-              >
-                View Submission
-              </button>
-            )}
-            <label 
-              className="btn btn-lg" 
-              style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '1.1rem', padding: '16px 32px', borderRadius: '50px', cursor: 'pointer', border: '2px solid var(--orange)', color: 'var(--orange)', backgroundColor: 'transparent', fontWeight: 'bold' }}
-            >
-              {submittedFile ? "Update Submission" : "Submit Project"} <Upload size={20} strokeWidth={3} />
-              <input 
-                type="file" 
-                accept=".pdf" 
-                style={{ display: 'none' }} 
-                onChange={(e) => { 
-                  if(e.target.files.length) {
-                    setSubmittedFile(e.target.files[0]);
-                  }
-                }} 
-              />
-            </label>
-          </div>
         </motion.div>
 
       </div>
